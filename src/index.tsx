@@ -244,6 +244,224 @@ app.post('/api/admin/orders/:orderId/status', async (c) => {
   })
 })
 
+// ==========================================
+// 안전거래 장소 API
+// ==========================================
+
+// 안전거래 장소 목록 (위치 기반)
+app.get('/api/safe-trade-places', async (c) => {
+  const lat = parseFloat(c.req.query('lat') || '35.8252')
+  const lng = parseFloat(c.req.query('lng') || '128.7417')
+  const city = c.req.query('city') || 'gyeongsan'
+  
+  // 샘플 데이터 (실제로는 D1에서 조회하고 거리순 정렬)
+  const places = [
+    {
+      placeId: 'SAFE-P-001',
+      name: '경산경찰서 민원실 앞',
+      type: 'POLICE',
+      address: '경북 경산시 중앙로 80',
+      distance: 120, // 미터
+      hasCctv: true,
+      openHours: '24시간',
+      parking: true
+    },
+    {
+      placeId: 'SAFE-G-001',
+      name: '경산시청 민원실 앞',
+      type: 'GOV',
+      address: '경북 경산시 시청로 1',
+      distance: 300,
+      hasCctv: true,
+      openHours: '평일 09:00-18:00',
+      parking: true
+    },
+    {
+      placeId: 'SAFE-C-001',
+      name: '중앙시장 공영주차장',
+      type: 'CCTV',
+      address: '경북 경산시 중앙시장길 20',
+      distance: 450,
+      hasCctv: true,
+      openHours: '06:00-22:00',
+      parking: true
+    }
+  ]
+  
+  return c.json(places)
+})
+
+// 안전거래 장소 상세
+app.get('/api/safe-trade-places/:placeId', async (c) => {
+  const placeId = c.req.param('placeId')
+  
+  return c.json({
+    placeId,
+    name: '경산경찰서 민원실 앞',
+    type: 'POLICE',
+    address: '경북 경산시 중앙로 80',
+    addressDetail: '1층 민원실 앞 광장',
+    lat: 35.8252,
+    lng: 128.7417,
+    hasCctv: true,
+    openHours: '24시간',
+    parking: true,
+    verifiedBy: '경산경찰서',
+    features: [
+      'CCTV 24시간 녹화',
+      '경찰 순찰 가능',
+      '주차 가능',
+      '밝은 조명'
+    ]
+  })
+})
+
+// ==========================================
+// 중고거래 API
+// ==========================================
+
+// 중고거래 아이템 목록
+app.get('/api/trade-items', async (c) => {
+  const isFree = c.req.query('isFree') === 'true'
+  const category = c.req.query('category')
+  
+  const sampleItems = [
+    {
+      itemId: 'TRADE-001',
+      title: '삼성 냉장고 (2021년형)',
+      price: 150000,
+      isFree: false,
+      category: '가전',
+      thumbnail: 'https://via.placeholder.com/300x200',
+      status: 'AVAILABLE',
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'TRADE-003',
+      title: '무료나눔 - 유아용 자전거',
+      price: 0,
+      isFree: true,
+      category: '유아용품',
+      thumbnail: 'https://via.placeholder.com/300x200',
+      status: 'AVAILABLE',
+      createdAt: new Date().toISOString()
+    }
+  ]
+  
+  return c.json(isFree ? sampleItems.filter(i => i.isFree) : sampleItems)
+})
+
+// 채팅방 생성
+app.post('/api/chat-rooms', async (c) => {
+  const body = await c.req.json()
+  const roomId = 'ROOM-' + Date.now()
+  
+  return c.json({
+    success: true,
+    roomId,
+    itemId: body.itemId,
+    sellerId: body.sellerId,
+    buyerId: body.buyerId,
+    status: 'ACTIVE',
+    systemMessage: '안전거래 장소에서의 만남을 권장합니다.'
+  })
+})
+
+// 채팅방에 안전거래 장소 선택
+app.post('/api/chat-rooms/:roomId/select-place', async (c) => {
+  const roomId = c.req.param('roomId')
+  const body = await c.req.json()
+  
+  return c.json({
+    success: true,
+    roomId,
+    placeId: body.placeId,
+    placeName: body.placeName,
+    status: 'PLACE_SELECTED',
+    systemMessage: `거래 장소가 선택되었습니다: ${body.placeName}`
+  })
+})
+
+// 분쟁 신고
+app.post('/api/trade-disputes', async (c) => {
+  const body = await c.req.json()
+  const disputeId = 'DISPUTE-' + Date.now()
+  
+  return c.json({
+    success: true,
+    disputeId,
+    status: 'RECEIVED',
+    message: '신고가 접수되었습니다. 빠른 시일 내에 처리하겠습니다.',
+    estimatedTime: '24시간 이내'
+  })
+})
+
+// ==========================================
+// 로컬푸드 API
+// ==========================================
+
+// 로컬푸드 상품 목록
+app.get('/api/local-food-products', async (c) => {
+  const category = c.req.query('category')
+  
+  const sampleProducts = [
+    {
+      productId: 'LOCAL-001',
+      farmName: '경산 유기농 농장',
+      farmerName: '김농부',
+      productName: '당일 수확 상추',
+      price: 5000,
+      unit: '1kg',
+      todayStock: 20,
+      harvestDate: new Date().toISOString().split('T')[0],
+      certification: 'ORGANIC',
+      thumbnail: 'https://via.placeholder.com/300x200'
+    },
+    {
+      productId: 'LOCAL-003',
+      farmName: '경산 대추 농장',
+      farmerName: '박농부',
+      productName: '경산 대추',
+      price: 20000,
+      unit: '1kg',
+      todayStock: 30,
+      harvestDate: new Date().toISOString().split('T')[0],
+      certification: 'PESTICIDE_FREE',
+      thumbnail: 'https://via.placeholder.com/300x200'
+    }
+  ]
+  
+  return c.json(sampleProducts)
+})
+
+// 로컬푸드 예약 주문
+app.post('/api/local-food-orders', async (c) => {
+  const body = await c.req.json()
+  const orderId = 'LF-ORD-' + Date.now()
+  
+  // 재고 확인
+  if (body.quantity > body.todayStock) {
+    return c.json({
+      success: false,
+      message: '오늘 수확 가능 수량을 초과했습니다.'
+    }, 400)
+  }
+  
+  return c.json({
+    success: true,
+    orderId,
+    orderType: 'LOCALFOOD',
+    productName: body.productName,
+    quantity: body.quantity,
+    deliveryDate: body.deliveryDate,
+    totalAmount: body.price * body.quantity,
+    deliveryFee: 0,
+    freeDelivery: true,
+    message: '로컬푸드 예약 주문이 완료되었습니다.',
+    notice: '농가에서 수확 후 배송됩니다.'
+  })
+})
+
 // 관리자: 무료배달 예산 조회
 app.get('/api/admin/delivery-budget', async (c) => {
   const date = c.req.query('date') || new Date().toISOString().split('T')[0]
