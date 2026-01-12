@@ -24,6 +24,7 @@
 **중고거래**: https://inkorea.me/static/trade.html  
 **로컬푸드**: https://inkorea.me/static/localfood.html  
 **관리자 주문 관리**: https://inkorea.me/static/admin-orders.html  
+**관리자 안전거래 장소 관리**: https://inkorea.me/static/admin-safe-places.html  
 **챗봇 (8개 언어)**: https://inkorea.me/static/i18n/chatbot-ko
 
 **API 엔드포인트**:
@@ -31,6 +32,13 @@
 - 로컬푸드 상품: https://inkorea.me/api/local-food-products
 - 중고거래 아이템: https://inkorea.me/api/trade-items
 - 관리자 주문 목록: https://inkorea.me/api/admin/orders
+
+**최근 수정 사항 (2026-01-12)**:
+- ✅ 주문하기/메뉴보기 버튼 클릭 오류 해결
+- ✅ 중고거래 상품 클릭 오류 해결
+- ✅ 무료나눔 상품 클릭 오류 해결
+- ✅ 안전거래장소 6곳 클릭 오류 해결
+- ✅ 모달 닫기 함수 추가 (closeItemDetailModal)
 
 ---
 
@@ -255,9 +263,11 @@
 ## 📝 프로젝트 정보
 
 - **개발 기간**: 2026-01-12
-- **코드 라인**: 2,700+줄 (챗봇 추가)
-- **Git 커밋**: 13개
+- **코드 라인**: 4,532줄 (최신)
+- **Git 커밋**: 28개
 - **프로젝트 위치**: `/home/user/webapp`
+- **관리자 페이지**: 3개 (주문, 안전거래장소, 대시보드)
+- **다국어 지원**: 8개 언어 (KO/EN/ZH/JA/ES/FR/AR/DE)
 
 ## 📄 주요 문서
 
