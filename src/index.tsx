@@ -439,11 +439,21 @@ app.post('/api/local-food-orders', async (c) => {
   const body = await c.req.json()
   const orderId = 'LF-ORD-' + Date.now()
   
+  // 임시 데이터에서 상품 찾기
+  const sampleProducts = [
+    { productId: 'LOCAL-001', productName: '당일 수확 상추', todayStock: 20, price: 5000 },
+    { productId: 'LOCAL-002', productName: '유기농 방울토마토', todayStock: 15, price: 8000 },
+    { productId: 'LOCAL-003', productName: '경산 대추', todayStock: 30, price: 20000 },
+    { productId: 'LOCAL-004', productName: '하양 포도', todayStock: 10, price: 35000 }
+  ]
+  
+  const product = sampleProducts.find(p => p.productId === body.productId)
+  
   // 재고 확인
-  if (body.quantity > body.todayStock) {
+  if (product && body.quantity > product.todayStock) {
     return c.json({
       success: false,
-      message: '오늘 수확 가능 수량을 초과했습니다.'
+      message: `오늘 수확 가능 수량을 초과했습니다. (최대 ${product.todayStock}개)`
     }, 400)
   }
   
@@ -451,10 +461,11 @@ app.post('/api/local-food-orders', async (c) => {
     success: true,
     orderId,
     orderType: 'LOCALFOOD',
-    productName: body.productName,
+    productId: body.productId,
+    farmId: body.farmId,
     quantity: body.quantity,
     deliveryDate: body.deliveryDate,
-    totalAmount: body.price * body.quantity,
+    totalPrice: body.totalPrice,
     deliveryFee: 0,
     freeDelivery: true,
     message: '로컬푸드 예약 주문이 완료되었습니다.',
