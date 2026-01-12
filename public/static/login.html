@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인 - 경산온(ON)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen flex items-center justify-center p-4">
+        <div class="max-w-md w-full">
+            <!-- Logo -->
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">경산온(ON)</h1>
+                <p class="text-gray-600">경산은 배달비가 없습니다</p>
+            </div>
+
+            <!-- Login Card -->
+            <div class="bg-white rounded-lg shadow-sm p-8">
+                <h2 class="text-2xl font-bold mb-6 text-center">로그인</h2>
+
+                <!-- Tab Buttons -->
+                <div class="flex gap-2 mb-6">
+                    <button onclick="showLoginMethod('phone')" id="btn-phone" 
+                            class="flex-1 py-2 px-4 rounded-lg bg-blue-600 text-white font-medium">
+                        <i class="fas fa-mobile-alt mr-2"></i>휴대폰
+                    </button>
+                    <button onclick="showLoginMethod('email')" id="btn-email"
+                            class="flex-1 py-2 px-4 rounded-lg bg-gray-100 text-gray-600 font-medium">
+                        <i class="fas fa-envelope mr-2"></i>이메일
+                    </button>
+                </div>
+
+                <!-- Phone Login -->
+                <form id="phone-login" onsubmit="loginWithPhone(event)">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">휴대폰 번호</label>
+                            <input type="tel" id="phone-number" required
+                                   class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                                   placeholder="010-0000-0000"
+                                   pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}">
+                        </div>
+
+                        <button type="button" onclick="sendVerificationCode()" id="send-code-btn"
+                                class="w-full py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700">
+                            <i class="fas fa-paper-plane mr-2"></i>인증번호 발송
+                        </button>
+
+                        <div id="verification-section" class="hidden space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-2">인증번호</label>
+                                <input type="text" id="verification-code" 
+                                       class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                                       placeholder="6자리 숫자 입력"
+                                       maxlength="6">
+                                <p class="text-xs text-gray-500 mt-1">
+                                    <i class="fas fa-clock mr-1"></i>남은 시간: <span id="timer">03:00</span>
+                                </p>
+                            </div>
+
+                            <button type="submit"
+                                    class="w-full py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700">
+                                <i class="fas fa-sign-in-alt mr-2"></i>로그인
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Email Login (hidden by default) -->
+                <form id="email-login" class="hidden" onsubmit="loginWithEmail(event)">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">이메일</label>
+                            <input type="email" id="email" required
+                                   class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                                   placeholder="example@email.com">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium mb-2">비밀번호</label>
+                            <input type="password" id="password" required
+                                   class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                                   placeholder="비밀번호 입력">
+                        </div>
+
+                        <button type="submit"
+                                class="w-full py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700">
+                            <i class="fas fa-sign-in-alt mr-2"></i>로그인
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Divider -->
+                <div class="relative my-6">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-300"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-2 bg-white text-gray-500">또는</span>
+                    </div>
+                </div>
+
+                <!-- Quick Login -->
+                <div class="space-y-3">
+                    <button onclick="socialLogin('kakao')" class="w-full py-3 bg-yellow-400 text-gray-900 font-medium rounded-lg hover:bg-yellow-500">
+                        <i class="fas fa-comment mr-2"></i>카카오 로그인
+                    </button>
+                    <button onclick="socialLogin('naver')" class="w-full py-3 bg-green-500 text-white font-medium rounded-lg hover:bg-green-600">
+                        <i class="fas fa-n mr-2"></i>네이버 로그인
+                    </button>
+                </div>
+
+                <!-- Links -->
+                <div class="mt-6 text-center text-sm">
+                    <a href="/signup" class="text-blue-600 hover:underline">회원가입</a>
+                    <span class="text-gray-400 mx-2">|</span>
+                    <a href="/find-password" class="text-gray-600 hover:underline">비밀번호 찾기</a>
+                </div>
+            </div>
+
+            <!-- Back to Home -->
+            <div class="mt-6 text-center">
+                <a href="/" class="text-gray-600 hover:text-gray-900">
+                    <i class="fas fa-home mr-1"></i>메인으로 돌아가기
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+    <script>
+        let timerInterval;
+
+        function showLoginMethod(method) {
+            // Hide all forms
+            document.getElementById('phone-login').classList.add('hidden');
+            document.getElementById('email-login').classList.add('hidden');
+
+            // Reset buttons
+            document.getElementById('btn-phone').classList.remove('bg-blue-600', 'text-white');
+            document.getElementById('btn-phone').classList.add('bg-gray-100', 'text-gray-600');
+            document.getElementById('btn-email').classList.remove('bg-blue-600', 'text-white');
+            document.getElementById('btn-email').classList.add('bg-gray-100', 'text-gray-600');
+
+            // Show selected form
+            if (method === 'phone') {
+                document.getElementById('phone-login').classList.remove('hidden');
+                document.getElementById('btn-phone').classList.remove('bg-gray-100', 'text-gray-600');
+                document.getElementById('btn-phone').classList.add('bg-blue-600', 'text-white');
+            } else {
+                document.getElementById('email-login').classList.remove('hidden');
+                document.getElementById('btn-email').classList.remove('bg-gray-100', 'text-gray-600');
+                document.getElementById('btn-email').classList.add('bg-blue-600', 'text-white');
+            }
+        }
+
+        async function sendVerificationCode() {
+            const phone = document.getElementById('phone-number').value;
+            if (!phone) {
+                alert('휴대폰 번호를 입력해주세요.');
+                return;
+            }
+
+            try {
+                const response = await axios.post('/api/auth/send-code', { phone });
+                
+                // Show verification section
+                document.getElementById('verification-section').classList.remove('hidden');
+                document.getElementById('send-code-btn').textContent = '재발송';
+                
+                // Start timer
+                startTimer(180); // 3 minutes
+
+                alert('인증번호가 발송되었습니다.');
+            } catch (error) {
+                console.error('인증번호 발송 실패:', error);
+                alert('인증번호 발송에 실패했습니다. 다시 시도해주세요.');
+            }
+        }
+
+        function startTimer(seconds) {
+            clearInterval(timerInterval);
+            let remaining = seconds;
+
+            timerInterval = setInterval(() => {
+                const minutes = Math.floor(remaining / 60);
+                const secs = remaining % 60;
+                document.getElementById('timer').textContent = 
+                    `${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+                
+                remaining--;
+
+                if (remaining < 0) {
+                    clearInterval(timerInterval);
+                    alert('인증 시간이 만료되었습니다. 다시 발송해주세요.');
+                }
+            }, 1000);
+        }
+
+        async function loginWithPhone(event) {
+            event.preventDefault();
+
+            const phone = document.getElementById('phone-number').value;
+            const code = document.getElementById('verification-code').value;
+
+            try {
+                const response = await axios.post('/api/auth/login-phone', { phone, code });
+                
+                // Save token
+                localStorage.setItem('token', response.data.token);
+                localStorage.setItem('user', JSON.stringify(response.data.user));
+
+                alert('로그인되었습니다.');
+                window.location.href = '/';
+            } catch (error) {
+                console.error('로그인 실패:', error);
+                alert('로그인에 실패했습니다. 인증번호를 확인해주세요.');
+            }
+        }
+
+        async function loginWithEmail(event) {
+            event.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await axios.post('/api/auth/login-email', { email, password });
+                
+                // Save token
+                localStorage.setItem('token', response.data.token);
+                localStorage.setItem('user', JSON.stringify(response.data.user));
+
+                alert('로그인되었습니다.');
+                window.location.href = '/';
+            } catch (error) {
+                console.error('로그인 실패:', error);
+                alert('로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.');
+            }
+        }
+
+        function socialLogin(provider) {
+            alert(`${provider} 로그인은 준비 중입니다.`);
+        }
+    </script>
+</body>
+</html>
