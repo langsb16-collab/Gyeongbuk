@@ -646,8 +646,8 @@ function showRestaurantDetail(id) {
         </div>
       </div>
       <div class="space-y-2">
-        <button class="w-full py-3 bg-blue-500 text-white font-bold rounded-lg">주문하기</button>
-        <button class="w-full py-3 border border-gray-300 font-bold rounded-lg">메뉴 보기</button>
+        <button onclick="orderFromRestaurant('${r.id}')" class="w-full py-3 bg-blue-500 text-white font-bold rounded-lg hover:bg-blue-600">주문하기</button>
+        <button onclick="viewMenu('${r.id}')" class="w-full py-3 border border-gray-300 font-bold rounded-lg hover:bg-gray-50">메뉴 보기</button>
       </div>
     </div>
   `;
@@ -723,6 +723,22 @@ function addToMarketCart(productId) {
 
 function showSafeZoneOnMap(zoneId) {
   showSafeZoneMap();
+}
+
+function orderFromRestaurant(restaurantId) {
+  const restaurant = state.restaurants.find(r => r.id === restaurantId);
+  if (!restaurant) return;
+  
+  alert(`${restaurant.name} 주문을 시작합니다.\n\n메뉴를 선택하고 주문해주세요.`);
+  viewMenu(restaurantId);
+}
+
+function viewMenu(restaurantId) {
+  const restaurant = state.restaurants.find(r => r.id === restaurantId);
+  if (!restaurant) return;
+  
+  // 메뉴 페이지로 이동
+  window.location.href = `/menu?restaurant=${restaurantId}`;
 }
 
 function closeModal(modalId) {

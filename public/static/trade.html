@@ -402,6 +402,10 @@
             document.getElementById('safePlaceModal').classList.remove('active');
         }
 
+        function closeItemDetailModal() {
+            document.getElementById('itemDetailModal').classList.remove('active');
+        }
+
         // 지도 연동 함수들
         function openMap({name, lat, lng}) {
             // 모바일은 카카오맵, PC는 카카오맵 + 네이버 선택지
