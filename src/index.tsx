@@ -493,6 +493,269 @@ app.get('/admin', (c) => {
   return c.redirect('/static/admin.html')
 })
 
+// 배달 페이지
+app.get('/delivery', (c) => {
+  return c.html(`
+    <!DOCTYPE html>
+    <html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>배달 - 경산온(ON)</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    </head>
+    <body class="bg-gray-50">
+        <div class="max-w-7xl mx-auto p-6">
+            <h1 class="text-3xl font-bold mb-6"><i class="fas fa-motorcycle mr-2"></i>배달 서비스</h1>
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <p class="text-gray-600 mb-4">배달비 0원으로 경산 전역 배달 서비스를 제공합니다.</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="border rounded-lg p-4">
+                        <h3 class="font-bold mb-2">🍜 음식점 배달</h3>
+                        <p class="text-sm text-gray-600">다양한 음식점에서 주문하세요</p>
+                    </div>
+                    <div class="border rounded-lg p-4">
+                        <h3 class="font-bold mb-2">🏪 전통시장 배달</h3>
+                        <p class="text-sm text-gray-600">전통시장 상품을 한번에</p>
+                    </div>
+                    <div class="border rounded-lg p-4">
+                        <h3 class="font-bold mb-2">🥬 로컬푸드 배달</h3>
+                        <p class="text-sm text-gray-600">당일 수확 신선 배송</p>
+                    </div>
+                </div>
+                <div class="mt-6 text-center">
+                    <a href="/" class="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        <i class="fas fa-home mr-2"></i>메인으로 돌아가기
+                    </a>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
+  `)
+})
+
+// 전통시장 페이지
+app.get('/market', (c) => {
+  return c.html(`
+    <!DOCTYPE html>
+    <html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>전통시장 - 경산온(ON)</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    </head>
+    <body class="bg-gray-50">
+        <div class="max-w-7xl mx-auto p-6">
+            <h1 class="text-3xl font-bold mb-6"><i class="fas fa-store mr-2"></i>전통시장</h1>
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <p class="text-gray-600 mb-4">경산 전통시장에서 신선한 상품을 만나보세요.</p>
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                    <h3 class="font-bold text-blue-900 mb-2"><i class="fas fa-gift mr-2"></i>전통시장 특별 혜택</h3>
+                    <ul class="text-sm text-blue-800 space-y-1">
+                        <li>✓ 여러 가게 한번에 주문 가능</li>
+                        <li>✓ 장날 자동 알림</li>
+                        <li>✓ 묶음배달 시스템</li>
+                    </ul>
+                </div>
+                <div class="mt-6 text-center">
+                    <a href="/" class="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        <i class="fas fa-home mr-2"></i>메인으로 돌아가기
+                    </a>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
+  `)
+})
+
+// 특산물 페이지
+app.get('/specialty', (c) => {
+  return c.html(`
+    <!DOCTYPE html>
+    <html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>경산 특산물 - 경산온(ON)</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    </head>
+    <body class="bg-gray-50">
+        <div class="max-w-7xl mx-auto p-6">
+            <h1 class="text-3xl font-bold mb-6"><i class="fas fa-apple-alt mr-2"></i>경산 특산물</h1>
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <p class="text-gray-600 mb-6">경산의 자랑, 4대 특산물을 만나보세요.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="border rounded-lg p-4 text-center">
+                        <div class="text-5xl mb-3">🌰</div>
+                        <h3 class="font-bold text-lg mb-2">경산 대추</h3>
+                        <p class="text-sm text-gray-600 mb-2">지리적 표시 등록</p>
+                        <span class="inline-block px-3 py-1 bg-red-100 text-red-800 text-xs rounded-full">9-11월 제철</span>
+                    </div>
+                    <div class="border rounded-lg p-4 text-center">
+                        <div class="text-5xl mb-3">🍇</div>
+                        <h3 class="font-bold text-lg mb-2">경산 포도</h3>
+                        <p class="text-sm text-gray-600 mb-2">시설재배 거봉</p>
+                        <span class="inline-block px-3 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">7-9월 제철</span>
+                    </div>
+                    <div class="border rounded-lg p-4 text-center">
+                        <div class="text-5xl mb-3">🍑</div>
+                        <h3 class="font-bold text-lg mb-2">경산 복숭아</h3>
+                        <p class="text-sm text-gray-600 mb-2">천도복숭아 주산지</p>
+                        <span class="inline-block px-3 py-1 bg-pink-100 text-pink-800 text-xs rounded-full">6-8월 제철</span>
+                    </div>
+                    <div class="border rounded-lg p-4 text-center">
+                        <div class="text-5xl mb-3">🍐</div>
+                        <h3 class="font-bold text-lg mb-2">경산 자두</h3>
+                        <p class="text-sm text-gray-600 mb-2">신선한 자두</p>
+                        <span class="inline-block px-3 py-1 bg-green-100 text-green-800 text-xs rounded-full">6-7월 제철</span>
+                    </div>
+                </div>
+                <div class="mt-8 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                    <h3 class="font-bold text-yellow-900 mb-2"><i class="fas fa-map-marker-alt mr-2"></i>관광지 QR 커머스</h3>
+                    <p class="text-sm text-yellow-800 mb-3">관광지에서 QR코드를 스캔하면 특산물 구매 시 배송비 5,000원 지원!</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 bg-white rounded-lg text-sm">📿 팔공산 갓바위</span>
+                        <span class="px-3 py-1 bg-white rounded-lg text-sm">🌊 반곡지</span>
+                        <span class="px-3 py-1 bg-white rounded-lg text-sm">🌳 자인계정숲</span>
+                    </div>
+                </div>
+                <div class="mt-6 text-center">
+                    <a href="/" class="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        <i class="fas fa-home mr-2"></i>메인으로 돌아가기
+                    </a>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
+  `)
+})
+
+// 가맹점 신청 페이지
+app.get('/partner/apply', (c) => {
+  return c.html(`
+    <!DOCTYPE html>
+    <html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>가맹점 신청 - 경산온(ON)</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    </head>
+    <body class="bg-gray-50">
+        <div class="max-w-3xl mx-auto p-6">
+            <h1 class="text-3xl font-bold mb-6"><i class="fas fa-handshake mr-2"></i>가맹점 신청</h1>
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                    <h3 class="font-bold text-blue-900 mb-2"><i class="fas fa-gift mr-2"></i>가맹 혜택</h3>
+                    <ul class="text-sm text-blue-800 space-y-1">
+                        <li>✓ 중개 수수료 0%</li>
+                        <li>✓ 광고비 0원</li>
+                        <li>✓ 배달비 무료/최소화</li>
+                        <li>✓ 24시간 내 승인</li>
+                    </ul>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">가게 이름</label>
+                        <input type="text" class="w-full px-4 py-2 border rounded-lg" placeholder="예: 경산 맛집">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">연락처</label>
+                        <input type="tel" class="w-full px-4 py-2 border rounded-lg" placeholder="010-0000-0000">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">사업자등록증</label>
+                        <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+                            <i class="fas fa-camera text-4xl text-gray-400 mb-2"></i>
+                            <p class="text-sm text-gray-600">사진을 촬영하거나 업로드하세요</p>
+                            <p class="text-xs text-gray-500 mt-1">OCR 자동 인식으로 3분 등록</p>
+                        </div>
+                    </div>
+                    <button class="w-full py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700">
+                        <i class="fas fa-paper-plane mr-2"></i>신청하기
+                    </button>
+                </div>
+                <div class="mt-6 text-center">
+                    <a href="/" class="text-gray-600 hover:text-gray-900">
+                        <i class="fas fa-home mr-1"></i>메인으로 돌아가기
+                    </a>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
+  `)
+})
+
+// 고객센터 페이지
+app.get('/support', (c) => {
+  return c.html(`
+    <!DOCTYPE html>
+    <html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>고객센터 - 경산온(ON)</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    </head>
+    <body class="bg-gray-50">
+        <div class="max-w-4xl mx-auto p-6">
+            <h1 class="text-3xl font-bold mb-6"><i class="fas fa-headset mr-2"></i>고객센터</h1>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <h3 class="font-bold text-lg mb-4"><i class="fas fa-phone mr-2"></i>전화 문의</h3>
+                    <p class="text-2xl font-bold text-blue-600 mb-2">1588-0000</p>
+                    <p class="text-sm text-gray-600">평일 09:00 - 18:00</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <h3 class="font-bold text-lg mb-4"><i class="fas fa-comments mr-2"></i>챗봇 상담</h3>
+                    <p class="text-sm text-gray-600 mb-3">우측 하단 '온이' 챗봇으로 24시간 상담 가능</p>
+                    <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        <i class="fas fa-comment-dots mr-1"></i>챗봇 열기
+                    </button>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h3 class="font-bold text-lg mb-4"><i class="fas fa-question-circle mr-2"></i>자주 묻는 질문 (FAQ)</h3>
+                <div class="space-y-3">
+                    <details class="border rounded-lg p-4">
+                        <summary class="font-medium cursor-pointer">배달비가 정말 0원인가요?</summary>
+                        <p class="mt-2 text-sm text-gray-600">네, 경산시 보조금 지원으로 배달비가 무료입니다.</p>
+                    </details>
+                    <details class="border rounded-lg p-4">
+                        <summary class="font-medium cursor-pointer">전통시장 여러 가게 동시 주문이 가능한가요?</summary>
+                        <p class="mt-2 text-sm text-gray-600">네, 여러 가게 상품을 장바구니에 담아 한번에 주문할 수 있습니다.</p>
+                    </details>
+                    <details class="border rounded-lg p-4">
+                        <summary class="font-medium cursor-pointer">안전거래 장소는 어디에 있나요?</summary>
+                        <p class="mt-2 text-sm text-gray-600">경찰서, 파출소, CCTV 밀집 지역 등 8곳이 지정되어 있습니다.</p>
+                    </details>
+                    <details class="border rounded-lg p-4">
+                        <summary class="font-medium cursor-pointer">로컬푸드는 언제 배송되나요?</summary>
+                        <p class="mt-2 text-sm text-gray-600">당일 수확 상품은 당일 또는 익일 배송됩니다.</p>
+                    </details>
+                </div>
+                <div class="mt-6 text-center">
+                    <a href="/" class="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        <i class="fas fa-home mr-2"></i>메인으로 돌아가기
+                    </a>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
+  `)
+})
+
 // 메인 페이지
 app.get('/', (c) => {
   return c.html(`
