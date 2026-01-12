@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주문 관리 - 경산온(ON) 관리자</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif; }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .status-CREATED { background: #E5E7EB; color: #374151; }
+        .status-PAID { background: #DBEAFE; color: #1E40AF; }
+        .status-COOKING { background: #FEF3C7; color: #92400E; }
+        .status-DELIVERING { background: #CFFAFE; color: #155E75; }
+        .status-COMPLETED { background: #D1FAE5; color: #065F46; }
+        .status-CANCELED { background: #FEE2E2; color: #991B1B; }
+        
+        .sidebar {
+            width: 250px;
+            background: white;
+            border-right: 1px solid #E5E7EB;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            padding: 24px;
+            background: #F9FAFB;
+            min-height: 100vh;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: #6B7280;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .nav-item:hover {
+            background: #F3F4F6;
+            color: #3B82F6;
+        }
+        
+        .nav-item.active {
+            background: #EFF6FF;
+            color: #3B82F6;
+            border-right: 3px solid #3B82F6;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .order-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 12px;
+            transition: all 0.2s;
+        }
+        
+        .order-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .filter-btn {
+            padding: 8px 16px;
+            border: 1px solid #E5E7EB;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .filter-btn:hover {
+            border-color: #3B82F6;
+        }
+        
+        .filter-btn.active {
+            background: #3B82F6;
+            color: white;
+            border-color: #3B82F6;
+        }
+    </style>
+</head>
+<body>
+    <!-- 사이드바 -->
+    <aside class="sidebar">
+        <div class="p-6">
+            <h1 class="text-xl font-bold text-gray-900">
+                <i class="fas fa-handshake text-blue-500"></i>
+                경산온(ON)
+            </h1>
+            <p class="text-sm text-gray-500 mt-1">관리자 대시보드</p>
+        </div>
+        
+        <nav class="mt-6">
+            <div class="nav-item active" onclick="loadPage('orders')">
+                <i class="fas fa-shopping-cart"></i>
+                <span>주문 관리</span>
+            </div>
+            <div class="nav-item" onclick="loadPage('budget')">
+                <i class="fas fa-won-sign"></i>
+                <span>무료배달 예산</span>
+            </div>
+            <div class="nav-item" onclick="loadPage('merchants')">
+                <i class="fas fa-store"></i>
+                <span>가맹점 관리</span>
+            </div>
+            <div class="nav-item" onclick="loadPage('statistics')">
+                <i class="fas fa-chart-bar"></i>
+                <span>통계</span>
+            </div>
+            <div class="nav-item" onclick="window.location.href='/'">
+                <i class="fas fa-home"></i>
+                <span>홈으로 돌아가기</span>
+            </div>
+        </nav>
+    </aside>
+    
+    <!-- 메인 콘텐츠 -->
+    <main class="main-content">
+        <div id="content-area">
+            <!-- 주문 관리 페이지 -->
+            <div id="orders-page">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900">주문 관리</h2>
+                    <div class="flex gap-2">
+                        <input type="date" id="dateFilter" class="filter-btn">
+                        <button class="filter-btn" onclick="refreshOrders()">
+                            <i class="fas fa-sync"></i> 새로고침
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 통계 카드 -->
+                <div class="grid grid-cols-4 gap-4 mb-6">
+                    <div class="stat-card">
+                        <div class="text-sm text-gray-500 mb-1">오늘 총 주문</div>
+                        <div class="text-2xl font-bold text-gray-900">47건</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="text-sm text-gray-500 mb-1">결제 완료</div>
+                        <div class="text-2xl font-bold text-blue-600">32건</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="text-sm text-gray-500 mb-1">배달 중</div>
+                        <div class="text-2xl font-bold text-yellow-600">8건</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="text-sm text-gray-500 mb-1">완료</div>
+                        <div class="text-2xl font-bold text-green-600">7건</div>
+                    </div>
+                </div>
+                
+                <!-- 필터 -->
+                <div class="mb-4 flex gap-2">
+                    <button class="filter-btn active" onclick="filterOrders('ALL')">전체</button>
+                    <button class="filter-btn" onclick="filterOrders('CREATED')">주문 접수</button>
+                    <button class="filter-btn" onclick="filterOrders('PAID')">결제 완료</button>
+                    <button class="filter-btn" onclick="filterOrders('COOKING')">조리 중</button>
+                    <button class="filter-btn" onclick="filterOrders('DELIVERING')">배달 중</button>
+                    <button class="filter-btn" onclick="filterOrders('COMPLETED')">완료</button>
+                    <button class="filter-btn" onclick="filterOrders('CANCELED')">취소</button>
+                </div>
+                
+                <!-- 주문 목록 -->
+                <div id="orders-list">
+                    <!-- JavaScript로 동적 생성 -->
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+    <script>
+        let currentFilter = 'ALL';
+        let orders = [];
+        
+        async function loadOrders() {
+            try {
+                const response = await axios.get('/api/admin/orders');
+                orders = response.data;
+                renderOrders();
+            } catch (error) {
+                console.error('주문 로딩 실패:', error);
+                
+                // 샘플 데이터 (API 실패 시)
+                orders = [
+                    {
+                        orderId: 'ORD-20260112-001',
+                        storeName: '경산 전통 한정식',
+                        totalAmount: 18000,
+                        deliveryFee: 0,
+                        freeDelivery: true,
+                        status: 'PAID',
+                        createdAt: '2026-01-12T10:30:00'
+                    },
+                    {
+                        orderId: 'ORD-20260112-002',
+                        storeName: '경산 대추 한과',
+                        totalAmount: 25000,
+                        deliveryFee: 0,
+                        freeDelivery: true,
+                        status: 'COOKING',
+                        createdAt: '2026-01-12T11:15:00'
+                    },
+                    {
+                        orderId: 'ORD-20260112-003',
+                        storeName: '전통시장 야채가게',
+                        totalAmount: 15000,
+                        deliveryFee: 0,
+                        freeDelivery: true,
+                        status: 'DELIVERING',
+                        createdAt: '2026-01-12T11:45:00'
+                    },
+                    {
+                        orderId: 'ORD-20260112-004',
+                        storeName: '로컬푸드 직매장',
+                        totalAmount: 20000,
+                        deliveryFee: 0,
+                        freeDelivery: true,
+                        status: 'COMPLETED',
+                        createdAt: '2026-01-12T09:30:00'
+                    }
+                ];
+                renderOrders();
+            }
+        }
+        
+        function renderOrders() {
+            const container = document.getElementById('orders-list');
+            const filteredOrders = currentFilter === 'ALL' 
+                ? orders 
+                : orders.filter(o => o.status === currentFilter);
+            
+            if (filteredOrders.length === 0) {
+                container.innerHTML = '<div class="text-center py-12 text-gray-500">주문이 없습니다.</div>';
+                return;
+            }
+            
+            container.innerHTML = filteredOrders.map(order => `
+                <div class="order-card">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-2 mb-2">
+                                <h3 class="font-bold text-gray-900">${order.orderId}</h3>
+                                <span class="status-badge status-${order.status}">${getStatusText(order.status)}</span>
+                                ${order.freeDelivery ? '<span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">무료배달</span>' : ''}
+                            </div>
+                            <div class="text-sm text-gray-600 mb-1">
+                                <i class="fas fa-store text-gray-400"></i> ${order.storeName}
+                            </div>
+                            <div class="text-sm text-gray-600 mb-1">
+                                <i class="fas fa-clock text-gray-400"></i> ${formatTime(order.createdAt)}
+                            </div>
+                            <div class="text-sm font-bold text-gray-900">
+                                총 금액: ${order.totalAmount.toLocaleString()}원
+                                ${order.deliveryFee > 0 ? ` (배달비: ${order.deliveryFee.toLocaleString()}원)` : ''}
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            ${getActionButtons(order)}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function getStatusText(status) {
+            const statusMap = {
+                'CREATED': '주문 접수',
+                'PAID': '결제 완료',
+                'COOKING': '조리 중',
+                'DELIVERING': '배달 중',
+                'COMPLETED': '완료',
+                'CANCELED': '취소'
+            };
+            return statusMap[status] || status;
+        }
+        
+        function getActionButtons(order) {
+            const buttons = [];
+            
+            if (order.status === 'PAID') {
+                buttons.push(`<button class="filter-btn" onclick="changeStatus('${order.orderId}', 'COOKING')">조리 시작</button>`);
+            }
+            
+            if (order.status === 'COOKING') {
+                buttons.push(`<button class="filter-btn" onclick="changeStatus('${order.orderId}', 'DELIVERING')">배달 시작</button>`);
+            }
+            
+            if (order.status === 'DELIVERING') {
+                buttons.push(`<button class="filter-btn" onclick="changeStatus('${order.orderId}', 'COMPLETED')">완료</button>`);
+            }
+            
+            if (['CREATED', 'PAID'].includes(order.status)) {
+                buttons.push(`<button class="filter-btn" onclick="cancelOrder('${order.orderId}')">취소</button>`);
+            }
+            
+            buttons.push(`<button class="filter-btn" onclick="viewOrderDetail('${order.orderId}')">상세보기</button>`);
+            
+            return buttons.join('');
+        }
+        
+        async function changeStatus(orderId, newStatus) {
+            if (!confirm(`주문 상태를 "${getStatusText(newStatus)}"로 변경하시겠습니까?`)) {
+                return;
+            }
+            
+            try {
+                await axios.post(`/api/admin/orders/${orderId}/status`, { status: newStatus });
+                alert('주문 상태가 변경되었습니다.');
+                await loadOrders();
+            } catch (error) {
+                console.error('상태 변경 실패:', error);
+                alert('상태 변경에 실패했습니다.');
+            }
+        }
+        
+        async function cancelOrder(orderId) {
+            const reason = prompt('취소 사유를 입력하세요:');
+            if (!reason) return;
+            
+            try {
+                await axios.post(`/api/admin/orders/${orderId}/status`, { 
+                    status: 'CANCELED',
+                    reason 
+                });
+                alert('주문이 취소되었습니다.');
+                await loadOrders();
+            } catch (error) {
+                console.error('취소 실패:', error);
+                alert('취소에 실패했습니다.');
+            }
+        }
+        
+        function viewOrderDetail(orderId) {
+            alert(`주문 상세: ${orderId}\n(상세 페이지 구현 예정)`);
+        }
+        
+        function filterOrders(status) {
+            currentFilter = status;
+            
+            // 필터 버튼 활성화 상태 변경
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            renderOrders();
+        }
+        
+        function formatTime(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleString('ko-KR', { 
+                month: '2-digit', 
+                day: '2-digit', 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+        }
+        
+        function refreshOrders() {
+            loadOrders();
+        }
+        
+        function loadPage(page) {
+            if (page === 'orders') {
+                loadOrders();
+            } else if (page === 'budget') {
+                alert('무료배달 예산 페이지 (구현 예정)');
+            } else if (page === 'merchants') {
+                window.location.href = '/admin';
+            } else {
+                alert(`${page} 페이지 (구현 예정)`);
+            }
+        }
+        
+        // 초기 로딩
+        document.addEventListener('DOMContentLoaded', () => {
+            loadOrders();
+            
+            // 오늘 날짜 설정
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('dateFilter').value = today;
+        });
+    </script>
+</body>
+</html>

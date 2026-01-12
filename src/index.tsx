@@ -132,6 +132,133 @@ app.post('/api/merchant-applications/:id/reject', async (c) => {
   })
 })
 
+// ==========================================
+// 주문/장바구니 API
+// ==========================================
+
+// 가게별 메뉴 조회
+app.get('/api/stores/:storeId/menus', async (c) => {
+  const storeId = c.req.param('storeId')
+  
+  // 임시 데이터 (실제로는 D1에서 조회)
+  const sampleMenus = [
+    { menuId: 'MENU-001', menuName: '한우 불고기 정식', price: 18000, category: '한식' },
+    { menuId: 'MENU-002', menuName: '제육볶음 정식', price: 12000, category: '한식' },
+    { menuId: 'MENU-003', menuName: '김치찌개', price: 8000, category: '한식' },
+    { menuId: 'MENU-004', menuName: '된장찌개', price: 8000, category: '한식' },
+    { menuId: 'MENU-005', menuName: '비빔밥', price: 10000, category: '한식' }
+  ]
+  
+  return c.json(sampleMenus)
+})
+
+// 장바구니 생성 (메뉴보기에서 담기)
+app.post('/api/cart/add', async (c) => {
+  const body = await c.req.json()
+  const cartId = 'CART-' + Date.now()
+  
+  return c.json({
+    success: true,
+    cartId,
+    status: 'TEMP',
+    message: '장바구니에 담겼습니다.'
+  })
+})
+
+// 주문 시작 (주문하기 버튼)
+app.post('/api/orders/start', async (c) => {
+  const body = await c.req.json()
+  const orderId = 'ORD-' + Date.now()
+  
+  // 무료배달 조건 체크
+  const freeDelivery = true // 기본값
+  const deliveryFee = freeDelivery ? 0 : 3000
+  
+  return c.json({
+    success: true,
+    orderId,
+    status: 'CREATED',
+    freeDelivery,
+    deliveryFee,
+    message: '주문이 생성되었습니다.'
+  })
+})
+
+// 주문 조회
+app.get('/api/orders/:orderId', async (c) => {
+  const orderId = c.req.param('orderId')
+  
+  return c.json({
+    orderId,
+    status: 'CREATED',
+    subtotalAmount: 18000,
+    deliveryFee: 0,
+    totalAmount: 18000,
+    freeDelivery: true,
+    items: [
+      { menuName: '한우 불고기 정식', price: 18000, quantity: 1 }
+    ]
+  })
+})
+
+// 관리자: 주문 목록 조회
+app.get('/api/admin/orders', async (c) => {
+  const status = c.req.query('status')
+  const date = c.req.query('date')
+  
+  // 임시 샘플 데이터
+  const sampleOrders = [
+    {
+      orderId: 'ORD-001',
+      storeName: '경산 전통 한정식',
+      totalAmount: 18000,
+      deliveryFee: 0,
+      freeDelivery: true,
+      status: 'PAID',
+      createdAt: new Date().toISOString()
+    },
+    {
+      orderId: 'ORD-002',
+      storeName: '경산 대추 한과',
+      totalAmount: 25000,
+      deliveryFee: 0,
+      freeDelivery: true,
+      status: 'COOKING',
+      createdAt: new Date().toISOString()
+    }
+  ]
+  
+  return c.json(sampleOrders)
+})
+
+// 관리자: 주문 상태 변경
+app.post('/api/admin/orders/:orderId/status', async (c) => {
+  const orderId = c.req.param('orderId')
+  const body = await c.req.json()
+  
+  return c.json({
+    success: true,
+    orderId,
+    status: body.status,
+    message: '주문 상태가 변경되었습니다.'
+  })
+})
+
+// 관리자: 무료배달 예산 조회
+app.get('/api/admin/delivery-budget', async (c) => {
+  const date = c.req.query('date') || new Date().toISOString().split('T')[0]
+  
+  return c.json({
+    date,
+    totalBudget: 1000000,
+    usedBudget: 350000,
+    remainingBudget: 650000,
+    isActive: true,
+    dailyOrders: 47,
+    avgSupport: 7447
+  })
+})
+
 // 관리자 대시보드 페이지
 app.get('/admin', (c) => {
   return c.redirect('/static/admin.html')
