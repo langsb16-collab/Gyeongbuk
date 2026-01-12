@@ -461,3 +461,115 @@ export const merchantApplications = {
     }
   ]
 };
+
+// 경산 특산물 데이터
+export const gyeongsanSpecialties = [
+  {
+    id: 1,
+    name: '경산 대추',
+    category: 'jujube',
+    description: '지리적표시 등록 상품, 경산의 대표 특산물',
+    season: '가을 (9-11월)',
+    price: 39000,
+    unit: '1kg',
+    image: 'https://images.unsplash.com/photo-1577234286642-fc512a5f8f11?w=400',
+    badges: ['지리적표시', '당일출고', '선물추천'],
+    inStock: true,
+    farmDirect: true
+  },
+  {
+    id: 2,
+    name: '경산 포도 (거봉)',
+    category: 'grape',
+    description: '시설포도 강점, 청포도 생산 확대',
+    season: '여름-가을 (7-10월)',
+    price: 45000,
+    unit: '2kg',
+    image: 'https://images.unsplash.com/photo-1599707367072-cd6ada2bc375?w=400',
+    badges: ['시설재배', '당일배송', '선물세트'],
+    inStock: true,
+    farmDirect: true
+  },
+  {
+    id: 3,
+    name: '경산 복숭아 (천도)',
+    category: 'peach',
+    description: '경산 복숭아 주산지, 천도복숭아 명품',
+    season: '여름 (6-8월)',
+    price: 38000,
+    unit: '2kg',
+    image: 'https://images.unsplash.com/photo-1629828874514-a4e2c7e8f963?w=400',
+    badges: ['주산지', '당일수확', '프리미엄'],
+    inStock: false,
+    farmDirect: true
+  },
+  {
+    id: 4,
+    name: '경산 자두',
+    category: 'plum',
+    description: '경산 자두, 신선하고 달콤한 맛',
+    season: '여름 (6-7월)',
+    price: 32000,
+    unit: '2kg',
+    image: 'https://images.unsplash.com/photo-1593105813562-7ac64418c7d3?w=400',
+    badges: ['신선', '농가직송', '가성비'],
+    inStock: false,
+    farmDirect: true
+  }
+];
+
+// 관광지 데이터
+export const touristSpots = [
+  {
+    id: 1,
+    name: '팔공산 갓바위',
+    type: 'mountain',
+    address: '경상북도 경산시 와촌면 갓바위로 181',
+    description: '팔공산의 대표 유적, 갓바위 석불',
+    lat: 35.9753,
+    lng: 128.6891,
+    image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400',
+    facilities: ['주차장', '화장실', '매점', '안내소'],
+    qrEnabled: true,
+    specialtyLink: true
+  },
+  {
+    id: 2,
+    name: '반곡지',
+    type: 'lake',
+    address: '경상북도 경산시 반곡동',
+    description: '경산 가볼만한 곳, 아름다운 저수지',
+    lat: 35.8389,
+    lng: 128.7428,
+    image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400',
+    facilities: ['주차장', '포토존', '산책로'],
+    qrEnabled: true,
+    specialtyLink: true
+  },
+  {
+    id: 3,
+    name: '자인계정숲',
+    type: 'forest',
+    address: '경상북도 경산시 자인면',
+    description: '경산 베스트 10 관광지',
+    lat: 35.7856,
+    lng: 128.7542,
+    image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400',
+    facilities: ['주차장', '화장실', '쉼터'],
+    qrEnabled: true,
+    specialtyLink: true
+  }
+];
+
+// 축제 정보
+export const festivals = [
+  {
+    id: 1,
+    name: '경산 대추축제 & 농산물 한마당',
+    date: '2025.10.17~10.19',
+    location: '경산시 일원',
+    description: '경산 대추와 농산물을 한자리에',
+    specialEvents: ['대추 할인판매', '농산물 경매', '체험 프로그램'],
+    image: 'https://images.unsplash.com/photo-1533900298318-6b8da08a523e?w=400'
+  }
+];

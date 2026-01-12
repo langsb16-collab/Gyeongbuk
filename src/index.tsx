@@ -9,7 +9,10 @@ import {
   safeZones, 
   coupons, 
   statistics,
-  restaurantCategories 
+  restaurantCategories,
+  gyeongsanSpecialties,
+  touristSpots,
+  festivals
 } from './data'
 
 const app = new Hono()
@@ -26,6 +29,49 @@ app.get('/api/coupons', (c) => c.json(coupons))
 app.get('/api/statistics', (c) => c.json(statistics))
 app.get('/api/restaurant-categories', (c) => c.json(restaurantCategories))
 app.get('/api/merchant-applications', (c) => c.json(merchantApplications))
+
+// 경산 특산물·관광 API
+app.get('/api/specialties', (c) => c.json(gyeongsanSpecialties))
+app.get('/api/tourist-spots', (c) => c.json(touristSpots))
+app.get('/api/festivals', (c) => c.json(festivals))
+
+// 관광지 QR 커머스 (관광지별 특산물 추천)
+app.get('/api/qr/:spotId', (c) => {
+  const spotId = parseInt(c.req.param('spotId'))
+  const spot = touristSpots.find(s => s.id === spotId)
+  
+  if (!spot) {
+    return c.json({ error: 'Tourist spot not found' }, 404)
+  }
+  
+  // 계절별 추천 특산물 (간단한 로직)
+  const currentMonth = new Date().getMonth() + 1
+  let recommendedSpecialties = gyeongsanSpecialties.filter(s => s.inStock)
+  
+  // 가을(9-11월)에는 대추 우선
+  if (currentMonth >= 9 && currentMonth <= 11) {
+    recommendedSpecialties.sort((a, b) => {
+      if (a.category === 'jujube') return -1
+      if (b.category === 'jujube') return 1
+      return 0
+    })
+  }
+  
+  return c.json({
+    spot,
+    specialties: recommendedSpecialties.slice(0, 4),
+    coupon: {
+      code: `QR${spotId}2026`,
+      discount: 5000,
+      description: '관광지 QR 전용 배송비 지원 쿠폰'
+    }
+  })
+})
+
+// 관리자 대시보드 라우트
+app.get('/admin', (c) => {
+  return c.redirect('/static/admin.html')
+})
 
 // 가맹점 신청 API
 app.post('/api/merchant-apply', async (c) => {
