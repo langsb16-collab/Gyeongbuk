@@ -16,7 +16,16 @@
         @media (min-width: 768px) {
             .header-compact { padding: 16px 24px; }
             .header-title { font-size: 20px; }
-            .container-main { max-width: 900px; margin: 0 auto; }
+            .container-main { max-width: 720px; margin: 0 auto; }
+        }
+        
+        /* PC 80% width limit */
+        @media (min-width: 1200px) {
+            body {
+                max-width: 80%;
+                margin: 0 auto;
+            }
+            .container-main { max-width: 960px; }
         }
         
         .lang-btn {
