@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>روبوت الدردشة أون-إي - جيونغسان أون</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* رأس مضغوط */
+        .compact-header {
+            padding: 12px 16px;
+            background: linear-gradient(135deg, #1F3A5F 0%, #2A4A6F 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .compact-header h1 {
+            font-size: 20px;
+            font-weight: 700;
+            margin: 0;
+        }
+        .compact-header p {
+            font-size: 12px;
+            margin: 4px 0 0 0;
+            opacity: 0.9;
+        }
+
+        /* تعديلات استجابة */
+        @media (min-width: 1200px) {
+            body {
+                max-width: 80%;
+                margin: 0 auto;
+                box-shadow: 0 0 30px rgba(0,0,0,0.1);
+            }
+            .compact-header {
+                padding: 16px 32px;
+            }
+            .compact-header h1 {
+                font-size: 24px;
+            }
+            .compact-header p {
+                font-size: 14px;
+            }
+            .container-main {
+                max-width: 960px;
+                margin: 0 auto;
+                padding: 32px 24px;
+            }
+        }
+
+        @media (max-width: 1199px) {
+            .container-main {
+                padding: 16px;
+            }
+        }
+
+        /* واجهة الدردشة */
+        .chat-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .chat-messages {
+            max-height: 60vh;
+            overflow-y: auto;
+            padding: 20px;
+            background: #F8F9FA;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .message {
+            margin-bottom: 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        
+        .message.bot {
+            justify-content: flex-end;
+            flex-direction: row-reverse;
+        }
+        
+        .message.user {
+            justify-content: flex-start;
+            flex-direction: row-reverse;
+        }
+        
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .message.bot .message-avatar {
+            background: linear-gradient(135deg, #1F3A5F 0%, #2A4A6F 100%);
+        }
+        
+        .message.user .message-avatar {
+            background: #6B3E26;
+        }
+        
+        .message-bubble {
+            max-width: 70%;
+            padding: 16px 20px;
+            border-radius: 18px;
+            font-size: 18px;
+            line-height: 1.6;
+            text-align: right;
+        }
+        
+        .message.bot .message-bubble {
+            background: white;
+            color: #1F3A5F;
+            border: 2px solid #1F3A5F;
+            box-shadow: 0 2px 8px rgba(31, 58, 95, 0.1);
+        }
+        
+        .message.user .message-bubble {
+            background: #1F3A5F;
+            color: white;
+        }
+        
+        /* فئات الأسئلة الشائعة */
+        .faq-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        
+        .faq-category-btn {
+            padding: 16px;
+            background: white;
+            border: 2px solid #1F3A5F;
+            border-radius: 12px;
+            color: #1F3A5F;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-height: 48px;
+        }
+        
+        .faq-category-btn:hover {
+            background: #1F3A5F;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(31, 58, 95, 0.2);
+        }
+        
+        .faq-category-btn.active {
+            background: #1F3A5F;
+            color: white;
+        }
+        
+        /* أسئلة الأسئلة الشائعة */
+        .faq-questions {
+            display: grid;
+            gap: 12px;
+        }
+        
+        .faq-question {
+            padding: 16px 20px;
+            background: white;
+            border: 2px solid #E5E7EB;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 18px;
+            font-weight: 500;
+            color: #1F3A5F;
+            text-align: right;
+            min-height: 48px;
+        }
+        
+        .faq-question:hover {
+            border-color: #1F3A5F;
+            background: #F8F9FA;
+            transform: translateX(-4px);
+        }
+        
+        /* منطقة الإدخال */
+        .chat-input-area {
+            display: flex;
+            gap: 12px;
+            padding: 16px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            flex-direction: row-reverse;
+        }
+        
+        .chat-input {
+            flex: 1;
+            padding: 14px 20px;
+            border: 2px solid #E5E7EB;
+            border-radius: 24px;
+            font-size: 18px;
+            outline: none;
+            transition: border-color 0.3s;
+            text-align: right;
+        }
+        
+        .chat-input:focus {
+            border-color: #1F3A5F;
+        }
+        
+        .send-btn {
+            padding: 14px 32px;
+            background: #1F3A5F;
+            color: white;
+            border: none;
+            border-radius: 24px;
+            font-weight: 600;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 48px;
+            min-height: 48px;
+        }
+        
+        .send-btn:hover {
+            background: #2A4A6F;
+            transform: scale(1.05);
+        }
+
+        /* زر الإغلاق */
+        .close-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 48px;
+            height: 48px;
+            background: white;
+            border: 2px solid #1F3A5F;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 24px;
+            color: #1F3A5F;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        
+        .close-btn:hover {
+            background: #1F3A5F;
+            color: white;
+            transform: rotate(90deg);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- رأس مضغوط -->
+    <header class="compact-header">
+        <h1><i class="fas fa-comments ml-2"></i>روبوت الدردشة أون-إي</h1>
+        <p>في خدمتك على مدار 24 ساعة 😊</p>
+    </header>
+
+    <div class="container-main">
+        <!-- زر الإغلاق -->
+        <button class="close-btn" onclick="window.history.back()">
+            <i class="fas fa-times"></i>
+        </button>
+
+        <!-- حاوية الدردشة -->
+        <div class="chat-container">
+            <!-- رسائل الدردشة -->
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot">
+                    <div class="message-avatar">😊</div>
+                    <div class="message-bubble">
+                        مرحباً! أنا أون-إي😊<br>
+                        أنا روبوت الدردشة الذكي لجيونغسان أون.<br>
+                        لا تتردد في طرح أي أسئلة!
+                    </div>
+                </div>
+            </div>
+
+            <!-- فئات الأسئلة الشائعة -->
+            <div class="faq-categories">
+                <button class="faq-category-btn active" data-category="all">
+                    <i class="fas fa-list ml-2"></i>الكل
+                </button>
+                <button class="faq-category-btn" data-category="citizen">
+                    <i class="fas fa-user ml-2"></i>المواطن
+                </button>
+                <button class="faq-category-btn" data-category="merchant">
+                    <i class="fas fa-store ml-2"></i>التاجر
+                </button>
+                <button class="faq-category-btn" data-category="senior">
+                    <i class="fas fa-heart ml-2"></i>كبار السن
+                </button>
+                <button class="faq-category-btn" data-category="admin">
+                    <i class="fas fa-user-shield ml-2"></i>المشرف
+                </button>
+            </div>
+
+            <!-- قائمة الأسئلة الشائعة -->
+            <div class="faq-questions" id="faqQuestions">
+                <!-- يتم إنشاؤها ديناميكياً باستخدام JavaScript -->
+            </div>
+
+            <!-- منطقة الإدخال -->
+            <div class="chat-input-area">
+                <button class="send-btn" onclick="sendMessage()">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+                <input 
+                    type="text" 
+                    class="chat-input" 
+                    id="chatInput" 
+                    placeholder="اكتب رسالة..."
+                    onkeypress="if(event.key === 'Enter') sendMessage()"
+                >
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // بيانات الأسئلة الشائعة
+        const faqData = {
+            citizen: [
+                { q: "ما هو هذا التطبيق؟", a: "إنها منصة عامة للتوصيل المجاني والطعام المحلي تديرها مدينة جيونغسان." },
+                { q: "هل التوصيل مجاني حقاً؟", a: "نعم. التجار المشاركون يقدمون طلبات بدون رسوم توصيل. (تطبق بعض الاستثناءات)" },
+                { q: "هل هناك رسوم؟", a: "0% عمولة وساطة لكل من المواطنين والتجار." },
+                { q: "ما المتاجر التي يمكنني الطلب منها؟", a: "يمكنك الطلب من الأسواق التقليدية والمطاعم والطعام المحلي والمنتجات الخاصة من جيونغسان." },
+                { q: "كيف أقوم بتقديم طلب؟", a: "حدد منتجاً في التطبيق ← أضف إلى السلة ← أدخل عنوان التوصيل ← الدفع مكتمل." },
+                { q: "ما طرق الدفع المقبولة؟", a: "ندعم الدفع بالبطاقة والعملة المحلية والدفع البسيط (Toss، Kakao Pay)." },
+                { q: "كم يستغرق التوصيل؟", a: "عادة ما يستغرق بين 30 و 60 دقيقة بعد الطلب." },
+                { q: "هل يمكنني إلغاء طلبي؟", a: "يمكنك الإلغاء قبل بدء التحضير. استشر التاجر مباشرة." },
+                { q: "أين يمكنني الحصول على كوبونات؟", a: "في قائمة الكوبونات في التطبيق أو بمسح رموز QR في المواقع السياحية." },
+                { q: "هل يمكنني الإرجاع أو الاستبدال؟", a: "إذا كانت هناك مشكلة في المنتج، اتصل بنا خلال ساعة واحدة من الاستلام." }
+            ],
+            merchant: [
+                { q: "كيف أسجل متجري؟", a: "في قائمة طلب التاجر، التقط صورة لسجل أعمالك وانتهى الأمر." },
+                { q: "كم تكلفة عمولة التاجر؟", a: "0% عمولة وساطة، 0 تكلفة إعلانية." },
+                { q: "كيف أسجل القائمة؟", a: "بعد الموافقة على المتجر، يمكنك تسجيل القائمة والأسعار في صفحة الإدارة." },
+                { q: "من يدفع التوصيل؟", a: "مدينة جيونغسان تقدم دعماً جزئياً أو كاملاً لتكاليف التوصيل." },
+                { q: "ما الدعم المتاح؟", a: "دعم التوصيل والتسويق والتصوير الفوتوغرافي للمنتجات والتدريب." },
+                { q: "كم يستغرق الموافقة؟", a: "عادة ما تتم الموافقة خلال 24 ساعة من الطلب." },
+                { q: "من يقوم بالتوصيل؟", a: "يمكنك القيام بتوصيل ذاتي أو استخدام نظام التوصيل العام." },
+                { q: "أين أرى المبيعات؟", a: "في صفحة إدارة المتجر يمكنك رؤية المبيعات اليومية/الأسبوعية." },
+                { q: "كيف أتعامل مع الشكاوى؟", a: "راجع الاستفسارات في صفحة الإدارة ورد مباشرة." },
+                { q: "هل يمكنني إغلاق متجري؟", a: "نعم. بعد إكمال جميع الطلبات الجارية، يمكنك طلب الإغلاق." }
+            ],
+            senior: [
+                { q: "علمني كيف أستخدمه", a: "فقط التقط صورة😊 أون-إي سيساعدك" },
+                { q: "الحروف صغيرة جداً", a: "اذهب إلى الإعدادات ← حجم الخط لتكبيرها" },
+                { q: "هل يمكنني الطلب بالهاتف؟", a: "نعم. يمكنك الاتصال بالمتاجر القريبة لتقديم طلبك" },
+                { q: "هل يمكنني الدفع نقداً؟", a: "بعض المتاجر تقبل الدفع النقدي" },
+                { q: "كيف أدخل العنوان؟", a: "ابحث عن العنوان أو قله لأون-إي وسيتم إدخاله تلقائياً" },
+                { q: "هل يمكن لأون-إي مساعدتي؟", a: "بالطبع😊 لنفعلها بسهولة ومتعة معاً!" },
+                { q: "هل هناك خصومات لكبار السن؟", a: "بعض المتاجر تقدم خصومات لكبار السن" },
+                { q: "لا أدفع التوصيل؟", a: "نعم. إنه مجاني لأن مدينة جيونغسان تدعمه" },
+                { q: "هل يمكنهم مساعدتي في المركز المجتمعي؟", a: "نعم. في المركز المجتمعي سيساعدونك في التسجيل" },
+                { q: "لا أستطيع قراءة الحروف", a: "أون-إي سيقرأها لك بصوت عالٍ😊 فقط اضغط" }
+            ],
+            admin: [
+                { q: "ما هي صلاحيات المشرف؟", a: "يمكنك الموافقة/رفض المتاجر، عرض الإحصائيات، إصدار كوبونات وإدارة الاستفسارات." },
+                { q: "ما هي معايير الموافقة؟", a: "نتحقق من صلاحية سجل الأعمال والتصاريح الصحية والحالة التشغيلية." },
+                { q: "أين أرى الإحصائيات؟", a: "في لوحة المشرف ← قائمة الإحصائيات يمكنك رؤية البيانات حسب المنطقة/الفئة." },
+                { q: "كيف أصدر كوبونات؟", a: "صفحة المشرف ← إدارة الكوبونات ← إصدار جديد." },
+                { q: "كيف أعالج الاستفسارات؟", a: "قائمة الاستفسارات ← عرض التفاصيل ← تسجيل الرد." },
+                { q: "كيف يسير تنفيذ الميزانية؟", a: "في الإحصائيات ← إدارة الميزانية يمكنك رؤية سجل التنفيذ والرصيد." },
+                { q: "ما هي سياسة دعم التوصيل؟", a: "يمكنك تطبيق سياسات دعم مختلفة حسب نوع المتجر." },
+                { q: "كيف أعالج شكاوى المواطنين؟", a: "في قائمة إدارة الشكاوى، راجع المحتوى وتوسط بين المتجر والمواطن." },
+                { q: "هل يمكنني تصدير البيانات؟", a: "نعم. يمكنك التصدير بتنسيق Excel/CSV." },
+                { q: "كيف أدير صلاحيات المستخدم؟", a: "في الإعدادات ← إدارة الصلاحيات يمكنك تكوين الوصول حسب الدور." }
+            ]
+        };
+
+        let currentCategory = 'all';
+        let chatHistory = [];
+
+        // تهيئة عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            renderFAQs('all');
+            addBotMessage("مرحباً! أنا أون-إي😊<br>أنا روبوت الدردشة الذكي لجيونغسان أون.<br>لا تتردد في طرح أي أسئلة!");
+        });
+
+        // أحداث أزرار الفئات
+        document.querySelectorAll('.faq-category-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.faq-category-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                const category = this.dataset.category;
+                currentCategory = category;
+                renderFAQs(category);
+            });
+        });
+
+        // عرض الأسئلة الشائعة
+        function renderFAQs(category) {
+            const container = document.getElementById('faqQuestions');
+            container.innerHTML = '';
+
+            let faqs = [];
+            if (category === 'all') {
+                Object.values(faqData).forEach(catFaqs => {
+                    faqs = faqs.concat(catFaqs);
+                });
+            } else {
+                faqs = faqData[category] || [];
+            }
+
+            faqs.forEach((faq, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'faq-question';
+                btn.innerHTML = `<i class="fas fa-comment-dots ml-2"></i>${faq.q}`;
+                btn.onclick = () => handleFAQClick(faq);
+                container.appendChild(btn);
+            });
+        }
+
+        // معالجة النقر على الأسئلة الشائعة
+        function handleFAQClick(faq) {
+            addUserMessage(faq.q);
+            setTimeout(() => {
+                addBotMessage(faq.a);
+            }, 500);
+        }
+
+        // إرسال رسالة
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (message) {
+                addUserMessage(message);
+                input.value = '';
+                
+                // محاكاة استجابة الذكاء الاصطناعي
+                setTimeout(() => {
+                    respondToMessage(message);
+                }, 500);
+            }
+        }
+
+        // إضافة رسالة مستخدم
+        function addUserMessage(text) {
+            const container = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message user';
+            messageDiv.innerHTML = `
+                <div class="message-avatar">👤</div>
+                <div class="message-bubble">${text}</div>
+            `;
+            container.appendChild(messageDiv);
+            container.scrollTop = container.scrollHeight;
+            chatHistory.push({ role: 'user', content: text });
+        }
+
+        // إضافة رسالة الروبوت
+        function addBotMessage(text) {
+            const container = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message bot';
+            
+            const expressions = ['😊', '👀', '👍'];
+            const randomExp = expressions[Math.floor(Math.random() * expressions.length)];
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar">${randomExp}</div>
+                <div class="message-bubble">${text}</div>
+            `;
+            container.appendChild(messageDiv);
+            container.scrollTop = container.scrollHeight;
+            chatHistory.push({ role: 'bot', content: text });
+        }
+
+        // الرد على الرسالة
+        function respondToMessage(message) {
+            const lowerMsg = message.toLowerCase();
+            
+            // ردود بسيطة بناءً على الكلمات المفتاحية
+            if (lowerMsg.includes('توصيل') || lowerMsg.includes('شحن')) {
+                addBotMessage('التوصيل مجاني😊 مدعوم من مدينة جيونغسان. يستغرق عادة 30-60 دقيقة بعد الطلب.');
+            } else if (lowerMsg.includes('عمولة') || lowerMsg.includes('رسوم')) {
+                addBotMessage('0% عمولة لكل من المواطنين والتجار👍 أيضاً 0 تكلفة إعلانية!');
+            } else if (lowerMsg.includes('طلب') || lowerMsg.includes('شراء')) {
+                addBotMessage('حدد منتجاً في التطبيق ← أضف إلى السلة ← أدخل العنوان ← الدفع مكتمل. إنه سهل جداً😊');
+            } else if (lowerMsg.includes('كوبون') || lowerMsg.includes('خصم')) {
+                addBotMessage('احصل على كوبونات في قائمة التطبيق أو امسح رموز QR في المواقع السياحية. هناك كوبونات بقيمة 5,000 وون للشحن!');
+            } else if (lowerMsg.includes('متجر') || lowerMsg.includes('تاجر')) {
+                addBotMessage('تسجيل متجر سهل بصورة واحدة📸 فقط التقط صورة لسجل أعمالك. موافقة خلال 24 ساعة!');
+            } else if (lowerMsg.includes('شكرا')) {
+                addBotMessage('على الرحب والسعة😊 دائماً في خدمتك!');
+            } else if (lowerMsg.includes('مرحبا') || lowerMsg.includes('السلام')) {
+                addBotMessage('مرحباً! أنا أون-إي😊 كيف يمكنني مساعدتك؟');
+            } else {
+                addBotMessage('لم أفهم هذا السؤال جيداً👀 هل يمكنك الضغط على أزرار الأسئلة الشائعة أعلاه أو الشرح بمزيد من التفصيل؟');
+            }
+        }
+
+        // إرسال بالضغط على Enter
+        document.getElementById('chatInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>

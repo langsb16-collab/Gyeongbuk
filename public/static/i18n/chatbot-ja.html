@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>オンイ チャットボット - 慶山オン(ON)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* コンパクトヘッダー */
+        .compact-header {
+            padding: 12px 16px;
+            background: linear-gradient(135deg, #1F3A5F 0%, #2A4A6F 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .compact-header h1 {
+            font-size: 20px;
+            font-weight: 700;
+            margin: 0;
+        }
+        .compact-header p {
+            font-size: 12px;
+            margin: 4px 0 0 0;
+            opacity: 0.9;
+        }
+
+        /* レスポンシブ調整 */
+        @media (min-width: 1200px) {
+            body {
+                max-width: 80%;
+                margin: 0 auto;
+                box-shadow: 0 0 30px rgba(0,0,0,0.1);
+            }
+            .compact-header {
+                padding: 16px 32px;
+            }
+            .compact-header h1 {
+                font-size: 24px;
+            }
+            .compact-header p {
+                font-size: 14px;
+            }
+            .container-main {
+                max-width: 960px;
+                margin: 0 auto;
+                padding: 32px 24px;
+            }
+        }
+
+        @media (max-width: 1199px) {
+            .container-main {
+                padding: 16px;
+            }
+        }
+
+        /* チャット UI */
+        .chat-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .chat-messages {
+            max-height: 60vh;
+            overflow-y: auto;
+            padding: 20px;
+            background: #F8F9FA;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .message {
+            margin-bottom: 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        
+        .message.bot {
+            justify-content: flex-start;
+        }
+        
+        .message.user {
+            justify-content: flex-end;
+        }
+        
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .message.bot .message-avatar {
+            background: linear-gradient(135deg, #1F3A5F 0%, #2A4A6F 100%);
+        }
+        
+        .message.user .message-avatar {
+            background: #6B3E26;
+        }
+        
+        .message-bubble {
+            max-width: 70%;
+            padding: 16px 20px;
+            border-radius: 18px;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+        
+        .message.bot .message-bubble {
+            background: white;
+            color: #1F3A5F;
+            border: 2px solid #1F3A5F;
+            box-shadow: 0 2px 8px rgba(31, 58, 95, 0.1);
+        }
+        
+        .message.user .message-bubble {
+            background: #1F3A5F;
+            color: white;
+        }
+        
+        /* FAQカテゴリー */
+        .faq-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        
+        .faq-category-btn {
+            padding: 16px;
+            background: white;
+            border: 2px solid #1F3A5F;
+            border-radius: 12px;
+            color: #1F3A5F;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-height: 48px;
+        }
+        
+        .faq-category-btn:hover {
+            background: #1F3A5F;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(31, 58, 95, 0.2);
+        }
+        
+        .faq-category-btn.active {
+            background: #1F3A5F;
+            color: white;
+        }
+        
+        /* FAQ質問 */
+        .faq-questions {
+            display: grid;
+            gap: 12px;
+        }
+        
+        .faq-question {
+            padding: 16px 20px;
+            background: white;
+            border: 2px solid #E5E7EB;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 18px;
+            font-weight: 500;
+            color: #1F3A5F;
+            text-align: left;
+            min-height: 48px;
+        }
+        
+        .faq-question:hover {
+            border-color: #1F3A5F;
+            background: #F8F9FA;
+            transform: translateX(4px);
+        }
+        
+        /* 入力エリア */
+        .chat-input-area {
+            display: flex;
+            gap: 12px;
+            padding: 16px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .chat-input {
+            flex: 1;
+            padding: 14px 20px;
+            border: 2px solid #E5E7EB;
+            border-radius: 24px;
+            font-size: 18px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        
+        .chat-input:focus {
+            border-color: #1F3A5F;
+        }
+        
+        .send-btn {
+            padding: 14px 32px;
+            background: #1F3A5F;
+            color: white;
+            border: none;
+            border-radius: 24px;
+            font-weight: 600;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 48px;
+            min-height: 48px;
+        }
+        
+        .send-btn:hover {
+            background: #2A4A6F;
+            transform: scale(1.05);
+        }
+        
+        /* バッジ */
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+        
+        .badge-primary {
+            background: #1F3A5F;
+            color: white;
+        }
+        
+        .badge-secondary {
+            background: #6B3E26;
+            color: white;
+        }
+        
+        .badge-accent {
+            background: #C9A24D;
+            color: white;
+        }
+
+        /* 閉じるボタン */
+        .close-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 48px;
+            height: 48px;
+            background: white;
+            border: 2px solid #1F3A5F;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 24px;
+            color: #1F3A5F;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        
+        .close-btn:hover {
+            background: #1F3A5F;
+            color: white;
+            transform: rotate(90deg);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- コンパクトヘッダー -->
+    <header class="compact-header">
+        <h1><i class="fas fa-comments mr-2"></i>オンイ チャットボット</h1>
+        <p>24時間いつでもお手伝いします 😊</p>
+    </header>
+
+    <div class="container-main">
+        <!-- 閉じるボタン -->
+        <button class="close-btn" onclick="window.history.back()">
+            <i class="fas fa-times"></i>
+        </button>
+
+        <!-- チャットコンテナ -->
+        <div class="chat-container">
+            <!-- チャットメッセージ -->
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot">
+                    <div class="message-avatar">😊</div>
+                    <div class="message-bubble">
+                        こんにちは！オンイです😊<br>
+                        慶山オン(ON)のAIチャットボットです。<br>
+                        お困りのことがございましたら、お気軽にお尋ねください！
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQカテゴリー -->
+            <div class="faq-categories">
+                <button class="faq-category-btn active" data-category="all">
+                    <i class="fas fa-list mr-2"></i>全体
+                </button>
+                <button class="faq-category-btn" data-category="citizen">
+                    <i class="fas fa-user mr-2"></i>市民
+                </button>
+                <button class="faq-category-btn" data-category="merchant">
+                    <i class="fas fa-store mr-2"></i>加盟店
+                </button>
+                <button class="faq-category-btn" data-category="senior">
+                    <i class="fas fa-heart mr-2"></i>高齢者
+                </button>
+                <button class="faq-category-btn" data-category="admin">
+                    <i class="fas fa-user-shield mr-2"></i>管理
+                </button>
+            </div>
+
+            <!-- FAQ質問リスト -->
+            <div class="faq-questions" id="faqQuestions">
+                <!-- JavaScriptで動的に生成 -->
+            </div>
+
+            <!-- 入力エリア -->
+            <div class="chat-input-area">
+                <input 
+                    type="text" 
+                    class="chat-input" 
+                    id="chatInput" 
+                    placeholder="メッセージを入力してください..."
+                    onkeypress="if(event.key === 'Enter') sendMessage()"
+                >
+                <button class="send-btn" onclick="sendMessage()">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // FAQ データ
+        const faqData = {
+            citizen: [
+                { q: "このアプリは何ですか？", a: "慶山市が運営する無料配達・ローカルフード公共プラットフォームです。" },
+                { q: "本当に配達料が無料ですか？", a: "はい。加盟店は配達料なしで注文できます。（一部条件を除く）" },
+                { q: "手数料はありませんか？", a: "市民と加盟店の両方とも仲介手数料は0ウォンです。" },
+                { q: "どのような店舗を注文できますか？", a: "伝統市場、レストラン、ローカルフード、慶山特産物を注文できます。" },
+                { q: "どのように注文しますか？", a: "アプリで商品を選択 → カートに追加 → 配達先入力 → 決済完了です。" },
+                { q: "決済方法は何がありますか？", a: "カード決済、地域通貨、簡単決済（Toss、Kakao Pay）をサポートしています。" },
+                { q: "配達はどのくらいかかりますか？", a: "注文後、通常30～60分以内に配達されます。" },
+                { q: "注文をキャンセルできますか？", a: "調理前であればキャンセル可能です。加盟店に直接お問い合わせください。" },
+                { q: "クーポンはどこで受け取れますか？", a: "アプリのクーポンメニューまたは観光地のQRコードをスキャンして受け取ってください。" },
+                { q: "返品・交換はできますか？", a: "商品に問題がある場合、受取後1時間以内にお問い合わせください。" }
+            ],
+            merchant: [
+                { q: "加盟店の登録方法は？", a: "アプリの加盟店申請メニューで事業者登録証の写真を1枚撮影すると完了です。" },
+                { q: "加盟店手数料はいくらですか？", a: "仲介手数料0%、広告費0ウォンです。" },
+                { q: "メニューの登録方法は？", a: "加盟店承認後、管理者ページでメニューと価格を登録できます。" },
+                { q: "配達料は誰が負担しますか？", a: "慶山市が一部または全額を支援する政策を運営しています。" },
+                { q: "どのような支援がありますか？", a: "配達料支援、マーケティング支援、写真撮影支援、教育支援があります。" },
+                { q: "承認はどのくらいかかりますか？", a: "申請後、通常24時間以内に承認されます。" },
+                { q: "配達は誰がしますか？", a: "加盟店の自己配達または公共配達代行システムを利用できます。" },
+                { q: "売上管理はどこで確認できますか？", a: "加盟店専用管理者ページで日別/週別売上を確認できます。" },
+                { q: "クレーム処理方法は？", a: "管理者ページのお問い合わせ事項で確認し、直接対応してください。" },
+                { q: "加盟店を退会できますか？", a: "可能です。進行中の注文をすべて完了した後、退会申請してください。" }
+            ],
+            senior: [
+                { q: "使い方を教えてください", a: "写真を撮るだけです😊 オンイがお手伝いします" },
+                { q: "字が小さくて見えません", a: "設定 → 字サイズで大きく変更できます" },
+                { q: "電話注文はできますか？", a: "はい。お近くの加盟店に電話して注文できます" },
+                { q: "現金で支払えますか？", a: "一部店舗では現金払いが可能です" },
+                { q: "配達先の入力方法は？", a: "住所検索またはオンイに話しかければ入力されます" },
+                { q: "オンイが助けてくれますか？", a: "もちろんです😊 簡単に楽しく一緒にやりましょう！" },
+                { q: "高齢者割引はありますか？", a: "一部店舗で高齢者割引を提供しています" },
+                { q: "配達料は払わなくてもいいですか？", a: "はい。慶山市が支援するので無料です" },
+                { q: "住民センターで助けてくれますか？", a: "はい。住民センターで登録を手伝ってくれます" },
+                { q: "字が読めません", a: "オンイが音声で読んであげます😊 押してください" }
+            ],
+            admin: [
+                { q: "管理者権限は何ですか？", a: "加盟店承認/却下、統計確認、クーポン発行、お問い合わせ管理ができます。" },
+                { q: "加盟店の承認基準は？", a: "事業者登録証の有効性、衛生許可、営業状態を確認します。" },
+                { q: "統計はどこで確認できますか？", a: "管理者ダッシュボード → 統計メニューで地域別/カテゴリー別データを確認できます。" },
+                { q: "クーポンの発行方法は？", a: "管理者ページ → クーポン管理 → 新規発行で作成できます。" },
+                { q: "お問い合わせの処理方法は？", a: "お問い合わせリスト → 詳細確認 → 回答登録の順序で処理してください。" },
+                { q: "予算の執行状況は？", a: "統計 → 予算管理メニューで執行履歴と残額を確認できます。" },
+                { q: "配達料の支援政策は？", a: "加盟店タイプ別に異なる支援政策を適用できます。" },
+                { q: "市民のクレームはどう処理しますか？", a: "クレーム管理メニューで内容を確認し、加盟店と市民を仲介します。" },
+                { q: "データのエクスポートは可能ですか？", a: "はい。Excel/CSV形式でエクスポートできます。" },
+                { q: "ユーザー権限の管理方法は？", a: "設定 → 権限管理で役割別にアクセス権限を設定できます。" }
+            ]
+        };
+
+        let currentCategory = 'all';
+        let chatHistory = [];
+
+        // ページ読み込み時に初期化
+        document.addEventListener('DOMContentLoaded', function() {
+            renderFAQs('all');
+            addBotMessage("こんにちは！オンイです😊<br>慶山オン(ON)のAIチャットボットです。<br>お困りのことがございましたら、お気軽にお尋ねください！");
+        });
+
+        // カテゴリーボタンイベント
+        document.querySelectorAll('.faq-category-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.faq-category-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                const category = this.dataset.category;
+                currentCategory = category;
+                renderFAQs(category);
+            });
+        });
+
+        // FAQをレンダリング
+        function renderFAQs(category) {
+            const container = document.getElementById('faqQuestions');
+            container.innerHTML = '';
+
+            let faqs = [];
+            if (category === 'all') {
+                Object.values(faqData).forEach(catFaqs => {
+                    faqs = faqs.concat(catFaqs);
+                });
+            } else {
+                faqs = faqData[category] || [];
+            }
+
+            faqs.forEach((faq, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'faq-question';
+                btn.innerHTML = `<i class="fas fa-comment-dots mr-2"></i>${faq.q}`;
+                btn.onclick = () => handleFAQClick(faq);
+                container.appendChild(btn);
+            });
+        }
+
+        // FAQ クリック処理
+        function handleFAQClick(faq) {
+            addUserMessage(faq.q);
+            setTimeout(() => {
+                addBotMessage(faq.a);
+            }, 500);
+        }
+
+        // メッセージ送信
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (message) {
+                addUserMessage(message);
+                input.value = '';
+                
+                // 簡単なAI応答シミュレーション
+                setTimeout(() => {
+                    respondToMessage(message);
+                }, 500);
+            }
+        }
+
+        // ユーザーメッセージを追加
+        function addUserMessage(text) {
+            const container = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message user';
+            messageDiv.innerHTML = `
+                <div class="message-bubble">${text}</div>
+                <div class="message-avatar">👤</div>
+            `;
+            container.appendChild(messageDiv);
+            container.scrollTop = container.scrollHeight;
+            chatHistory.push({ role: 'user', content: text });
+        }
+
+        // ボットメッセージを追加
+        function addBotMessage(text) {
+            const container = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message bot';
+            
+            const expressions = ['😊', '👀', '👍'];
+            const randomExp = expressions[Math.floor(Math.random() * expressions.length)];
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar">${randomExp}</div>
+                <div class="message-bubble">${text}</div>
+            `;
+            container.appendChild(messageDiv);
+            container.scrollTop = container.scrollHeight;
+            chatHistory.push({ role: 'bot', content: text });
+        }
+
+        // メッセージに応答
+        function respondToMessage(message) {
+            const lowerMsg = message.toLowerCase();
+            
+            // キーワードベースの簡単な応答
+            if (lowerMsg.includes('配達') || lowerMsg.includes('配送')) {
+                addBotMessage('配達料は無料です😊 慶山市が支援しています。注文後、通常30～60分以内に配達されます。');
+            } else if (lowerMsg.includes('手数料') || lowerMsg.includes('費用')) {
+                addBotMessage('市民と加盟店の両方とも仲介手数料は0ウォンです👍 広告費も0ウォンです！');
+            } else if (lowerMsg.includes('注文') || lowerMsg.includes('購入')) {
+                addBotMessage('アプリで商品を選択 → カートに追加 → 配達先入力 → 決済完了です。とても簡単ですよ😊');
+            } else if (lowerMsg.includes('クーポン') || lowerMsg.includes('割引')) {
+                addBotMessage('アプリのクーポンメニューまたは観光地のQRコードをスキャンして受け取ってください。5,000ウォン配送費支援クーポンがあります！');
+            } else if (lowerMsg.includes('加盟店') || lowerMsg.includes('店舗')) {
+                addBotMessage('加盟店登録は写真1枚で完了です📸 事業者登録証を撮影して送信するだけです。24時間以内に承認されます！');
+            } else if (lowerMsg.includes('ありがとう') || lowerMsg.includes('感謝')) {
+                addBotMessage('どういたしまして😊 いつでもお手伝いします！');
+            } else if (lowerMsg.includes('こんにちは') || lowerMsg.includes('やあ')) {
+                addBotMessage('こんにちは！オンイです😊 何かお手伝いできることはありますか？');
+            } else {
+                addBotMessage('その質問はよく理解できませんでした👀 上のFAQボタンを押すか、より詳しく説明していただけますか？');
+            }
+        }
+
+        // Enterキーで送信
+        document.getElementById('chatInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>

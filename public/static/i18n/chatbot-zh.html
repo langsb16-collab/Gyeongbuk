@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小温聊天机器人 - 庆山ON</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; }
+        body { background: #F8F9FA; }
+        
+        .header-compact { padding: 12px 16px; }
+        .header-title { font-size: 18px; }
+        
+        @media (min-width: 768px) {
+            .header-compact { padding: 16px 24px; }
+            .header-title { font-size: 20px; }
+            .container-main { max-width: 720px; margin: 0 auto; }
+        }
+        
+        @media (min-width: 1200px) {
+            body {
+                max-width: 80%;
+                margin: 0 auto;
+            }
+            .container-main { max-width: 960px; }
+        }
+        
+        .lang-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 12px;
+            font-size: 13px;
+            border-radius: 8px;
+            background: white;
+            border: 1px solid #E5E7EB;
+            transition: all 0.2s;
+        }
+        .lang-btn:hover {
+            background: #EEF2F6;
+            border-color: #1F3A5F;
+        }
+        .lang-btn.active {
+            background: #1F3A5F;
+            color: white;
+            border-color: #1F3A5F;
+        }
+        
+        .category-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .category-card:hover {
+            box-shadow: 0 4px 12px rgba(31,58,95,0.15);
+            transform: translateY(-2px);
+        }
+        
+        .faq-item {
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            overflow: hidden;
+        }
+        .faq-question {
+            padding: 14px 16px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+            color: #1F3A5F;
+        }
+        .faq-question:hover {
+            background: #F8F9FA;
+        }
+        .faq-answer {
+            padding: 0 16px 14px 16px;
+            color: #4B5563;
+            line-height: 1.6;
+            display: none;
+        }
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+        .faq-item.active .faq-icon {
+            transform: rotate(180deg);
+        }
+        .faq-icon {
+            transition: transform 0.2s;
+            color: #6B3E26;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-compact bg-white border-b border-gray-200">
+        <div class="container-main flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <span class="text-2xl">🤖</span>
+                <h1 class="header-title font-bold text-gray-800">小温聊天机器人</h1>
+            </div>
+            <a href="/" class="text-sm text-gray-600 hover:text-gray-900">
+                <i class="fas fa-times"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="bg-white border-b border-gray-200 py-3">
+        <div class="container-main px-4">
+            <div class="flex flex-wrap gap-2">
+                <a href="/static/i18n/chatbot-ko" class="lang-btn">🇰🇷 한국어</a>
+                <a href="/static/i18n/chatbot-en" class="lang-btn">🇺🇸 English</a>
+                <a href="/static/i18n/chatbot-zh" class="lang-btn active">🇨🇳 中文</a>
+                <a href="/static/i18n/chatbot-ja" class="lang-btn">🇯🇵 日本語</a>
+                <a href="/static/i18n/chatbot-es" class="lang-btn">🇪🇸 Español</a>
+                <a href="/static/i18n/chatbot-fr" class="lang-btn">🇫🇷 Français</a>
+                <a href="/static/i18n/chatbot-ar" class="lang-btn">🇸🇦 العربية</a>
+                <a href="/static/i18n/chatbot-de" class="lang-btn">🇩🇪 Deutsch</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-main px-4 py-6">
+        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 mb-6">
+            <div class="flex items-start gap-3">
+                <span class="text-4xl">😊</span>
+                <div>
+                    <h2 class="text-lg font-bold text-gray-800 mb-2">您好！我是小温</h2>
+                    <p class="text-gray-600 text-sm leading-relaxed">
+                        我会帮助您解答有关庆山ON平台的任何问题。<br>
+                        请选择下面的类别查看常见问题。
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <a href="#citizen" class="category-card">
+                <div class="flex items-start gap-3">
+                    <i class="fas fa-user text-2xl text-blue-600"></i>
+                    <div>
+                        <h3 class="font-bold text-gray-800 mb-1">市民用户</h3>
+                        <p class="text-sm text-gray-600">配送订单、优惠券、地方货币等</p>
+                        <span class="text-xs text-gray-500 mt-2 inline-block">15个问题</span>
+                    </div>
+                </div>
+            </a>
+            
+            <a href="#merchant" class="category-card">
+                <div class="flex items-start gap-3">
+                    <i class="fas fa-store text-2xl text-green-600"></i>
+                    <div>
+                        <h3 class="font-bold text-gray-800 mb-1">商家用户</h3>
+                        <p class="text-sm text-gray-600">加盟申请、手续费、结算等</p>
+                        <span class="text-xs text-gray-500 mt-2 inline-block">15个问题</span>
+                    </div>
+                </div>
+            </a>
+            
+            <a href="#senior" class="category-card">
+                <div class="flex items-start gap-3">
+                    <i class="fas fa-hands-helping text-2xl text-purple-600"></i>
+                    <div>
+                        <h3 class="font-bold text-gray-800 mb-1">老年人/现场注册</h3>
+                        <p class="text-sm text-gray-600">简单注册、使用方法等</p>
+                        <span class="text-xs text-gray-500 mt-2 inline-block">5个问题</span>
+                    </div>
+                </div>
+            </a>
+            
+            <a href="#admin" class="category-card">
+                <div class="flex items-start gap-3">
+                    <i class="fas fa-shield-alt text-2xl text-orange-600"></i>
+                    <div>
+                        <h3 class="font-bold text-gray-800 mb-1">行政/运营/信任</h3>
+                        <p class="text-sm text-gray-600">个人信息、公共平台等</p>
+                        <span class="text-xs text-gray-500 mt-2 inline-block">5个问题</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div id="citizen" class="mb-8">
+            <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <i class="fas fa-user text-blue-600"></i>
+                市民用户
+            </h2>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>这个应用程序是什么？</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">这是庆山市运营的免费配送和本地食品公共平台。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>配送真的免费吗？</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">是的。参与商家可以免费配送订单。（部分条件除外）</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>有手续费吗？</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">市民和商家都不收取中介手续费 - 0元。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>可以从哪些商店订购？</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">您可以从庆山地区的各种商家订购，包括餐厅、传统市场和本地食品店。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>可以一次从多个传统市场商店订购吗？</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">是的！您可以从多个商店订购，如副菜店、肉店和水果店，通过一次订单和捆绑配送。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>本地食品有什么不同？</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">当天收获的新鲜农产品由生产者直接销售，您可以验证生产者的姓名和农场位置。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>非庆山居民可以使用吗？</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">是的。访问庆山的游客也可以使用，并提供特产配送服务。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>如何使用地方货币？</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">使用庆山支付等地方货币支付时会提供额外折扣。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>配送需要多长时间？</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">常规配送为当天，本地食品默认为次日配送。（可能因产品而异）</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>如何取消订单？</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">产品发货前可以免费取消。在应用程序的"订单历史"中按取消按钮。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>如果出现问题，我应该联系哪里？</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">请联系应用程序中的"客户服务"或庆山市政府（☎ 053-810-XXXX）。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>老年人容易使用吗？</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">是的。应用了大字体、简单屏幕和语音指导等老年人友好设计。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>注册复杂吗？</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">不复杂。仅需手机验证即可在1分钟内完成注册。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>有优惠券或优惠吗？</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">有各种优惠，包括新会员优惠券、游客特别优惠券和额外的地方货币折扣。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>会扩展到其他地区吗？</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">是的。庆山试点后，将扩展到浦项、龟尾、安东和整个庆北地区。</div>
+            </div>
+        </div>
+
+        <div id="merchant" class="mb-8">
+            <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <i class="fas fa-store text-green-600"></i>
+                商家用户
+            </h2>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>有加盟费吗？</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">没有。加盟费、中介费和广告费均为0元。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>如何申请？</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">只需在应用程序中拍摄一张营业执照照片，3分钟内完成申请。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>如何注册菜单？</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">您可以在申请后稍后注册菜单。工作人员会协助您。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>可以现场注册吗？</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">是的。传统市场现场展位的工作人员会为您拍照并注册。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>什么时候会批准？</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">申请后24小时内自动批准。（如有文件问题，我们会联系您）</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>谁负责配送？</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">庆山市指定的配送代理免费配送。（配送费由市政府支持）</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>什么是捆绑配送？</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">一次性收集传统市场内多个商店的订单并一起配送的方法。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>什么时候收到结算？</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">每周结算自动存入您注册的账户。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>照片拍得模糊。</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">没关系。管理员会检查并联系您重新拍摄或手动输入。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>传统市场商家可以参与吗？</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">是的！传统市场商家有优惠政策，商家协会可以团体注册。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>市场日有特别优惠吗？</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">是的。在市场日，会自动显示"市场日特惠"横幅，带来更多订单。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>可以一次注册多个商店吗？</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">是的。如果商店都在您的名下，可以注册多个分店。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>注册后可以修改信息吗？</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">是的。您可以随时在应用程序的"商家管理"菜单中修改。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>有订阅费或月费吗？</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">完全没有。从注册到运营的所有费用都是0元。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>如果想退出怎么办？</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">您可以随时在应用程序中申请退出或联系客户服务进行处理。</div>
+            </div>
+        </div>
+
+        <div id="senior" class="mb-8">
+            <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <i class="fas fa-hands-helping text-purple-600"></i>
+                老年人/现场注册
+            </h2>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>要填写的内容很多吗？</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">不多！只需拍摄一张营业执照照片，就会自动填写。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>创建密码很困难。</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">您可以仅通过手机验证使用，无需密码。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>必须现在注册吗？</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">不必。您可以随时方便时注册。不用着急。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>工作人员可以代为注册吗？</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">是的！传统市场现场或市政厅的工作人员会协助您。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>注册后有问题怎么办？</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">工作人员会通过电话友好地解释。☎ 053-810-XXXX</div>
+            </div>
+        </div>
+
+        <div id="admin" class="mb-8">
+            <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <i class="fas fa-shield-alt text-orange-600"></i>
+                行政/运营/信任
+            </h2>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>可以防止未经授权的注册吗？</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">是的。通过国税局API立即验证营业登记号的存在。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>这真的是公共应用程序吗？</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">是的。这是庆山市政府直接运营的官方公共平台。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>个人信息安全吗？</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">是的。我们遵守个人信息保护法和公共机构安全标准，并加密存储。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>为什么在有私人配送应用程序时还要创建这个？</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">为了解决高额手续费给小企业带来负担和缺乏公共性的问题。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>将来会扩展到其他地区吗？</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">是的。庆山试点运营后，计划分阶段扩展到包括浦项、龟尾和安东在内的整个庆北地区。</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white border-t border-gray-200 py-6 mt-8">
+        <div class="container-main px-4 text-center">
+            <p class="text-sm text-gray-600 mb-2">还有其他问题吗？</p>
+            <a href="tel:053-810-0000" class="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700">
+                <i class="fas fa-phone"></i>
+                联系客户服务
+            </a>
+        </div>
+    </div>
+</body>
+</html>

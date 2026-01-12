@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot On-i - Gyeongsan ON</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Encabezado compacto */
+        .compact-header {
+            padding: 12px 16px;
+            background: linear-gradient(135deg, #1F3A5F 0%, #2A4A6F 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .compact-header h1 {
+            font-size: 20px;
+            font-weight: 700;
+            margin: 0;
+        }
+        .compact-header p {
+            font-size: 12px;
+            margin: 4px 0 0 0;
+            opacity: 0.9;
+        }
+
+        /* Ajustes responsivos */
+        @media (min-width: 1200px) {
+            body {
+                max-width: 80%;
+                margin: 0 auto;
+                box-shadow: 0 0 30px rgba(0,0,0,0.1);
+            }
+            .compact-header {
+                padding: 16px 32px;
+            }
+            .compact-header h1 {
+                font-size: 24px;
+            }
+            .compact-header p {
+                font-size: 14px;
+            }
+            .container-main {
+                max-width: 960px;
+                margin: 0 auto;
+                padding: 32px 24px;
+            }
+        }
+
+        @media (max-width: 1199px) {
+            .container-main {
+                padding: 16px;
+            }
+        }
+
+        /* UI de chat */
+        .chat-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .chat-messages {
+            max-height: 60vh;
+            overflow-y: auto;
+            padding: 20px;
+            background: #F8F9FA;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .message {
+            margin-bottom: 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        
+        .message.bot {
+            justify-content: flex-start;
+        }
+        
+        .message.user {
+            justify-content: flex-end;
+        }
+        
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .message.bot .message-avatar {
+            background: linear-gradient(135deg, #1F3A5F 0%, #2A4A6F 100%);
+        }
+        
+        .message.user .message-avatar {
+            background: #6B3E26;
+        }
+        
+        .message-bubble {
+            max-width: 70%;
+            padding: 16px 20px;
+            border-radius: 18px;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+        
+        .message.bot .message-bubble {
+            background: white;
+            color: #1F3A5F;
+            border: 2px solid #1F3A5F;
+            box-shadow: 0 2px 8px rgba(31, 58, 95, 0.1);
+        }
+        
+        .message.user .message-bubble {
+            background: #1F3A5F;
+            color: white;
+        }
+        
+        /* Categorías de FAQ */
+        .faq-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        
+        .faq-category-btn {
+            padding: 16px;
+            background: white;
+            border: 2px solid #1F3A5F;
+            border-radius: 12px;
+            color: #1F3A5F;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-height: 48px;
+        }
+        
+        .faq-category-btn:hover {
+            background: #1F3A5F;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(31, 58, 95, 0.2);
+        }
+        
+        .faq-category-btn.active {
+            background: #1F3A5F;
+            color: white;
+        }
+        
+        /* Preguntas FAQ */
+        .faq-questions {
+            display: grid;
+            gap: 12px;
+        }
+        
+        .faq-question {
+            padding: 16px 20px;
+            background: white;
+            border: 2px solid #E5E7EB;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 18px;
+            font-weight: 500;
+            color: #1F3A5F;
+            text-align: left;
+            min-height: 48px;
+        }
+        
+        .faq-question:hover {
+            border-color: #1F3A5F;
+            background: #F8F9FA;
+            transform: translateX(4px);
+        }
+        
+        /* Área de entrada */
+        .chat-input-area {
+            display: flex;
+            gap: 12px;
+            padding: 16px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .chat-input {
+            flex: 1;
+            padding: 14px 20px;
+            border: 2px solid #E5E7EB;
+            border-radius: 24px;
+            font-size: 18px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        
+        .chat-input:focus {
+            border-color: #1F3A5F;
+        }
+        
+        .send-btn {
+            padding: 14px 32px;
+            background: #1F3A5F;
+            color: white;
+            border: none;
+            border-radius: 24px;
+            font-weight: 600;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 48px;
+            min-height: 48px;
+        }
+        
+        .send-btn:hover {
+            background: #2A4A6F;
+            transform: scale(1.05);
+        }
+
+        /* Botón de cerrar */
+        .close-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 48px;
+            height: 48px;
+            background: white;
+            border: 2px solid #1F3A5F;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 24px;
+            color: #1F3A5F;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        
+        .close-btn:hover {
+            background: #1F3A5F;
+            color: white;
+            transform: rotate(90deg);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Encabezado compacto -->
+    <header class="compact-header">
+        <h1><i class="fas fa-comments mr-2"></i>Chatbot On-i</h1>
+        <p>24 horas a su servicio 😊</p>
+    </header>
+
+    <div class="container-main">
+        <!-- Botón de cerrar -->
+        <button class="close-btn" onclick="window.history.back()">
+            <i class="fas fa-times"></i>
+        </button>
+
+        <!-- Contenedor de chat -->
+        <div class="chat-container">
+            <!-- Mensajes de chat -->
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot">
+                    <div class="message-avatar">😊</div>
+                    <div class="message-bubble">
+                        ¡Hola! Soy On-i😊<br>
+                        Soy el chatbot de IA de Gyeongsan ON.<br>
+                        ¡Pregúntame cualquier cosa!
+                    </div>
+                </div>
+            </div>
+
+            <!-- Categorías de FAQ -->
+            <div class="faq-categories">
+                <button class="faq-category-btn active" data-category="all">
+                    <i class="fas fa-list mr-2"></i>Todas
+                </button>
+                <button class="faq-category-btn" data-category="citizen">
+                    <i class="fas fa-user mr-2"></i>Ciudadano
+                </button>
+                <button class="faq-category-btn" data-category="merchant">
+                    <i class="fas fa-store mr-2"></i>Comercio
+                </button>
+                <button class="faq-category-btn" data-category="senior">
+                    <i class="fas fa-heart mr-2"></i>Senior
+                </button>
+                <button class="faq-category-btn" data-category="admin">
+                    <i class="fas fa-user-shield mr-2"></i>Admin
+                </button>
+            </div>
+
+            <!-- Lista de preguntas FAQ -->
+            <div class="faq-questions" id="faqQuestions">
+                <!-- Se generan dinámicamente con JavaScript -->
+            </div>
+
+            <!-- Área de entrada -->
+            <div class="chat-input-area">
+                <input 
+                    type="text" 
+                    class="chat-input" 
+                    id="chatInput" 
+                    placeholder="Escribe un mensaje..."
+                    onkeypress="if(event.key === 'Enter') sendMessage()"
+                >
+                <button class="send-btn" onclick="sendMessage()">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Datos FAQ
+        const faqData = {
+            citizen: [
+                { q: "¿Qué es esta aplicación?", a: "Es una plataforma pública de entrega gratuita y comida local operada por la ciudad de Gyeongsan." },
+                { q: "¿Realmente la entrega es gratis?", a: "Sí. Los comercios participantes ofrecen pedidos sin costo de entrega. (Algunas excepciones aplican)" },
+                { q: "¿No hay comisiones?", a: "0% de comisión intermediaria tanto para ciudadanos como para comercios." },
+                { q: "¿Qué tiendas puedo pedir?", a: "Puedes pedir de mercados tradicionales, restaurantes, comida local y productos especiales de Gyeongsan." },
+                { q: "¿Cómo hago un pedido?", a: "Selecciona un producto en la app → Añadir al carrito → Ingresa dirección de entrega → Pago completado." },
+                { q: "¿Qué métodos de pago aceptan?", a: "Soportamos pago con tarjeta, moneda local y pago simple (Toss, Kakao Pay)." },
+                { q: "¿Cuánto tarda la entrega?", a: "Normalmente tarda entre 30 y 60 minutos después de realizar el pedido." },
+                { q: "¿Puedo cancelar mi pedido?", a: "Puedes cancelar antes de que empiece la preparación. Consulta directamente con el comercio." },
+                { q: "¿Dónde puedo obtener cupones?", a: "En el menú de cupones de la app o escaneando códigos QR en lugares turísticos." },
+                { q: "¿Puedo hacer devoluciones o cambios?", a: "Si hay un problema con el producto, contáctanos dentro de 1 hora después de recibirlo." }
+            ],
+            merchant: [
+                { q: "¿Cómo registro mi comercio?", a: "En el menú de solicitud de comercio, toma una foto de tu registro de negocio y listo." },
+                { q: "¿Cuánto cuesta la comisión del comercio?", a: "0% de comisión intermediaria, 0 costo de publicidad." },
+                { q: "¿Cómo registro el menú?", a: "Después de la aprobación del comercio, puedes registrar menú y precios en la página de administración." },
+                { q: "¿Quién paga la entrega?", a: "La ciudad de Gyeongsan ofrece apoyo parcial o total de los costos de entrega." },
+                { q: "¿Qué apoyos hay disponibles?", a: "Apoyo de entrega, marketing, fotografía de productos y capacitación." },
+                { q: "¿Cuánto tarda la aprobación?", a: "Normalmente se aprueba dentro de 24 horas después de la solicitud." },
+                { q: "¿Quién hace las entregas?", a: "Puedes hacer entregas propias o usar el sistema público de entregas." },
+                { q: "¿Dónde veo las ventas?", a: "En la página de administración del comercio puedes ver ventas diarias/semanales." },
+                { q: "¿Cómo manejo las quejas?", a: "Revisa las consultas en la página de administración y responde directamente." },
+                { q: "¿Puedo dar de baja mi comercio?", a: "Sí. Después de completar todos los pedidos pendientes, puedes solicitar la baja." }
+            ],
+            senior: [
+                { q: "Enséñame cómo usarlo", a: "Solo toma una foto😊 On-i te ayudará" },
+                { q: "Las letras son muy pequeñas", a: "Ve a Ajustes → Tamaño de letra para agrandarlas" },
+                { q: "¿Puedo pedir por teléfono?", a: "Sí. Puedes llamar a los comercios cercanos para hacer tu pedido" },
+                { q: "¿Puedo pagar en efectivo?", a: "Algunas tiendas aceptan pago en efectivo" },
+                { q: "¿Cómo ingreso la dirección?", a: "Busca la dirección o dísela a On-i y se ingresará automáticamente" },
+                { q: "¿On-i me puede ayudar?", a: "¡Por supuesto😊 Hagámoslo fácil y divertido juntos!" },
+                { q: "¿Hay descuentos para seniors?", a: "Algunas tiendas ofrecen descuentos para personas mayores" },
+                { q: "¿No pago entrega?", a: "Sí. Es gratis porque la ciudad de Gyeongsan lo apoya" },
+                { q: "¿Pueden ayudarme en el centro comunitario?", a: "Sí. En el centro comunitario te ayudarán con el registro" },
+                { q: "No puedo leer las letras", a: "On-i te las leerá en voz alta😊 Solo presiona" }
+            ],
+            admin: [
+                { q: "¿Qué permisos tiene el administrador?", a: "Puedes aprobar/rechazar comercios, ver estadísticas, emitir cupones y gestionar consultas." },
+                { q: "¿Cuáles son los criterios de aprobación?", a: "Se verifica la validez del registro de negocio, permisos sanitarios y estado operativo." },
+                { q: "¿Dónde veo las estadísticas?", a: "En el panel de administrador → Menú de estadísticas puedes ver datos por región/categoría." },
+                { q: "¿Cómo emito cupones?", a: "Página de administrador → Gestión de cupones → Nueva emisión." },
+                { q: "¿Cómo proceso consultas?", a: "Lista de consultas → Ver detalles → Registrar respuesta." },
+                { q: "¿Cómo va la ejecución del presupuesto?", a: "En Estadísticas → Gestión de presupuesto puedes ver el historial de ejecución y saldo." },
+                { q: "¿Cuál es la política de apoyo de entrega?", a: "Puedes aplicar diferentes políticas de apoyo según el tipo de comercio." },
+                { q: "¿Cómo proceso quejas de ciudadanos?", a: "En el menú de gestión de quejas, revisa el contenido y media entre comercio y ciudadano." },
+                { q: "¿Puedo exportar datos?", a: "Sí. Puedes exportar en formato Excel/CSV." },
+                { q: "¿Cómo gestiono permisos de usuario?", a: "En Ajustes → Gestión de permisos puedes configurar acceso por rol." }
+            ]
+        };
+
+        let currentCategory = 'all';
+        let chatHistory = [];
+
+        // Inicializar al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            renderFAQs('all');
+            addBotMessage("¡Hola! Soy On-i😊<br>Soy el chatbot de IA de Gyeongsan ON.<br>¡Pregúntame cualquier cosa!");
+        });
+
+        // Eventos de botones de categoría
+        document.querySelectorAll('.faq-category-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.faq-category-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                const category = this.dataset.category;
+                currentCategory = category;
+                renderFAQs(category);
+            });
+        });
+
+        // Renderizar FAQs
+        function renderFAQs(category) {
+            const container = document.getElementById('faqQuestions');
+            container.innerHTML = '';
+
+            let faqs = [];
+            if (category === 'all') {
+                Object.values(faqData).forEach(catFaqs => {
+                    faqs = faqs.concat(catFaqs);
+                });
+            } else {
+                faqs = faqData[category] || [];
+            }
+
+            faqs.forEach((faq, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'faq-question';
+                btn.innerHTML = `<i class="fas fa-comment-dots mr-2"></i>${faq.q}`;
+                btn.onclick = () => handleFAQClick(faq);
+                container.appendChild(btn);
+            });
+        }
+
+        // Manejar clic en FAQ
+        function handleFAQClick(faq) {
+            addUserMessage(faq.q);
+            setTimeout(() => {
+                addBotMessage(faq.a);
+            }, 500);
+        }
+
+        // Enviar mensaje
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (message) {
+                addUserMessage(message);
+                input.value = '';
+                
+                // Simulación de respuesta AI
+                setTimeout(() => {
+                    respondToMessage(message);
+                }, 500);
+            }
+        }
+
+        // Agregar mensaje de usuario
+        function addUserMessage(text) {
+            const container = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message user';
+            messageDiv.innerHTML = `
+                <div class="message-bubble">${text}</div>
+                <div class="message-avatar">👤</div>
+            `;
+            container.appendChild(messageDiv);
+            container.scrollTop = container.scrollHeight;
+            chatHistory.push({ role: 'user', content: text });
+        }
+
+        // Agregar mensaje del bot
+        function addBotMessage(text) {
+            const container = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message bot';
+            
+            const expressions = ['😊', '👀', '👍'];
+            const randomExp = expressions[Math.floor(Math.random() * expressions.length)];
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar">${randomExp}</div>
+                <div class="message-bubble">${text}</div>
+            `;
+            container.appendChild(messageDiv);
+            container.scrollTop = container.scrollHeight;
+            chatHistory.push({ role: 'bot', content: text });
+        }
+
+        // Responder al mensaje
+        function respondToMessage(message) {
+            const lowerMsg = message.toLowerCase();
+            
+            // Respuestas simples basadas en palabras clave
+            if (lowerMsg.includes('entrega') || lowerMsg.includes('envío')) {
+                addBotMessage('La entrega es gratuita😊 Apoyada por la ciudad de Gyeongsan. Normalmente tarda 30-60 minutos después del pedido.');
+            } else if (lowerMsg.includes('comisión') || lowerMsg.includes('costo')) {
+                addBotMessage('0% de comisión tanto para ciudadanos como comercios👍 ¡También 0 costo de publicidad!');
+            } else if (lowerMsg.includes('pedido') || lowerMsg.includes('compra')) {
+                addBotMessage('Selecciona producto en la app → Añadir al carrito → Ingresa dirección → Pago completado. ¡Es muy fácil😊');
+            } else if (lowerMsg.includes('cupón') || lowerMsg.includes('descuento')) {
+                addBotMessage('Obtén cupones en el menú de la app o escanea códigos QR en lugares turísticos. ¡Hay cupones de 5,000 won para envío!');
+            } else if (lowerMsg.includes('comercio') || lowerMsg.includes('tienda')) {
+                addBotMessage('Registrar un comercio es fácil con 1 foto📸 Solo toma una foto de tu registro de negocio. ¡Aprobación en 24 horas!');
+            } else if (lowerMsg.includes('gracias')) {
+                addBotMessage('¡De nada😊 Siempre a tu servicio!');
+            } else if (lowerMsg.includes('hola') || lowerMsg.includes('hey')) {
+                addBotMessage('¡Hola! Soy On-i😊 ¿En qué puedo ayudarte?');
+            } else {
+                addBotMessage('No entendí bien esa pregunta👀 ¿Puedes presionar los botones FAQ de arriba o explicar con más detalle?');
+            }
+        }
+
+        // Enviar con Enter
+        document.getElementById('chatInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
