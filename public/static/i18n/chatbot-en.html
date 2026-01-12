@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oni Chatbot - Gyeongsan ON</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; }
+        body { background: #F8F9FA; }
+        
+        .header-compact { padding: 12px 16px; }
+        .header-title { font-size: 18px; }
+        
+        @media (min-width: 768px) {
+            .header-compact { padding: 16px 24px; }
+            .header-title { font-size: 20px; }
+            .container-main { max-width: 900px; margin: 0 auto; }
+        }
+        
+        .lang-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 12px;
+            font-size: 13px;
+            border-radius: 8px;
+            background: white;
+            border: 1px solid #E5E7EB;
+            transition: all 0.2s;
+        }
+        .lang-btn:hover {
+            background: #EEF2F6;
+            border-color: #1F3A5F;
+        }
+        .lang-btn.active {
+            background: #1F3A5F;
+            color: white;
+            border-color: #1F3A5F;
+        }
+        
+        .category-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .category-card:hover {
+            box-shadow: 0 4px 12px rgba(31,58,95,0.15);
+            transform: translateY(-2px);
+        }
+        
+        .faq-item {
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            overflow: hidden;
+        }
+        .faq-question {
+            padding: 14px 16px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+            color: #1F3A5F;
+        }
+        .faq-question:hover {
+            background: #F8F9FA;
+        }
+        .faq-answer {
+            padding: 0 16px 14px 16px;
+            color: #4B5563;
+            line-height: 1.6;
+            display: none;
+        }
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+        .faq-item.active .faq-icon {
+            transform: rotate(180deg);
+        }
+        .faq-icon {
+            transition: transform 0.2s;
+            color: #6B3E26;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-compact bg-white border-b border-gray-200">
+        <div class="container-main flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <span class="text-2xl">🤖</span>
+                <h1 class="header-title font-bold text-gray-800">Oni Chatbot</h1>
+            </div>
+            <a href="/" class="text-sm text-gray-600 hover:text-gray-900">
+                <i class="fas fa-times"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="bg-white border-b border-gray-200 py-3">
+        <div class="container-main px-4">
+            <div class="flex flex-wrap gap-2">
+                <a href="/static/i18n/chatbot-ko.html" class="lang-btn">🇰🇷 한국어</a>
+                <a href="/static/i18n/chatbot-en.html" class="lang-btn active">🇺🇸 English</a>
+                <a href="/static/i18n/chatbot-zh.html" class="lang-btn">🇨🇳 中文</a>
+                <a href="/static/i18n/chatbot-ja.html" class="lang-btn">🇯🇵 日本語</a>
+                <a href="/static/i18n/chatbot-es.html" class="lang-btn">🇪🇸 Español</a>
+                <a href="/static/i18n/chatbot-fr.html" class="lang-btn">🇫🇷 Français</a>
+                <a href="/static/i18n/chatbot-ar.html" class="lang-btn">🇸🇦 العربية</a>
+                <a href="/static/i18n/chatbot-de.html" class="lang-btn">🇩🇪 Deutsch</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-main px-4 py-6">
+        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 mb-6">
+            <div class="flex items-start gap-3">
+                <span class="text-4xl">😊</span>
+                <div>
+                    <h2 class="text-lg font-bold text-gray-800 mb-2">Hello! I'm Oni</h2>
+                    <p class="text-gray-600 text-sm leading-relaxed">
+                        I'll help you with any questions about the Gyeongsan ON platform.<br>
+                        Select a category below to see frequently asked questions.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <a href="#citizen" class="category-card">
+                <div class="flex items-start gap-3">
+                    <i class="fas fa-user text-2xl text-blue-600"></i>
+                    <div>
+                        <h3 class="font-bold text-gray-800 mb-1">For Citizens (Users)</h3>
+                        <p class="text-sm text-gray-600">Delivery orders, coupons, local currency, etc.</p>
+                        <span class="text-xs text-gray-500 mt-2 inline-block">15 questions</span>
+                    </div>
+                </div>
+            </a>
+            
+            <a href="#merchant" class="category-card">
+                <div class="flex items-start gap-3">
+                    <i class="fas fa-store text-2xl text-green-600"></i>
+                    <div>
+                        <h3 class="font-bold text-gray-800 mb-1">For Merchants</h3>
+                        <p class="text-sm text-gray-600">Registration, fees, settlement, etc.</p>
+                        <span class="text-xs text-gray-500 mt-2 inline-block">15 questions</span>
+                    </div>
+                </div>
+            </a>
+            
+            <a href="#senior" class="category-card">
+                <div class="flex items-start gap-3">
+                    <i class="fas fa-hands-helping text-2xl text-purple-600"></i>
+                    <div>
+                        <h3 class="font-bold text-gray-800 mb-1">For Seniors/On-site Registration</h3>
+                        <p class="text-sm text-gray-600">Easy registration, simple usage, etc.</p>
+                        <span class="text-xs text-gray-500 mt-2 inline-block">5 questions</span>
+                    </div>
+                </div>
+            </a>
+            
+            <a href="#admin" class="category-card">
+                <div class="flex items-start gap-3">
+                    <i class="fas fa-shield-alt text-2xl text-orange-600"></i>
+                    <div>
+                        <h3 class="font-bold text-gray-800 mb-1">Administration/Operations/Trust</h3>
+                        <p class="text-sm text-gray-600">Privacy, public platform, etc.</p>
+                        <span class="text-xs text-gray-500 mt-2 inline-block">5 questions</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div id="citizen" class="mb-8">
+            <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <i class="fas fa-user text-blue-600"></i>
+                For Citizens (Users)
+            </h2>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>What is this app?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">A public platform for free delivery and local food operated by Gyeongsan City.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>Is delivery really free?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">Yes. Participating merchants offer free delivery. (Some conditions may apply)</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>Are there any fees?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">No commission fees for both citizens and merchants - 0 won.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>What stores can I order from?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">You can order from various merchants in Gyeongsan including restaurants, traditional markets, and local food stores.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>Can I order from multiple traditional market stores at once?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">Yes! You can order from multiple stores like side dish shops, butchers, and fruit shops in one order with bundled delivery.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>How is local food different?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">Fresh produce harvested the same day is sold directly by producers, and you can verify the producer's name and farm location.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>Can non-Gyeongsan residents use this?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">Yes. Tourists visiting Gyeongsan can also use it, and specialty product delivery service is available.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>How do I use local currency?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">Additional discounts are provided when paying with local currency like Gyeongsan Pay.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>How long does delivery take?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">Regular delivery is same-day, local food is next-day delivery by default. (May vary by product)</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>How do I cancel an order?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">Free cancellation is available before product shipment. Press the cancel button in 'Order History' in the app.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>Where do I contact if there's a problem?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">Contact 'Customer Service' in the app or Gyeongsan City Hall (☎ 053-810-XXXX).</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>Is it easy for seniors to use?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">Yes. Senior-friendly design with large fonts, simple screens, and voice guidance is applied.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>Is sign-up complicated?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">No. Sign-up is completed in 1 minute with just mobile phone verification.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>Are there any coupons or benefits?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">Various benefits including new member coupons, tourist special coupons, and additional local currency discounts.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>Will it expand to other regions?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">Yes. After the Gyeongsan pilot, it will expand to Pohang, Gumi, Andong, and throughout Gyeongbuk.</div>
+            </div>
+        </div>
+
+        <div id="merchant" class="mb-8">
+            <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <i class="fas fa-store text-green-600"></i>
+                For Merchants
+            </h2>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>Is there a franchise fee?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">No. Franchise fees, commission fees, and advertising costs are all 0 won.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>How do I apply?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">Just take one photo of your business registration certificate in the app and complete application in 3 minutes.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>How do I register the menu?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">You can register the menu later after application. Staff will assist you.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>Can I register on-site?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">Yes. Staff at the traditional market on-site booth will take photos and register for you.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>When will I be approved?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">Automatic approval within 24 hours of application. (We'll contact you if there are document issues)</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>Who does the delivery?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">Gyeongsan City designated delivery agency delivers for free. (Delivery fee is supported by the city)</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>What is bundled delivery?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">A method of collecting orders from multiple stores within the traditional market and delivering them at once.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>When do I receive settlement?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">Weekly settlement is automatically deposited to your registered account.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>The photo came out blurry.</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">That's okay. The administrator will check and contact you to retake or manually input.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>Can traditional market merchants participate?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">Yes! There's a preferential policy for traditional market merchants, and group registration by merchant associations is possible.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>Are there special benefits on market days?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">Yes. On market days, a 'Market Day Special' banner is automatically displayed, bringing more orders.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>Can I register multiple stores at once?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">Yes. You can register multiple locations if they are under your name.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>Can I modify information after registration?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">Yes. You can modify anytime in the 'Merchant Management' menu in the app.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>Is there a subscription fee or monthly fee?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">Not at all. All costs from sign-up to operation are 0 won.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>How do I unsubscribe if I want to?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">You can apply for withdrawal in the app anytime or contact customer service for processing.</div>
+            </div>
+        </div>
+
+        <div id="senior" class="mb-8">
+            <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <i class="fas fa-hands-helping text-purple-600"></i>
+                For Seniors/On-site Registration
+            </h2>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>Isn't there a lot to fill in?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">No! Just take one photo of your business registration certificate and it's automatically filled in.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>Creating a password is difficult.</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">You can use it with just mobile phone verification without a password.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>Do I have to register right now?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">No. You can register anytime at your convenience. No need to rush.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>Can staff register for me?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">Yes! Staff at the traditional market site or city hall will assist you.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>What if I have questions after registration?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">Staff will kindly explain over the phone. ☎ 053-810-XXXX</div>
+            </div>
+        </div>
+
+        <div id="admin" class="mb-8">
+            <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <i class="fas fa-shield-alt text-orange-600"></i>
+                Administration/Operations/Trust
+            </h2>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>Can unauthorized registration be prevented?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">Yes. The existence of business registration numbers is immediately verified through the National Tax Service API.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>Is this really a public app?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">Yes. It's an official public platform directly operated by Gyeongsan City Hall.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>Is personal information safe?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">Yes. We comply with the Personal Information Protection Act and public institution security standards, with encrypted storage.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>Why create this when private delivery apps exist?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">To solve the problem of high commission fees burdening small businesses and lack of publicness.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    <span>Will it expand to other regions in the future?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">Yes. After the Gyeongsan pilot operation, phased expansion throughout Gyeongbuk including Pohang, Gumi, and Andong is planned.</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white border-t border-gray-200 py-6 mt-8">
+        <div class="container-main px-4 text-center">
+            <p class="text-sm text-gray-600 mb-2">Do you have any more questions?</p>
+            <a href="tel:053-810-0000" class="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700">
+                <i class="fas fa-phone"></i>
+                Contact Customer Service
+            </a>
+        </div>
+    </div>
+</body>
+</html>
