@@ -25,6 +25,67 @@ app.get('/api/safe-zones', (c) => c.json(safeZones))
 app.get('/api/coupons', (c) => c.json(coupons))
 app.get('/api/statistics', (c) => c.json(statistics))
 app.get('/api/restaurant-categories', (c) => c.json(restaurantCategories))
+app.get('/api/merchant-applications', (c) => c.json(merchantApplications))
+
+// 가맹점 신청 API
+app.post('/api/merchant-apply', async (c) => {
+  const body = await c.req.json()
+  const applicationId = Date.now()
+  
+  return c.json({
+    success: true,
+    applicationId,
+    status: 'PENDING_ACTIVE',
+    message: '가맹점 신청이 완료되었습니다. 24시간 내 검토 후 승인됩니다.',
+    data: {
+      businessName: body.businessName || '자동인식된 상호명',
+      ownerName: body.ownerName || '자동인식된 대표자명',
+      businessNumber: body.businessNumber || '123-45-67890',
+      address: body.address || '자동인식된 주소',
+      phone: body.phone || '',
+      city: body.city || 'gyeongsan',
+      ocrConfidence: Math.floor(Math.random() * 20) + 75
+    }
+  })
+})
+
+// 가맹점 승인/반려 API
+app.post('/api/merchant-applications/:id/approve', async (c) => {
+  const id = c.req.param('id')
+  const body = await c.req.json()
+  
+  return c.json({
+    success: true,
+    message: '가맹점이 승인되었습니다.',
+    data: {
+      id,
+      status: 'ACTIVE',
+      approvedAt: new Date().toISOString(),
+      approvedBy: body.adminId || 'admin_001'
+    }
+  })
+})
+
+app.post('/api/merchant-applications/:id/reject', async (c) => {
+  const id = c.req.param('id')
+  const body = await c.req.json()
+  
+  return c.json({
+    success: true,
+    message: '가맹점 신청이 반려되었습니다.',
+    data: {
+      id,
+      status: 'REJECTED',
+      rejectedAt: new Date().toISOString(),
+      reason: body.reason || '서류 미비'
+    }
+  })
+})
+
+// 관리자 대시보드 페이지
+app.get('/admin', (c) => {
+  return c.redirect('/static/admin.html')
+})
 
 // 메인 페이지
 app.get('/', (c) => {

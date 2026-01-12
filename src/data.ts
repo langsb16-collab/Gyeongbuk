@@ -371,5 +371,93 @@ export const statistics = {
   localCurrencyUsage: 3420000000,
   wasteReduction: 12.5,
   activeUsers: 8932,
-  merchantCount: 234
+  merchantCount: 234,
+  pendingMerchants: 47,
+  previewMerchants: 153
+};
+
+// 가맹점 신청 샘플 데이터 (사전 등록용 - 시민 앱용)
+export const previewMerchants = [
+  {
+    id: 1,
+    businessName: '경산김밥',
+    ownerName: '홍길동',
+    businessNumber: '123-45-67890',
+    address: '경상북도 경산시 중앙로 123',
+    phone: '053-811-1234',
+    status: 'PENDING_ACTIVE',
+    submittedAt: '2026-01-12T09:30:00',
+    category: 'snack'
+  },
+  {
+    id: 2,
+    businessName: '맛나 분식',
+    ownerName: '김영희',
+    businessNumber: '234-56-78901',
+    address: '경상북도 경산시 사동 45',
+    phone: '010-1234-5678',
+    status: 'APPLIED',
+    submittedAt: '2026-01-12T10:15:00',
+    category: 'snack'
+  },
+  {
+    id: 3,
+    businessName: '전통 순대국',
+    ownerName: '박철수',
+    businessNumber: '345-67-89012',
+    address: '경상북도 경산시 중앙시장 내',
+    phone: '053-812-3456',
+    status: 'CONSENTED_PREVIEW',
+    submittedAt: '2026-01-11T14:20:00',
+    category: 'korean'
+  }
+];
+
+// 가맹점 신청 데이터 (관리자 대시보드용)
+export const merchantApplications = {
+  success: true,
+  total: 3,
+  data: [
+    {
+      id: 1001,
+      businessName: '경산 전통 한정식',
+      ownerName: '김영희',
+      businessNumber: '123-45-67890',
+      address: '경북 경산시 중앙동 123-45',
+      phone: '053-111-2222',
+      city: 'gyeongsan',
+      status: 'PENDING_ACTIVE',
+      appliedAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+      ocrConfidence: 92,
+      documentUrl: '/uploads/cert_1001.jpg'
+    },
+    {
+      id: 1002,
+      businessName: '중앙시장 떡볶이',
+      ownerName: '박철수',
+      businessNumber: '234-56-78901',
+      address: '경북 경산시 중앙시장 3길 12',
+      phone: '053-222-3333',
+      city: 'gyeongsan',
+      status: 'ACTIVE',
+      appliedAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+      approvedAt: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(),
+      ocrConfidence: 88,
+      documentUrl: '/uploads/cert_1002.jpg'
+    },
+    {
+      id: 1003,
+      businessName: '포항 로컬푸드 직판장',
+      ownerName: '이순자',
+      businessNumber: '345-67-89012',
+      address: '경북 포항시 북구 123번지',
+      phone: '054-333-4444',
+      city: 'pohang',
+      status: 'PENDING_ACTIVE',
+      appliedAt: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
+      ocrConfidence: 75,
+      documentUrl: '/uploads/cert_1003.jpg',
+      needsReview: true
+    }
+  ]
 };

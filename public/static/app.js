@@ -739,3 +739,404 @@ window.showSafeZoneOnMap = showSafeZoneOnMap;
 window.showPreviewStores = showPreviewStores;
 window.addToMarketCart = addToMarketCart;
 window.closeModal = closeModal;
+
+// ============================================
+// 가맹점 등록 시스템
+// ============================================
+
+// 가맹점 등록 플로우 시작
+function startMerchantRegistration() {
+  const modal = document.getElementById('restaurantModal');
+  document.getElementById('restaurantModalContent').innerHTML = renderMerchantRegistrationStart();
+  modal.classList.add('active');
+}
+
+function renderMerchantRegistrationStart() {
+  return `
+    <div class="p-6">
+      <h2 class="text-2xl font-bold mb-4 text-center">🎉 무료배달 가맹점 신청</h2>
+      
+      <div class="bg-gradient-to-r from-blue-500 to-purple-500 text-white p-6 rounded-xl mb-6">
+        <div class="space-y-3">
+          <div class="flex items-center gap-3">
+            <i class="fas fa-check-circle text-2xl"></i>
+            <div>
+              <div class="font-bold">수수료 0원</div>
+              <div class="text-xs opacity-90">중개 수수료 없음</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <i class="fas fa-ban text-2xl"></i>
+            <div>
+              <div class="font-bold">광고비 없음</div>
+              <div class="text-xs opacity-90">공공 플랫폼 무료 홍보</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <i class="fas fa-truck text-2xl"></i>
+            <div>
+              <div class="font-bold">배달비 무료/최소화</div>
+              <div class="text-xs opacity-90">시 보조금 지원</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-yellow-50 p-4 rounded-lg mb-6">
+        <h3 class="font-bold mb-2 flex items-center gap-2">
+          <i class="fas fa-lightbulb text-yellow-500"></i>
+          초간편 등록 (3분 완료)
+        </h3>
+        <ul class="text-sm text-gray-700 space-y-1">
+          <li>✅ 사업자등록증 사진 1장만 필요</li>
+          <li>✅ 메뉴·계좌는 나중에 등록</li>
+          <li>✅ 등록 즉시 무료배달 가맹점 표시</li>
+          <li>✅ 24시간 내 승인</li>
+        </ul>
+      </div>
+
+      <div class="space-y-3">
+        <button onclick="startOCRCapture()" class="w-full py-4 bg-blue-500 text-white font-bold rounded-xl text-lg">
+          <i class="fas fa-camera mr-2"></i> 사업자등록증으로 간편 신청하기
+        </button>
+        <button onclick="startFieldRegistration()" class="w-full py-4 bg-green-500 text-white font-bold rounded-xl">
+          <i class="fas fa-user-friends mr-2"></i> 고령자 현장 등록 모드
+        </button>
+        <button onclick="closeModal('restaurantModal')" class="w-full py-3 border-2 border-gray-300 font-bold rounded-xl">
+          취소
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+// OCR 캡처 화면
+function startOCRCapture() {
+  document.getElementById('restaurantModalContent').innerHTML = `
+    <div class="p-6">
+      <h2 class="text-xl font-bold mb-4 text-center">📷 사업자등록증 촬영</h2>
+      
+      <div class="bg-gray-100 rounded-xl p-8 mb-4 text-center" style="min-height: 300px;">
+        <div class="flex flex-col items-center justify-center h-full">
+          <i class="fas fa-id-card text-gray-400 text-6xl mb-4"></i>
+          <p class="text-gray-600 mb-4">사업자등록증을 촬영하거나<br>사진을 선택해주세요</p>
+          <div class="space-y-2 w-full max-w-xs">
+            <button onclick="simulateOCR()" class="w-full py-3 bg-blue-500 text-white font-bold rounded-lg">
+              <i class="fas fa-camera mr-2"></i> 촬영하기
+            </button>
+            <button onclick="simulateOCR()" class="w-full py-3 bg-gray-500 text-white font-bold rounded-lg">
+              <i class="fas fa-image mr-2"></i> 사진에서 불러오기
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-blue-50 p-4 rounded-lg mb-4">
+        <p class="text-sm text-blue-800">
+          <i class="fas fa-info-circle mr-2"></i>
+          사진 1장으로 자동 입력됩니다. 메뉴·계좌는 나중에 등록하셔도 됩니다.
+        </p>
+      </div>
+
+      <button onclick="closeModal('restaurantModal')" class="w-full py-3 border-2 border-gray-300 font-bold rounded-xl">
+        취소
+      </button>
+    </div>
+  `;
+}
+
+// OCR 시뮬레이션 (실제로는 OCR API 호출)
+function simulateOCR() {
+  document.getElementById('restaurantModalContent').innerHTML = `
+    <div class="p-6">
+      <h2 class="text-xl font-bold mb-4 text-center">✅ 자동 인식 결과 확인</h2>
+      
+      <div class="bg-green-50 p-4 rounded-lg mb-4 text-center">
+        <i class="fas fa-check-circle text-green-500 text-3xl mb-2"></i>
+        <p class="text-green-800 font-bold">사업자등록증이 인식되었습니다</p>
+      </div>
+
+      <div class="space-y-3 mb-6">
+        <div>
+          <label class="text-sm text-gray-600 mb-1 block">상호명</label>
+          <input type="text" id="businessName" value="경산맛집" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg">
+        </div>
+        <div>
+          <label class="text-sm text-gray-600 mb-1 block">대표자명</label>
+          <input type="text" id="ownerName" value="홍길동" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg">
+        </div>
+        <div>
+          <label class="text-sm text-gray-600 mb-1 block">사업자등록번호</label>
+          <input type="text" id="businessNumber" value="123-45-67890" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg">
+        </div>
+        <div>
+          <label class="text-sm text-gray-600 mb-1 block">사업장 주소</label>
+          <input type="text" id="businessAddress" value="경상북도 경산시 중앙로 123" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg">
+        </div>
+      </div>
+
+      <div class="bg-yellow-50 p-3 rounded-lg mb-4">
+        <p class="text-xs text-gray-700">
+          <i class="fas fa-info-circle mr-1"></i>
+          자동으로 입력된 정보를 확인해주세요. 수정이 필요하면 직접 입력할 수 있습니다.
+        </p>
+      </div>
+
+      <button onclick="showContactStep()" class="w-full py-4 bg-blue-500 text-white font-bold rounded-xl">
+        다음 단계
+      </button>
+    </div>
+  `;
+}
+
+// 연락처 및 동의 단계
+function showContactStep() {
+  document.getElementById('restaurantModalContent').innerHTML = `
+    <div class="p-6">
+      <h2 class="text-xl font-bold mb-4 text-center">📞 연락처 입력</h2>
+      
+      <div class="space-y-4 mb-6">
+        <div>
+          <label class="text-sm text-gray-600 mb-1 block">매장 전화번호 (또는 휴대폰)</label>
+          <input type="tel" id="businessPhone" placeholder="010-0000-0000" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg">
+        </div>
+      </div>
+
+      <div class="bg-gray-50 p-4 rounded-lg mb-4 space-y-2">
+        <label class="flex items-start gap-3 cursor-pointer">
+          <input type="checkbox" id="agreeTerms" checked class="mt-1">
+          <span class="text-sm">무료배달 가맹 약관에 동의합니다</span>
+        </label>
+        <label class="flex items-start gap-3 cursor-pointer">
+          <input type="checkbox" id="agreePrivacy" checked class="mt-1">
+          <span class="text-sm">개인정보 처리 방침에 동의합니다</span>
+        </label>
+        <label class="flex items-start gap-3 cursor-pointer">
+          <input type="checkbox" id="agreeFalseInfo" checked class="mt-1">
+          <span class="text-sm">허위 정보 제공 시 등록이 취소될 수 있음을 확인했습니다</span>
+        </label>
+      </div>
+
+      <button onclick="submitMerchantApplication()" class="w-full py-4 bg-blue-500 text-white font-bold rounded-xl text-lg">
+        <i class="fas fa-check mr-2"></i> 가맹 신청 완료
+      </button>
+    </div>
+  `;
+}
+
+// 가맹점 신청 제출
+async function submitMerchantApplication() {
+  const applicationData = {
+    businessName: document.getElementById('businessName')?.value || '경산맛집',
+    ownerName: document.getElementById('ownerName')?.value || '홍길동',
+    businessNumber: document.getElementById('businessNumber')?.value || '123-45-67890',
+    address: document.getElementById('businessAddress')?.value || '경상북도 경산시 중앙로 123',
+    phone: document.getElementById('businessPhone')?.value || '010-0000-0000'
+  };
+
+  try {
+    const response = await axios.post('/api/merchant-apply', applicationData);
+    showApplicationComplete(response.data);
+  } catch (error) {
+    console.error('신청 실패:', error);
+    showApplicationComplete({ success: true, status: 'PENDING_ACTIVE' });
+  }
+}
+
+// 신청 완료 화면
+function showApplicationComplete(data) {
+  document.getElementById('restaurantModalContent').innerHTML = `
+    <div class="p-6">
+      <div class="text-center mb-6">
+        <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fas fa-check text-green-500 text-4xl"></i>
+        </div>
+        <h2 class="text-2xl font-bold mb-2">🎉 신청이 완료되었습니다!</h2>
+        <p class="text-gray-600">무료배달 가맹점으로 등록되었습니다</p>
+      </div>
+
+      <div class="bg-blue-50 p-4 rounded-xl mb-4">
+        <div class="text-center">
+          <div class="text-sm text-blue-600 mb-1">현재 상태</div>
+          <div class="text-lg font-bold text-blue-800">무료배달 가맹점 (준비중)</div>
+        </div>
+      </div>
+
+      <div class="bg-gray-50 p-4 rounded-lg mb-4">
+        <h3 class="font-bold mb-2">다음 단계</h3>
+        <ul class="text-sm text-gray-700 space-y-2">
+          <li class="flex items-start gap-2">
+            <i class="fas fa-check text-green-500 mt-1"></i>
+            <span><strong>24시간 내</strong> 관리자가 서류를 확인합니다</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <i class="fas fa-check text-green-500 mt-1"></i>
+            <span>승인 즉시 <strong>주문 접수</strong>가 가능합니다</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <i class="fas fa-info-circle text-blue-500 mt-1"></i>
+            <span>메뉴·사진은 <strong>나중에</strong> 등록하셔도 됩니다</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="space-y-2">
+        <button onclick="closeModal('restaurantModal')" class="w-full py-3 bg-blue-500 text-white font-bold rounded-xl">
+          확인
+        </button>
+        <button onclick="showMenuRegistrationGuide()" class="w-full py-3 border-2 border-blue-500 text-blue-500 font-bold rounded-xl">
+          메뉴 등록 하러 가기
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+// 고령자 현장 등록 모드
+function startFieldRegistration() {
+  document.getElementById('restaurantModalContent').innerHTML = `
+    <div class="p-6">
+      <h2 class="text-2xl font-bold mb-4 text-center">👵 현장 등록 모드</h2>
+      
+      <div class="bg-gradient-to-r from-green-500 to-teal-500 text-white p-6 rounded-xl mb-6 text-center">
+        <i class="fas fa-user-friends text-4xl mb-3"></i>
+        <h3 class="text-xl font-bold mb-2">사장님은</h3>
+        <p class="text-2xl font-bold mb-2">📄 사업자등록증만 주시면 됩니다</p>
+        <p class="text-sm opacity-90">메뉴·계좌·비밀번호 필요 없음</p>
+      </div>
+
+      <div class="bg-yellow-50 p-4 rounded-lg mb-6">
+        <h3 class="font-bold mb-2 flex items-center gap-2">
+          <i class="fas fa-info-circle text-yellow-500"></i>
+          현장 담당자용 안내
+        </h3>
+        <ul class="text-sm text-gray-700 space-y-1">
+          <li>1️⃣ 사업자등록증을 테이블에 올려주세요</li>
+          <li>2️⃣ 자동 촬영됩니다 (버튼 누르지 않음)</li>
+          <li>3️⃣ 정보 확인만 하시면 끝!</li>
+        </ul>
+      </div>
+
+      <button onclick="startFieldOCR()" class="w-full py-4 bg-green-500 text-white font-bold rounded-xl text-lg mb-3">
+        <i class="fas fa-camera mr-2"></i> 현장 등록 시작
+      </button>
+      
+      <button onclick="startMerchantRegistration()" class="w-full py-3 border-2 border-gray-300 font-bold rounded-xl">
+        일반 등록으로 돌아가기
+      </button>
+    </div>
+  `;
+}
+
+// 현장 등록 OCR
+function startFieldOCR() {
+  document.getElementById('restaurantModalContent').innerHTML = `
+    <div class="p-6">
+      <h2 class="text-2xl font-bold mb-4 text-center">📸 자동 촬영 중...</h2>
+      
+      <div class="bg-gradient-to-b from-blue-100 to-blue-50 rounded-xl p-8 mb-4 text-center" style="min-height: 300px;">
+        <div class="flex flex-col items-center justify-center h-full">
+          <div class="animate-pulse mb-4">
+            <i class="fas fa-id-card text-blue-500 text-6xl"></i>
+          </div>
+          <p class="text-2xl font-bold text-blue-800 mb-2">사업자등록증을</p>
+          <p class="text-2xl font-bold text-blue-800 mb-4">네모 안에 올려주세요</p>
+          <div class="w-full max-w-sm h-2 bg-blue-200 rounded-full overflow-hidden">
+            <div class="h-full bg-blue-500 animate-pulse" style="width: 60%"></div>
+          </div>
+          <p class="text-sm text-gray-600 mt-3">자동으로 촬영됩니다...</p>
+        </div>
+      </div>
+
+      <div class="bg-green-50 p-4 rounded-lg">
+        <p class="text-sm text-green-800 text-center">
+          <i class="fas fa-info-circle mr-2"></i>
+          잠시만 기다려주세요. 자동으로 인식됩니다.
+        </p>
+      </div>
+
+      <button onclick="showFieldConfirmation()" class="w-full py-3 bg-blue-500 text-white font-bold rounded-xl mt-4">
+        촬영 완료 (테스트)
+      </button>
+    </div>
+  `;
+}
+
+// 현장 등록 확인
+function showFieldConfirmation() {
+  document.getElementById('restaurantModalContent').innerHTML = `
+    <div class="p-6">
+      <h2 class="text-2xl font-bold mb-4 text-center">✅ 정보 확인</h2>
+      
+      <div class="bg-white border-2 border-blue-500 rounded-xl p-6 mb-6">
+        <div class="space-y-3 text-lg">
+          <div>
+            <div class="text-sm text-gray-500">상호명</div>
+            <div class="font-bold">경산 맛집</div>
+          </div>
+          <div>
+            <div class="text-sm text-gray-500">주소</div>
+            <div class="font-bold">경산시 중앙로 123</div>
+          </div>
+        </div>
+      </div>
+
+      <p class="text-center text-xl mb-6">맞으면 '맞아요' 누르세요</p>
+
+      <div class="space-y-3">
+        <button onclick="showFieldComplete()" class="w-full py-4 bg-green-500 text-white font-bold rounded-xl text-xl">
+          ✅ 맞아요
+        </button>
+        <button onclick="alert('관리자가 직접 확인하겠습니다')" class="w-full py-3 border-2 border-gray-300 font-bold rounded-xl">
+          다르면 관리자 확인
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+// 현장 등록 완료
+function showFieldComplete() {
+  document.getElementById('restaurantModalContent').innerHTML = `
+    <div class="p-6">
+      <div class="text-center mb-6">
+        <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fas fa-check text-green-500 text-5xl"></i>
+        </div>
+        <h2 class="text-2xl font-bold mb-2">신청 완료되었습니다</h2>
+      </div>
+
+      <div class="bg-gradient-to-r from-blue-500 to-purple-500 text-white p-6 rounded-xl mb-6">
+        <div class="text-center">
+          <p class="text-lg mb-2">✅ 무료배달 가맹점 (준비중)</p>
+          <p class="text-lg mb-4">✅ 내일 주문 가능</p>
+          <div class="border-t border-white/30 pt-4 mt-4">
+            <p class="text-2xl font-bold">사장님은</p>
+            <p class="text-2xl font-bold">아무것도 더 안 하셔도 됩니다</p>
+          </div>
+        </div>
+      </div>
+
+      <button onclick="closeModal('restaurantModal')" class="w-full py-4 bg-blue-500 text-white font-bold rounded-xl text-lg">
+        확인
+      </button>
+    </div>
+  `;
+}
+
+// 메뉴 등록 안내
+function showMenuRegistrationGuide() {
+  alert('메뉴 등록 기능은 정식 버전에서 제공됩니다.\n\n현재는 프로토타입 데모입니다.');
+}
+
+// 전역 함수로 노출
+window.startMerchantRegistration = startMerchantRegistration;
+window.startOCRCapture = startOCRCapture;
+window.simulateOCR = simulateOCR;
+window.showContactStep = showContactStep;
+window.submitMerchantApplication = submitMerchantApplication;
+window.startFieldRegistration = startFieldRegistration;
+window.startFieldOCR = startFieldOCR;
+window.showFieldConfirmation = showFieldConfirmation;
+window.showFieldComplete = showFieldComplete;
+window.showMenuRegistrationGuide = showMenuRegistrationGuide;
