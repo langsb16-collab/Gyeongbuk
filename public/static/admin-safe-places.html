@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>안전거래 장소 관리 - 경산온(ON)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+        }
+        .stat-card {
+            transition: transform 0.2s;
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 헤더 -->
+    <header class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900">
+                        <i class="fas fa-shield-alt text-purple-600 mr-2"></i>
+                        안전거래 장소 관리
+                    </h1>
+                    <p class="text-sm text-gray-600 mt-1">경산온(ON) 관리자 페이지</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <a href="/static/admin-orders.html" class="px-4 py-2 text-gray-600 hover:text-gray-900">
+                        주문 관리
+                    </a>
+                    <a href="/" class="px-4 py-2 text-gray-600 hover:text-gray-900">
+                        <i class="fas fa-home mr-1"></i>
+                        메인
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 통계 카드 -->
+    <div class="max-w-7xl mx-auto px-4 py-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div class="stat-card bg-white rounded-lg shadow-sm p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600 mb-1">전체 안전거래 장소</p>
+                        <p id="totalPlaces" class="text-2xl font-bold text-gray-900">0곳</p>
+                    </div>
+                    <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-map-marker-alt text-purple-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card bg-white rounded-lg shadow-sm p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600 mb-1">이번 달 이용 횟수</p>
+                        <p id="monthlyUses" class="text-2xl font-bold text-green-600">0회</p>
+                    </div>
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card bg-white rounded-lg shadow-sm p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600 mb-1">장소 선택률</p>
+                        <p id="selectionRate" class="text-2xl font-bold text-blue-600">0%</p>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-chart-line text-blue-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card bg-white rounded-lg shadow-sm p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600 mb-1">분쟁 감소율</p>
+                        <p id="disputeReduction" class="text-2xl font-bold text-orange-600">0%</p>
+                    </div>
+                    <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-shield-alt text-orange-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 필터 -->
+        <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">상태</label>
+                    <select id="statusFilter" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                        <option value="all">전체</option>
+                        <option value="ACTIVE">활성</option>
+                        <option value="INACTIVE">비활성</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">유형</label>
+                    <select id="typeFilter" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                        <option value="all">전체</option>
+                        <option value="POLICE">경찰서/파출소</option>
+                        <option value="GOV">시청/행정센터</option>
+                        <option value="CCTV_ZONE">CCTV존</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">CCTV</label>
+                    <select id="cctvFilter" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                        <option value="all">전체</option>
+                        <option value="true">있음</option>
+                        <option value="false">없음</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">&nbsp;</label>
+                    <button onclick="applyFilters()" class="w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
+                        <i class="fas fa-filter mr-2"></i>
+                        필터 적용
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 장소 목록 -->
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+            <div class="px-6 py-4 border-b bg-gray-50 flex items-center justify-between">
+                <h2 class="text-lg font-bold text-gray-900">안전거래 장소 목록</h2>
+                <button onclick="openAddPlaceModal()" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
+                    <i class="fas fa-plus mr-2"></i>
+                    장소 추가
+                </button>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50 border-b">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">장소명</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">유형</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">주소</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">CCTV</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">이용 횟수</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">상태</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">액션</th>
+                        </tr>
+                    </thead>
+                    <tbody id="placesTableBody" class="divide-y divide-gray-200">
+                        <!-- 동적 로딩 -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 장소별 이용 통계 -->
+        <div class="bg-white rounded-lg shadow-sm p-6 mt-6">
+            <h2 class="text-lg font-bold text-gray-900 mb-4">장소별 이용 통계</h2>
+            <div id="placeUsageChart" class="h-64">
+                <!-- 차트가 들어갈 영역 (향후 Chart.js 추가) -->
+                <p class="text-gray-500 text-center py-20">
+                    <i class="fas fa-chart-bar text-4xl mb-2"></i><br>
+                    차트는 향후 업데이트 예정입니다
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 장소 추가/수정 모달 -->
+    <div id="placeModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-bold text-gray-900">
+                    <i class="fas fa-map-marker-alt text-purple-600 mr-2"></i>
+                    <span id="modalTitle">안전거래 장소 추가</span>
+                </h3>
+                <button onclick="closePlaceModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <form id="placeForm" class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            장소명 <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" id="placeName" required 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                               placeholder="예: 경산경찰서 민원실 앞">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            유형 <span class="text-red-500">*</span>
+                        </label>
+                        <select id="placeType" required class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                            <option value="">선택하세요</option>
+                            <option value="POLICE">경찰서/파출소</option>
+                            <option value="GOV">시청/행정센터</option>
+                            <option value="CCTV_ZONE">CCTV존</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        주소 <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" id="placeAddress" required 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                           placeholder="예: 경상북도 경산시 중앙로 132">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            위도 <span class="text-red-500">*</span>
+                        </label>
+                        <input type="number" step="0.000001" id="placeLat" required 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                               placeholder="예: 35.828653">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            경도 <span class="text-red-500">*</span>
+                        </label>
+                        <input type="number" step="0.000001" id="placeLng" required 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                               placeholder="예: 128.742810">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">운영시간</label>
+                    <input type="text" id="placeHours" 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                           placeholder="예: 24시간 또는 평일 09:00-18:00">
+                </div>
+
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="placeCctv" class="mr-2">
+                        <label for="placeCctv" class="text-sm text-gray-700">CCTV 설치</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="placeParking" class="mr-2">
+                        <label for="placeParking" class="text-sm text-gray-700">주차 가능</label>
+                    </div>
+                    <div>
+                        <select id="placeStatus" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                            <option value="ACTIVE">활성</option>
+                            <option value="INACTIVE">비활성</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">검증 기관</label>
+                    <input type="text" id="placeVerifier" 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                           placeholder="예: 경산시경찰, 경산시청">
+                </div>
+
+                <div class="flex justify-end space-x-2 pt-4 border-t">
+                    <button type="button" onclick="closePlaceModal()" 
+                            class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
+                        취소
+                    </button>
+                    <button type="submit" 
+                            class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
+                        저장
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+    <script>
+        let allPlaces = [];
+
+        // 페이지 로드
+        async function loadData() {
+            try {
+                const response = await axios.get('/api/safe-trade-places');
+                allPlaces = response.data.places || [];
+                renderPlaces();
+                updateStats();
+            } catch (error) {
+                console.error('데이터 로딩 실패:', error);
+            }
+        }
+
+        // 장소 목록 렌더링
+        function renderPlaces() {
+            const tbody = document.getElementById('placesTableBody');
+            
+            if (allPlaces.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="px-6 py-12 text-center text-gray-500">
+                            등록된 안전거래 장소가 없습니다.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = allPlaces.map(place => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4">
+                        <div class="font-medium text-gray-900">${place.name}</div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="px-2 py-1 text-xs rounded-full ${getTypeBadgeClass(place.type)}">
+                            ${getTypeText(place.type)}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-600 max-w-xs truncate">
+                        ${place.address}
+                    </td>
+                    <td class="px-6 py-4">
+                        ${place.hasCctv ? '<span class="text-green-600"><i class="fas fa-check"></i></span>' : '<span class="text-gray-400"><i class="fas fa-times"></i></span>'}
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-600">
+                        ${place.useCount || 0}회
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="px-2 py-1 text-xs rounded-full ${place.status === 'ACTIVE' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}">
+                            ${place.status === 'ACTIVE' ? '활성' : '비활성'}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="flex items-center space-x-2">
+                            <button onclick="openMap({name:'${place.name}', lat:${place.lat}, lng:${place.lng}})" 
+                                    class="text-blue-600 hover:text-blue-700" title="지도보기">
+                                <i class="fas fa-map-marked-alt"></i>
+                            </button>
+                            <button onclick="editPlace('${place.placeId}')" 
+                                    class="text-gray-600 hover:text-gray-700" title="수정">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button onclick="togglePlaceStatus('${place.placeId}')" 
+                                    class="text-orange-600 hover:text-orange-700" title="활성/비활성">
+                                <i class="fas fa-power-off"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // 통계 업데이트
+        function updateStats() {
+            document.getElementById('totalPlaces').textContent = allPlaces.length + '곳';
+            document.getElementById('monthlyUses').textContent = '156회'; // 임시 데이터
+            document.getElementById('selectionRate').textContent = '68%'; // 임시 데이터
+            document.getElementById('disputeReduction').textContent = '-32%'; // 임시 데이터
+        }
+
+        // 지도 열기
+        function openMap({name, lat, lng}) {
+            const url = `https://map.kakao.com/link/map/${encodeURIComponent(name)},${lat},${lng}`;
+            window.open(url, '_blank', 'noopener');
+        }
+
+        function getTypeText(type) {
+            const types = {
+                'POLICE': '경찰서',
+                'GOV': '행정센터',
+                'CCTV_ZONE': 'CCTV존'
+            };
+            return types[type] || type;
+        }
+
+        function getTypeBadgeClass(type) {
+            const classes = {
+                'POLICE': 'bg-blue-100 text-blue-800',
+                'GOV': 'bg-green-100 text-green-800',
+                'CCTV_ZONE': 'bg-purple-100 text-purple-800'
+            };
+            return classes[type] || 'bg-gray-100 text-gray-800';
+        }
+
+        function openAddPlaceModal() {
+            document.getElementById('placeModal').classList.remove('hidden');
+            document.getElementById('modalTitle').textContent = '안전거래 장소 추가';
+            document.getElementById('placeForm').reset();
+        }
+
+        function closePlaceModal() {
+            document.getElementById('placeModal').classList.add('hidden');
+        }
+
+        function applyFilters() {
+            alert('필터 기능은 곧 구현됩니다.');
+        }
+
+        function editPlace(placeId) {
+            alert(`장소 수정 기능은 곧 구현됩니다.\nPlace ID: ${placeId}`);
+        }
+
+        function togglePlaceStatus(placeId) {
+            if (confirm('장소의 상태를 변경하시겠습니까?')) {
+                alert('상태 변경 기능은 곧 구현됩니다.');
+            }
+        }
+
+        // 페이지 로드
+        loadData();
+    </script>
+</body>
+</html>
