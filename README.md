@@ -20,8 +20,17 @@
 
 ## 🌐 접속 URL
 
-**시민 앱**: https://3000-i72u8kdaamvfdmf8bmjvw-c07dda5e.sandbox.novita.ai  
-**관리자 대시보드**: https://3000-i72u8kdaamvfdmf8bmjvw-c07dda5e.sandbox.novita.ai/admin
+**메인 페이지**: https://inkorea.me  
+**중고거래**: https://inkorea.me/static/trade.html  
+**로컬푸드**: https://inkorea.me/static/localfood.html  
+**관리자 주문 관리**: https://inkorea.me/static/admin-orders.html  
+**챗봇 (8개 언어)**: https://inkorea.me/static/i18n/chatbot-ko
+
+**API 엔드포인트**:
+- 안전거래 장소: https://inkorea.me/api/safe-trade-places
+- 로컬푸드 상품: https://inkorea.me/api/local-food-products
+- 중고거래 아이템: https://inkorea.me/api/trade-items
+- 관리자 주문 목록: https://inkorea.me/api/admin/orders
 
 ---
 
@@ -129,38 +138,56 @@
 
 ---
 
-## 📊 API 엔드포인트
+## 📊 API 엔드포인트 (총 33개)
 
-### 배달·시장
+### 배달·주문 (7개)
 - `GET /api/restaurants` - 음식점 목록
 - `GET /api/market-products` - 전통시장 상품
-- `GET /api/local-foods` - 로컬푸드
+- `GET /api/stores/:storeId/menus` - 가게 메뉴 조회
+- `POST /api/cart/add` - 장바구니 담기
+- `POST /api/orders/start` - 주문 시작
+- `GET /api/orders/:orderId` - 주문 조회
+- `GET /api/admin/orders` - 관리자 주문 목록
 
-### 중고·나눔
-- `GET /api/used-items` - 중고거래
-- `GET /api/free-items` - 무료나눔
-- `GET /api/safe-zones` - 안전거래 존
+### 안전거래 장소 (3개 - 신규 ✨)
+- `GET /api/safe-trade-places` - 안전거래 장소 목록 (위치 기반 추천)
+- `GET /api/safe-trade-places/:placeId` - 안전거래 장소 상세
+- `POST /api/chat-rooms/:roomId/select-place` - 채팅방 안전거래 장소 선택
 
-### 특산물·관광
+### 중고거래 (3개 - 신규 ✨)
+- `GET /api/trade-items` - 중고거래 아이템 목록
+- `POST /api/chat-rooms` - 채팅방 생성
+- `POST /api/trade-disputes` - 분쟁 신고
+
+### 로컬푸드 (2개 - 신규 ✨)
+- `GET /api/local-food-products` - 로컬푸드 상품 목록
+- `POST /api/local-food-orders` - 로컬푸드 예약 주문
+
+### 특산물·관광 (4개)
 - `GET /api/specialties` - 경산 특산물 4종
 - `GET /api/tourist-spots` - 관광지 3곳
 - `GET /api/festivals` - 경산 대추축제
-- `GET /api/qr/:spotId` - 관광지 QR 커머스 (핵심)
+- `GET /api/qr/:spotId` - 관광지 QR 커머스
 
-### 챗봇 (NEW)
+### 챗봇 (2개)
 - `GET /api/chatbot/faq` - 전체 FAQ (40개)
 - `GET /api/chatbot/faq/:category` - 카테고리별 FAQ
 
-### 가맹점
+### 가맹점 (4개)
 - `POST /api/merchant-apply` - 가맹점 신청
 - `GET /api/merchant-applications` - 신청 목록
 - `POST /api/merchant-applications/:id/approve` - 승인
 - `POST /api/merchant-applications/:id/reject` - 반려
 
-### 기타
+### 기타 (8개)
 - `GET /api/statistics` - 플랫폼 통계
 - `GET /api/coupons` - 쿠폰 목록
 - `GET /api/cities` - 시군 목록
+- `GET /api/local-foods` - 로컬푸드 (레거시)
+- `GET /api/used-items` - 중고거래 (레거시)
+- `GET /api/free-items` - 무료나눔 (레거시)
+- `GET /api/safe-zones` - 안전거래 존 (레거시)
+- `POST /api/admin/orders/:orderId/status` - 주문 상태 변경
 
 ---
 
