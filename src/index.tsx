@@ -12,7 +12,8 @@ import {
   restaurantCategories,
   gyeongsanSpecialties,
   touristSpots,
-  festivals
+  festivals,
+  chatbotFAQ
 } from './data'
 
 const app = new Hono()
@@ -34,6 +35,9 @@ app.get('/api/merchant-applications', (c) => c.json(merchantApplications))
 app.get('/api/specialties', (c) => c.json(gyeongsanSpecialties))
 app.get('/api/tourist-spots', (c) => c.json(touristSpots))
 app.get('/api/festivals', (c) => c.json(festivals))
+
+// 챗봇 FAQ API
+app.get('/api/chatbot/faq', (c) => c.json(chatbotFAQ))
 
 // 관광지 QR 커머스 (관광지별 특산물 추천)
 app.get('/api/qr/:spotId', (c) => {
