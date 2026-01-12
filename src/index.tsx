@@ -326,29 +326,578 @@ app.get('/api/trade-items', async (c) => {
   const category = c.req.query('category')
   
   const sampleItems = [
+    // 무료나눔 10개
     {
-      itemId: 'TRADE-001',
-      title: '삼성 냉장고 (2021년형)',
-      price: 150000,
-      isFree: false,
-      category: '가전',
-      thumbnail: 'https://via.placeholder.com/300x200',
-      status: 'AVAILABLE',
-      createdAt: new Date().toISOString()
-    },
-    {
-      itemId: 'TRADE-003',
+      itemId: 'FREE-001',
       title: '무료나눔 - 유아용 자전거',
       price: 0,
       isFree: true,
       category: '유아용품',
-      thumbnail: 'https://via.placeholder.com/300x200',
+      thumbnail: 'https://via.placeholder.com/300x200?text=유아용+자전거',
       status: 'AVAILABLE',
+      viewCount: 45,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'FREE-002',
+      title: '무료나눔 - 책상 스탠드',
+      price: 0,
+      isFree: true,
+      category: '가전',
+      thumbnail: 'https://via.placeholder.com/300x200?text=책상+스탠드',
+      status: 'AVAILABLE',
+      viewCount: 32,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'FREE-003',
+      title: '무료나눔 - 아기 옷 세트',
+      price: 0,
+      isFree: true,
+      category: '유아용품',
+      thumbnail: 'https://via.placeholder.com/300x200?text=아기+옷',
+      status: 'AVAILABLE',
+      viewCount: 67,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'FREE-004',
+      title: '무료나눔 - 식탁 의자 2개',
+      price: 0,
+      isFree: true,
+      category: '가구',
+      thumbnail: 'https://via.placeholder.com/300x200?text=식탁+의자',
+      status: 'AVAILABLE',
+      viewCount: 89,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'FREE-005',
+      title: '무료나눔 - 공기청정기',
+      price: 0,
+      isFree: true,
+      category: '가전',
+      thumbnail: 'https://via.placeholder.com/300x200?text=공기청정기',
+      status: 'AVAILABLE',
+      viewCount: 123,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'FREE-006',
+      title: '무료나눔 - 유아 놀이매트',
+      price: 0,
+      isFree: true,
+      category: '유아용품',
+      thumbnail: 'https://via.placeholder.com/300x200?text=놀이매트',
+      status: 'AVAILABLE',
+      viewCount: 54,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'FREE-007',
+      title: '무료나눔 - 책장',
+      price: 0,
+      isFree: true,
+      category: '가구',
+      thumbnail: 'https://via.placeholder.com/300x200?text=책장',
+      status: 'AVAILABLE',
+      viewCount: 76,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'FREE-008',
+      title: '무료나눔 - 전기포트',
+      price: 0,
+      isFree: true,
+      category: '가전',
+      thumbnail: 'https://via.placeholder.com/300x200?text=전기포트',
+      status: 'AVAILABLE',
+      viewCount: 34,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'FREE-009',
+      title: '무료나눔 - 유모차',
+      price: 0,
+      isFree: true,
+      category: '유아용품',
+      thumbnail: 'https://via.placeholder.com/300x200?text=유모차',
+      status: 'AVAILABLE',
+      viewCount: 98,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'FREE-010',
+      title: '무료나눔 - 옷장',
+      price: 0,
+      isFree: true,
+      category: '가구',
+      thumbnail: 'https://via.placeholder.com/300x200?text=옷장',
+      status: 'AVAILABLE',
+      viewCount: 112,
+      createdAt: new Date().toISOString()
+    },
+    
+    // 전자기기 10개
+    {
+      itemId: 'ELEC-001',
+      title: '갤럭시 S21 (256GB)',
+      price: 350000,
+      isFree: false,
+      category: '전자기기',
+      thumbnail: 'https://via.placeholder.com/300x200?text=갤럭시+S21',
+      status: 'AVAILABLE',
+      viewCount: 234,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'ELEC-002',
+      title: '아이패드 9세대',
+      price: 280000,
+      isFree: false,
+      category: '전자기기',
+      thumbnail: 'https://via.placeholder.com/300x200?text=아이패드',
+      status: 'AVAILABLE',
+      viewCount: 189,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'ELEC-003',
+      title: 'LG 그램 노트북 (2022)',
+      price: 650000,
+      isFree: false,
+      category: '전자기기',
+      thumbnail: 'https://via.placeholder.com/300x200?text=LG+그램',
+      status: 'AVAILABLE',
+      viewCount: 456,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'ELEC-004',
+      title: '에어팟 프로 2세대',
+      price: 180000,
+      isFree: false,
+      category: '전자기기',
+      thumbnail: 'https://via.placeholder.com/300x200?text=에어팟+프로',
+      status: 'AVAILABLE',
+      viewCount: 321,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'ELEC-005',
+      title: '갤럭시 워치5',
+      price: 150000,
+      isFree: false,
+      category: '전자기기',
+      thumbnail: 'https://via.placeholder.com/300x200?text=갤럭시+워치',
+      status: 'AVAILABLE',
+      viewCount: 167,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'ELEC-006',
+      title: '닌텐도 스위치 OLED',
+      price: 250000,
+      isFree: false,
+      category: '전자기기',
+      thumbnail: 'https://via.placeholder.com/300x200?text=닌텐도+스위치',
+      status: 'AVAILABLE',
+      viewCount: 289,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'ELEC-007',
+      title: '소니 WH-1000XM4 헤드폰',
+      price: 220000,
+      isFree: false,
+      category: '전자기기',
+      thumbnail: 'https://via.placeholder.com/300x200?text=소니+헤드폰',
+      status: 'AVAILABLE',
+      viewCount: 143,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'ELEC-008',
+      title: '로지텍 게이밍 키보드',
+      price: 95000,
+      isFree: false,
+      category: '전자기기',
+      thumbnail: 'https://via.placeholder.com/300x200?text=게이밍+키보드',
+      status: 'AVAILABLE',
+      viewCount: 98,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'ELEC-009',
+      title: '샤오미 공기청정기 4 프로',
+      price: 180000,
+      isFree: false,
+      category: '전자기기',
+      thumbnail: 'https://via.placeholder.com/300x200?text=공기청정기+4+프로',
+      status: 'AVAILABLE',
+      viewCount: 201,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'ELEC-010',
+      title: '갤럭시 탭 S8',
+      price: 420000,
+      isFree: false,
+      category: '전자기기',
+      thumbnail: 'https://via.placeholder.com/300x200?text=갤럭시+탭',
+      status: 'AVAILABLE',
+      viewCount: 267,
+      createdAt: new Date().toISOString()
+    },
+    
+    // 가전 10개
+    {
+      itemId: 'APPL-001',
+      title: '삼성 냉장고 (2021년형)',
+      price: 350000,
+      isFree: false,
+      category: '가전',
+      thumbnail: 'https://via.placeholder.com/300x200?text=삼성+냉장고',
+      status: 'AVAILABLE',
+      viewCount: 178,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'APPL-002',
+      title: 'LG 드럼세탁기 15kg',
+      price: 280000,
+      isFree: false,
+      category: '가전',
+      thumbnail: 'https://via.placeholder.com/300x200?text=드럼세탁기',
+      status: 'AVAILABLE',
+      viewCount: 234,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'APPL-003',
+      title: '에어컨 벽걸이 9평형',
+      price: 450000,
+      isFree: false,
+      category: '가전',
+      thumbnail: 'https://via.placeholder.com/300x200?text=벽걸이+에어컨',
+      status: 'AVAILABLE',
+      viewCount: 345,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'APPL-004',
+      title: '다이슨 청소기 V11',
+      price: 320000,
+      isFree: false,
+      category: '가전',
+      thumbnail: 'https://via.placeholder.com/300x200?text=다이슨+청소기',
+      status: 'AVAILABLE',
+      viewCount: 289,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'APPL-005',
+      title: '전자레인지 (23L)',
+      price: 85000,
+      isFree: false,
+      category: '가전',
+      thumbnail: 'https://via.placeholder.com/300x200?text=전자레인지',
+      status: 'AVAILABLE',
+      viewCount: 123,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'APPL-006',
+      title: '공기청정기 삼성 블루스카이',
+      price: 150000,
+      isFree: false,
+      category: '가전',
+      thumbnail: 'https://via.placeholder.com/300x200?text=블루스카이',
+      status: 'AVAILABLE',
+      viewCount: 167,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'APPL-007',
+      title: '식기세척기 빌트인',
+      price: 380000,
+      isFree: false,
+      category: '가전',
+      thumbnail: 'https://via.placeholder.com/300x200?text=식기세척기',
+      status: 'AVAILABLE',
+      viewCount: 201,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'APPL-008',
+      title: '커피머신 드롱기',
+      price: 420000,
+      isFree: false,
+      category: '가전',
+      thumbnail: 'https://via.placeholder.com/300x200?text=커피머신',
+      status: 'AVAILABLE',
+      viewCount: 189,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'APPL-009',
+      title: '전기밥솥 10인용',
+      price: 95000,
+      isFree: false,
+      category: '가전',
+      thumbnail: 'https://via.placeholder.com/300x200?text=전기밥솥',
+      status: 'AVAILABLE',
+      viewCount: 143,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'APPL-010',
+      title: '제습기 20L',
+      price: 180000,
+      isFree: false,
+      category: '가전',
+      thumbnail: 'https://via.placeholder.com/300x200?text=제습기',
+      status: 'AVAILABLE',
+      viewCount: 156,
+      createdAt: new Date().toISOString()
+    },
+    
+    // 가구 10개
+    {
+      itemId: 'FURN-001',
+      title: '이케아 소파 3인용',
+      price: 180000,
+      isFree: false,
+      category: '가구',
+      thumbnail: 'https://via.placeholder.com/300x200?text=이케아+소파',
+      status: 'AVAILABLE',
+      viewCount: 234,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'FURN-002',
+      title: '퀸 사이즈 침대 + 매트리스',
+      price: 250000,
+      isFree: false,
+      category: '가구',
+      thumbnail: 'https://via.placeholder.com/300x200?text=퀸+침대',
+      status: 'AVAILABLE',
+      viewCount: 312,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'FURN-003',
+      title: '식탁 세트 (4인용)',
+      price: 150000,
+      isFree: false,
+      category: '가구',
+      thumbnail: 'https://via.placeholder.com/300x200?text=식탁+세트',
+      status: 'AVAILABLE',
+      viewCount: 189,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'FURN-004',
+      title: '책상 + 의자 세트',
+      price: 120000,
+      isFree: false,
+      category: '가구',
+      thumbnail: 'https://via.placeholder.com/300x200?text=책상+세트',
+      status: 'AVAILABLE',
+      viewCount: 167,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'FURN-005',
+      title: '옷장 슬라이딩 도어',
+      price: 280000,
+      isFree: false,
+      category: '가구',
+      thumbnail: 'https://via.placeholder.com/300x200?text=슬라이딩+옷장',
+      status: 'AVAILABLE',
+      viewCount: 201,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'FURN-006',
+      title: '서재용 책장',
+      price: 95000,
+      isFree: false,
+      category: '가구',
+      thumbnail: 'https://via.placeholder.com/300x200?text=책장',
+      status: 'AVAILABLE',
+      viewCount: 143,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'FURN-007',
+      title: 'TV 거치대',
+      price: 65000,
+      isFree: false,
+      category: '가구',
+      thumbnail: 'https://via.placeholder.com/300x200?text=TV+거치대',
+      status: 'AVAILABLE',
+      viewCount: 98,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'FURN-008',
+      title: '화장대 + 거울',
+      price: 135000,
+      isFree: false,
+      category: '가구',
+      thumbnail: 'https://via.placeholder.com/300x200?text=화장대',
+      status: 'AVAILABLE',
+      viewCount: 156,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'FURN-009',
+      title: '신발장 3단',
+      price: 75000,
+      isFree: false,
+      category: '가구',
+      thumbnail: 'https://via.placeholder.com/300x200?text=신발장',
+      status: 'AVAILABLE',
+      viewCount: 123,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'FURN-010',
+      title: '서랍장 5단',
+      price: 110000,
+      isFree: false,
+      category: '가구',
+      thumbnail: 'https://via.placeholder.com/300x200?text=서랍장',
+      status: 'AVAILABLE',
+      viewCount: 134,
+      createdAt: new Date().toISOString()
+    },
+    
+    // 유아용품 10개
+    {
+      itemId: 'BABY-001',
+      title: '유아용 자전거 (3~5세)',
+      price: 85000,
+      isFree: false,
+      category: '유아용품',
+      thumbnail: 'https://via.placeholder.com/300x200?text=유아+자전거',
+      status: 'AVAILABLE',
+      viewCount: 167,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'BABY-002',
+      title: '유모차 (2~3세용)',
+      price: 120000,
+      isFree: false,
+      category: '유아용품',
+      thumbnail: 'https://via.placeholder.com/300x200?text=유모차',
+      status: 'AVAILABLE',
+      viewCount: 234,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'BABY-003',
+      title: '아기 침대 + 매트리스',
+      price: 150000,
+      isFree: false,
+      category: '유아용품',
+      thumbnail: 'https://via.placeholder.com/300x200?text=아기+침대',
+      status: 'AVAILABLE',
+      viewCount: 201,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'BABY-004',
+      title: '카시트 (0~4세)',
+      price: 95000,
+      isFree: false,
+      category: '유아용품',
+      thumbnail: 'https://via.placeholder.com/300x200?text=카시트',
+      status: 'AVAILABLE',
+      viewCount: 189,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'BABY-005',
+      title: '유아 놀이매트 (대형)',
+      price: 65000,
+      isFree: false,
+      category: '유아용품',
+      thumbnail: 'https://via.placeholder.com/300x200?text=놀이매트',
+      status: 'AVAILABLE',
+      viewCount: 143,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'BABY-006',
+      title: '아기띠 (힙시트)',
+      price: 75000,
+      isFree: false,
+      category: '유아용품',
+      thumbnail: 'https://via.placeholder.com/300x200?text=아기띠',
+      status: 'AVAILABLE',
+      viewCount: 156,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'BABY-007',
+      title: '젖병 소독기',
+      price: 55000,
+      isFree: false,
+      category: '유아용품',
+      thumbnail: 'https://via.placeholder.com/300x200?text=젖병+소독기',
+      status: 'AVAILABLE',
+      viewCount: 123,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'BABY-008',
+      title: '유아 책상 + 의자',
+      price: 85000,
+      isFree: false,
+      category: '유아용품',
+      thumbnail: 'https://via.placeholder.com/300x200?text=유아+책상',
+      status: 'AVAILABLE',
+      viewCount: 134,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'BABY-009',
+      title: '점프루 (보행기)',
+      price: 65000,
+      isFree: false,
+      category: '유아용품',
+      thumbnail: 'https://via.placeholder.com/300x200?text=점프루',
+      status: 'AVAILABLE',
+      viewCount: 112,
+      createdAt: new Date().toISOString()
+    },
+    {
+      itemId: 'BABY-010',
+      title: '아기 욕조 + 목욕용품',
+      price: 45000,
+      isFree: false,
+      category: '유아용품',
+      thumbnail: 'https://via.placeholder.com/300x200?text=아기+욕조',
+      status: 'AVAILABLE',
+      viewCount: 98,
       createdAt: new Date().toISOString()
     }
   ]
   
-  return c.json(isFree ? sampleItems.filter(i => i.isFree) : sampleItems)
+  let filtered = sampleItems
+  
+  if (isFree) {
+    filtered = filtered.filter(i => i.isFree)
+  }
+  
+  if (category && category !== 'all') {
+    filtered = filtered.filter(i => i.category === category)
+  }
+  
+  return c.json({ items: filtered })
 })
 
 // 채팅방 생성
