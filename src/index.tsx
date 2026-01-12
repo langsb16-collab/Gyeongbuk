@@ -333,7 +333,7 @@ app.get('/api/trade-items', async (c) => {
       price: 0,
       isFree: true,
       category: '유아용품',
-      thumbnail: 'https://via.placeholder.com/300x200?text=유아용+자전거',
+      thumbnail: 'https://images.unsplash.com/photo-1610214379930-6c2c0e96e4a7?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 45,
       createdAt: new Date().toISOString()
@@ -344,7 +344,7 @@ app.get('/api/trade-items', async (c) => {
       price: 0,
       isFree: true,
       category: '가전',
-      thumbnail: 'https://via.placeholder.com/300x200?text=책상+스탠드',
+      thumbnail: 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 32,
       createdAt: new Date().toISOString()
@@ -355,7 +355,7 @@ app.get('/api/trade-items', async (c) => {
       price: 0,
       isFree: true,
       category: '유아용품',
-      thumbnail: 'https://via.placeholder.com/300x200?text=아기+옷',
+      thumbnail: 'https://images.unsplash.com/photo-1519689680058-324335c77eba?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 67,
       createdAt: new Date().toISOString()
@@ -366,7 +366,7 @@ app.get('/api/trade-items', async (c) => {
       price: 0,
       isFree: true,
       category: '가구',
-      thumbnail: 'https://via.placeholder.com/300x200?text=식탁+의자',
+      thumbnail: 'https://images.unsplash.com/photo-1503602642458-232111445657?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 89,
       createdAt: new Date().toISOString()
@@ -377,7 +377,7 @@ app.get('/api/trade-items', async (c) => {
       price: 0,
       isFree: true,
       category: '가전',
-      thumbnail: 'https://via.placeholder.com/300x200?text=공기청정기',
+      thumbnail: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 123,
       createdAt: new Date().toISOString()
@@ -388,7 +388,7 @@ app.get('/api/trade-items', async (c) => {
       price: 0,
       isFree: true,
       category: '유아용품',
-      thumbnail: 'https://via.placeholder.com/300x200?text=놀이매트',
+      thumbnail: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 54,
       createdAt: new Date().toISOString()
@@ -399,7 +399,7 @@ app.get('/api/trade-items', async (c) => {
       price: 0,
       isFree: true,
       category: '가구',
-      thumbnail: 'https://via.placeholder.com/300x200?text=책장',
+      thumbnail: 'https://images.unsplash.com/photo-1594620302200-9a762244a156?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 76,
       createdAt: new Date().toISOString()
@@ -410,7 +410,7 @@ app.get('/api/trade-items', async (c) => {
       price: 0,
       isFree: true,
       category: '가전',
-      thumbnail: 'https://via.placeholder.com/300x200?text=전기포트',
+      thumbnail: 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 34,
       createdAt: new Date().toISOString()
@@ -421,7 +421,7 @@ app.get('/api/trade-items', async (c) => {
       price: 0,
       isFree: true,
       category: '유아용품',
-      thumbnail: 'https://via.placeholder.com/300x200?text=유모차',
+      thumbnail: 'https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 98,
       createdAt: new Date().toISOString()
@@ -432,7 +432,7 @@ app.get('/api/trade-items', async (c) => {
       price: 0,
       isFree: true,
       category: '가구',
-      thumbnail: 'https://via.placeholder.com/300x200?text=옷장',
+      thumbnail: 'https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 112,
       createdAt: new Date().toISOString()
@@ -445,7 +445,7 @@ app.get('/api/trade-items', async (c) => {
       price: 350000,
       isFree: false,
       category: '전자기기',
-      thumbnail: 'https://via.placeholder.com/300x200?text=갤럭시+S21',
+      thumbnail: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 234,
       createdAt: new Date().toISOString()
@@ -456,7 +456,7 @@ app.get('/api/trade-items', async (c) => {
       price: 280000,
       isFree: false,
       category: '전자기기',
-      thumbnail: 'https://via.placeholder.com/300x200?text=아이패드',
+      thumbnail: 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 189,
       createdAt: new Date().toISOString()
@@ -467,7 +467,7 @@ app.get('/api/trade-items', async (c) => {
       price: 650000,
       isFree: false,
       category: '전자기기',
-      thumbnail: 'https://via.placeholder.com/300x200?text=LG+그램',
+      thumbnail: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 456,
       createdAt: new Date().toISOString()
@@ -478,7 +478,7 @@ app.get('/api/trade-items', async (c) => {
       price: 180000,
       isFree: false,
       category: '전자기기',
-      thumbnail: 'https://via.placeholder.com/300x200?text=에어팟+프로',
+      thumbnail: 'https://images.unsplash.com/photo-1606841837239-c5a1a4a07af7?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 321,
       createdAt: new Date().toISOString()
@@ -489,7 +489,7 @@ app.get('/api/trade-items', async (c) => {
       price: 150000,
       isFree: false,
       category: '전자기기',
-      thumbnail: 'https://via.placeholder.com/300x200?text=갤럭시+워치',
+      thumbnail: 'https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 167,
       createdAt: new Date().toISOString()
@@ -500,7 +500,7 @@ app.get('/api/trade-items', async (c) => {
       price: 250000,
       isFree: false,
       category: '전자기기',
-      thumbnail: 'https://via.placeholder.com/300x200?text=닌텐도+스위치',
+      thumbnail: 'https://images.unsplash.com/photo-1578303512597-81e6cc155b3e?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 289,
       createdAt: new Date().toISOString()
@@ -511,7 +511,7 @@ app.get('/api/trade-items', async (c) => {
       price: 220000,
       isFree: false,
       category: '전자기기',
-      thumbnail: 'https://via.placeholder.com/300x200?text=소니+헤드폰',
+      thumbnail: 'https://images.unsplash.com/photo-1545127398-14699f92334b?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 143,
       createdAt: new Date().toISOString()
@@ -522,7 +522,7 @@ app.get('/api/trade-items', async (c) => {
       price: 95000,
       isFree: false,
       category: '전자기기',
-      thumbnail: 'https://via.placeholder.com/300x200?text=게이밍+키보드',
+      thumbnail: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 98,
       createdAt: new Date().toISOString()
@@ -533,7 +533,7 @@ app.get('/api/trade-items', async (c) => {
       price: 180000,
       isFree: false,
       category: '전자기기',
-      thumbnail: 'https://via.placeholder.com/300x200?text=공기청정기+4+프로',
+      thumbnail: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 201,
       createdAt: new Date().toISOString()
@@ -544,7 +544,7 @@ app.get('/api/trade-items', async (c) => {
       price: 420000,
       isFree: false,
       category: '전자기기',
-      thumbnail: 'https://via.placeholder.com/300x200?text=갤럭시+탭',
+      thumbnail: 'https://images.unsplash.com/photo-1561154464-82e9adf32764?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 267,
       createdAt: new Date().toISOString()
@@ -557,7 +557,7 @@ app.get('/api/trade-items', async (c) => {
       price: 350000,
       isFree: false,
       category: '가전',
-      thumbnail: 'https://via.placeholder.com/300x200?text=삼성+냉장고',
+      thumbnail: 'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 178,
       createdAt: new Date().toISOString()
@@ -568,7 +568,7 @@ app.get('/api/trade-items', async (c) => {
       price: 280000,
       isFree: false,
       category: '가전',
-      thumbnail: 'https://via.placeholder.com/300x200?text=드럼세탁기',
+      thumbnail: 'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 234,
       createdAt: new Date().toISOString()
@@ -579,7 +579,7 @@ app.get('/api/trade-items', async (c) => {
       price: 450000,
       isFree: false,
       category: '가전',
-      thumbnail: 'https://via.placeholder.com/300x200?text=벽걸이+에어컨',
+      thumbnail: 'https://images.unsplash.com/photo-1585515656671-61c8436d6e96?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 345,
       createdAt: new Date().toISOString()
@@ -590,7 +590,7 @@ app.get('/api/trade-items', async (c) => {
       price: 320000,
       isFree: false,
       category: '가전',
-      thumbnail: 'https://via.placeholder.com/300x200?text=다이슨+청소기',
+      thumbnail: 'https://images.unsplash.com/photo-1558317374-067fb5f30001?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 289,
       createdAt: new Date().toISOString()
@@ -601,7 +601,7 @@ app.get('/api/trade-items', async (c) => {
       price: 85000,
       isFree: false,
       category: '가전',
-      thumbnail: 'https://via.placeholder.com/300x200?text=전자레인지',
+      thumbnail: 'https://images.unsplash.com/photo-1585659722983-3a675dabf23d?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 123,
       createdAt: new Date().toISOString()
@@ -612,7 +612,7 @@ app.get('/api/trade-items', async (c) => {
       price: 150000,
       isFree: false,
       category: '가전',
-      thumbnail: 'https://via.placeholder.com/300x200?text=블루스카이',
+      thumbnail: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 167,
       createdAt: new Date().toISOString()
@@ -623,7 +623,7 @@ app.get('/api/trade-items', async (c) => {
       price: 380000,
       isFree: false,
       category: '가전',
-      thumbnail: 'https://via.placeholder.com/300x200?text=식기세척기',
+      thumbnail: 'https://images.unsplash.com/photo-1556911220-bff31c812dba?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 201,
       createdAt: new Date().toISOString()
@@ -634,7 +634,7 @@ app.get('/api/trade-items', async (c) => {
       price: 420000,
       isFree: false,
       category: '가전',
-      thumbnail: 'https://via.placeholder.com/300x200?text=커피머신',
+      thumbnail: 'https://images.unsplash.com/photo-1517668808822-9ebb02f2a0e6?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 189,
       createdAt: new Date().toISOString()
@@ -645,7 +645,7 @@ app.get('/api/trade-items', async (c) => {
       price: 95000,
       isFree: false,
       category: '가전',
-      thumbnail: 'https://via.placeholder.com/300x200?text=전기밥솥',
+      thumbnail: 'https://images.unsplash.com/photo-1585928372040-8b583cc6c644?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 143,
       createdAt: new Date().toISOString()
@@ -656,7 +656,7 @@ app.get('/api/trade-items', async (c) => {
       price: 180000,
       isFree: false,
       category: '가전',
-      thumbnail: 'https://via.placeholder.com/300x200?text=제습기',
+      thumbnail: 'https://images.unsplash.com/photo-1626806664770-790d5d47fe61?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 156,
       createdAt: new Date().toISOString()
@@ -669,7 +669,7 @@ app.get('/api/trade-items', async (c) => {
       price: 180000,
       isFree: false,
       category: '가구',
-      thumbnail: 'https://via.placeholder.com/300x200?text=이케아+소파',
+      thumbnail: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 234,
       createdAt: new Date().toISOString()
@@ -680,7 +680,7 @@ app.get('/api/trade-items', async (c) => {
       price: 250000,
       isFree: false,
       category: '가구',
-      thumbnail: 'https://via.placeholder.com/300x200?text=퀸+침대',
+      thumbnail: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 312,
       createdAt: new Date().toISOString()
@@ -691,7 +691,7 @@ app.get('/api/trade-items', async (c) => {
       price: 150000,
       isFree: false,
       category: '가구',
-      thumbnail: 'https://via.placeholder.com/300x200?text=식탁+세트',
+      thumbnail: 'https://images.unsplash.com/photo-1617806118233-18e1de247200?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 189,
       createdAt: new Date().toISOString()
@@ -702,7 +702,7 @@ app.get('/api/trade-items', async (c) => {
       price: 120000,
       isFree: false,
       category: '가구',
-      thumbnail: 'https://via.placeholder.com/300x200?text=책상+세트',
+      thumbnail: 'https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 167,
       createdAt: new Date().toISOString()
@@ -713,7 +713,7 @@ app.get('/api/trade-items', async (c) => {
       price: 280000,
       isFree: false,
       category: '가구',
-      thumbnail: 'https://via.placeholder.com/300x200?text=슬라이딩+옷장',
+      thumbnail: 'https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 201,
       createdAt: new Date().toISOString()
@@ -724,7 +724,7 @@ app.get('/api/trade-items', async (c) => {
       price: 95000,
       isFree: false,
       category: '가구',
-      thumbnail: 'https://via.placeholder.com/300x200?text=책장',
+      thumbnail: 'https://images.unsplash.com/photo-1594620302200-9a762244a156?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 143,
       createdAt: new Date().toISOString()
@@ -735,7 +735,7 @@ app.get('/api/trade-items', async (c) => {
       price: 65000,
       isFree: false,
       category: '가구',
-      thumbnail: 'https://via.placeholder.com/300x200?text=TV+거치대',
+      thumbnail: 'https://images.unsplash.com/photo-1598300188962-73af6ec49e64?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 98,
       createdAt: new Date().toISOString()
@@ -746,7 +746,7 @@ app.get('/api/trade-items', async (c) => {
       price: 135000,
       isFree: false,
       category: '가구',
-      thumbnail: 'https://via.placeholder.com/300x200?text=화장대',
+      thumbnail: 'https://images.unsplash.com/photo-1595514535116-2d1b5a1f2e7e?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 156,
       createdAt: new Date().toISOString()
@@ -757,7 +757,7 @@ app.get('/api/trade-items', async (c) => {
       price: 75000,
       isFree: false,
       category: '가구',
-      thumbnail: 'https://via.placeholder.com/300x200?text=신발장',
+      thumbnail: 'https://images.unsplash.com/photo-1603912699214-92627f304eb6?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 123,
       createdAt: new Date().toISOString()
@@ -768,7 +768,7 @@ app.get('/api/trade-items', async (c) => {
       price: 110000,
       isFree: false,
       category: '가구',
-      thumbnail: 'https://via.placeholder.com/300x200?text=서랍장',
+      thumbnail: 'https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 134,
       createdAt: new Date().toISOString()
@@ -781,7 +781,7 @@ app.get('/api/trade-items', async (c) => {
       price: 85000,
       isFree: false,
       category: '유아용품',
-      thumbnail: 'https://via.placeholder.com/300x200?text=유아+자전거',
+      thumbnail: 'https://images.unsplash.com/photo-1610214379930-6c2c0e96e4a7?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 167,
       createdAt: new Date().toISOString()
@@ -792,7 +792,7 @@ app.get('/api/trade-items', async (c) => {
       price: 120000,
       isFree: false,
       category: '유아용품',
-      thumbnail: 'https://via.placeholder.com/300x200?text=유모차',
+      thumbnail: 'https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 234,
       createdAt: new Date().toISOString()
@@ -803,7 +803,7 @@ app.get('/api/trade-items', async (c) => {
       price: 150000,
       isFree: false,
       category: '유아용품',
-      thumbnail: 'https://via.placeholder.com/300x200?text=아기+침대',
+      thumbnail: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 201,
       createdAt: new Date().toISOString()
@@ -814,7 +814,7 @@ app.get('/api/trade-items', async (c) => {
       price: 95000,
       isFree: false,
       category: '유아용품',
-      thumbnail: 'https://via.placeholder.com/300x200?text=카시트',
+      thumbnail: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 189,
       createdAt: new Date().toISOString()
@@ -825,7 +825,7 @@ app.get('/api/trade-items', async (c) => {
       price: 65000,
       isFree: false,
       category: '유아용품',
-      thumbnail: 'https://via.placeholder.com/300x200?text=놀이매트',
+      thumbnail: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 143,
       createdAt: new Date().toISOString()
@@ -836,7 +836,7 @@ app.get('/api/trade-items', async (c) => {
       price: 75000,
       isFree: false,
       category: '유아용품',
-      thumbnail: 'https://via.placeholder.com/300x200?text=아기띠',
+      thumbnail: 'https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 156,
       createdAt: new Date().toISOString()
@@ -847,7 +847,7 @@ app.get('/api/trade-items', async (c) => {
       price: 55000,
       isFree: false,
       category: '유아용품',
-      thumbnail: 'https://via.placeholder.com/300x200?text=젖병+소독기',
+      thumbnail: 'https://images.unsplash.com/photo-1584923457660-3e9d5e0e6e3f?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 123,
       createdAt: new Date().toISOString()
@@ -858,7 +858,7 @@ app.get('/api/trade-items', async (c) => {
       price: 85000,
       isFree: false,
       category: '유아용품',
-      thumbnail: 'https://via.placeholder.com/300x200?text=유아+책상',
+      thumbnail: 'https://images.unsplash.com/photo-1503602642458-232111445657?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 134,
       createdAt: new Date().toISOString()
@@ -869,7 +869,7 @@ app.get('/api/trade-items', async (c) => {
       price: 65000,
       isFree: false,
       category: '유아용품',
-      thumbnail: 'https://via.placeholder.com/300x200?text=점프루',
+      thumbnail: 'https://images.unsplash.com/photo-1578750386766-f3d899c961b7?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 112,
       createdAt: new Date().toISOString()
@@ -880,7 +880,7 @@ app.get('/api/trade-items', async (c) => {
       price: 45000,
       isFree: false,
       category: '유아용품',
-      thumbnail: 'https://via.placeholder.com/300x200?text=아기+욕조',
+      thumbnail: 'https://images.unsplash.com/photo-1519689680058-324335c77eba?w=300&h=200&fit=crop',
       status: 'AVAILABLE',
       viewCount: 98,
       createdAt: new Date().toISOString()
