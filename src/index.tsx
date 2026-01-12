@@ -148,6 +148,7 @@ app.get('/', (c) => {
         <title>경산온(ON) - 경산은 배달비가 없습니다</title>
         <script src="https://cdn.tailwindcss.com"></script>
         <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+        <link href="/static/responsive.css" rel="stylesheet">
         <style>
           * {
             margin: 0;
@@ -323,15 +324,58 @@ app.get('/', (c) => {
         </style>
     </head>
     <body>
-        <!-- 헤더 -->
-        <header class="bg-white shadow-sm sticky top-0 z-50">
-            <div class="max-w-md mx-auto px-4 py-3">
+        <!-- PC 상단 헤더 -->
+        <header class="pc-header">
+            <a href="/" class="pc-header-logo">
+                <i class="fas fa-handshake"></i>
+                <span>경산온(ON)</span>
+            </a>
+            
+            <nav class="pc-header-nav">
+                <a href="#home">홈</a>
+                <a href="#delivery">배달</a>
+                <a href="#market">전통시장</a>
+                <a href="#localfood">로컬푸드</a>
+                <a href="#specialty">특산물</a>
+                <a href="#merchant">가맹점 신청</a>
+                <a href="#support">고객센터</a>
+            </nav>
+            
+            <div class="pc-header-actions">
+                <!-- 다국어 드롭다운 -->
+                <div class="lang-select">
+                    <button class="lang-btn">
+                        <span class="lang-text">한국어</span>
+                        <span class="lang-arrow">▾</span>
+                    </button>
+                    <ul class="lang-menu">
+                        <li class="active" data-lang="ko">한국어</li>
+                        <li data-lang="en">English</li>
+                        <li data-lang="zh">中文</li>
+                        <li data-lang="ja">日本語</li>
+                        <li data-lang="es">Español</li>
+                        <li data-lang="fr">Français</li>
+                        <li data-lang="ar">العربية</li>
+                        <li data-lang="de">Deutsch</li>
+                    </ul>
+                </div>
+                
+                <button class="lang-btn">
+                    <i class="fas fa-user"></i>
+                    <span>로그인</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- 모바일 헤더 -->
+        <header class="bg-white shadow-sm sticky top-0 z-50 mobile-header">
+            <div class="px-4 py-3">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-3">
                         <i class="fas fa-handshake text-blue-500 text-2xl"></i>
                         <div>
-                            <h1 class="text-lg font-bold text-gray-900">경북 공공상생</h1>
-                            <p class="text-xs text-gray-500">배달 80% · 중고나눔 20%</p>
+                            <h1 class="text-lg font-bold text-gray-900">경산온(ON)</h1>
+                            <p class="text-xs text-gray-500">배달비 0원</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -341,16 +385,39 @@ app.get('/', (c) => {
                             <option value="gumi">구미시</option>
                             <option value="andong">안동시</option>
                         </select>
+                        
+                        <!-- 모바일 다국어 드롭다운 -->
+                        <div class="lang-select">
+                            <button class="lang-btn" style="padding: 6px 10px; font-size: 13px;">
+                                <span class="lang-text">한국어</span>
+                                <span class="lang-arrow">▾</span>
+                            </button>
+                            <ul class="lang-menu">
+                                <li class="active" data-lang="ko">한국어</li>
+                                <li data-lang="en">English</li>
+                                <li data-lang="zh">中文</li>
+                                <li data-lang="ja">日本語</li>
+                                <li data-lang="es">Español</li>
+                                <li data-lang="fr">Français</li>
+                                <li data-lang="ar">العربية</li>
+                                <li data-lang="de">Deutsch</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
         </header>
 
         <!-- 메인 콘텐츠 -->
-        <div id="app" class="max-w-md mx-auto"></div>
+        <div id="app" class="app-container"></div>
 
-        <!-- 하단 네비게이션 -->
-        <nav class="bottom-nav">
+        <!-- 챗봇 플로팅 버튼 -->
+        <a href="/static/i18n/chatbot-ko" class="chatbot-button" title="온이 챗봇">
+            <i class="fas fa-comments"></i>
+        </a>
+
+        <!-- 모바일 하단 네비게이션 -->
+        <nav class="mobile-tab bottom-nav">
             <div class="nav-item active" data-page="home">
                 <i class="fas fa-home text-xl mb-1"></i>
                 <span class="text-xs">홈</span>
@@ -388,6 +455,103 @@ app.get('/', (c) => {
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+        <script>
+          // 다국어 드롭다운 기능
+          document.addEventListener('DOMContentLoaded', function() {
+            const langSelects = document.querySelectorAll('.lang-select');
+            
+            langSelects.forEach(select => {
+              const btn = select.querySelector('.lang-btn');
+              const menu = select.querySelector('.lang-menu');
+              const langText = select.querySelector('.lang-text');
+              const items = select.querySelectorAll('.lang-menu li');
+              
+              // 버튼 클릭 시 토글
+              btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                select.classList.toggle('open');
+                
+                // 다른 드롭다운 닫기
+                langSelects.forEach(other => {
+                  if (other !== select) other.classList.remove('open');
+                });
+              });
+              
+              // 언어 선택
+              items.forEach(item => {
+                item.addEventListener('click', () => {
+                  const lang = item.dataset.lang;
+                  const text = item.textContent;
+                  
+                  // 선택된 언어 표시
+                  items.forEach(i => i.classList.remove('active'));
+                  item.classList.add('active');
+                  
+                  // 버튼 텍스트 변경
+                  langText.textContent = text;
+                  
+                  // 로컬 스토리지에 저장
+                  localStorage.setItem('lang', lang);
+                  
+                  // 챗봇 페이지로 이동 (언어별)
+                  const chatbotBtn = document.querySelector('.chatbot-button');
+                  if (chatbotBtn) {
+                    chatbotBtn.href = '/static/i18n/chatbot-' + lang;
+                  }
+                  
+                  // 드롭다운 닫기
+                  select.classList.remove('open');
+                  
+                  // 토스트 메시지 (선택사항)
+                  console.log('언어가 변경되었습니다: ' + text);
+                });
+              });
+            });
+            
+            // 외부 클릭 시 드롭다운 닫기
+            document.addEventListener('click', () => {
+              langSelects.forEach(select => {
+                select.classList.remove('open');
+              });
+            });
+            
+            // 저장된 언어 불러오기
+            const savedLang = localStorage.getItem('lang') || 'ko';
+            const langNames = {
+              'ko': '한국어',
+              'en': 'English',
+              'zh': '中文',
+              'ja': '日本語',
+              'es': 'Español',
+              'fr': 'Français',
+              'ar': 'العربية',
+              'de': 'Deutsch'
+            };
+            
+            langSelects.forEach(select => {
+              const langText = select.querySelector('.lang-text');
+              const items = select.querySelectorAll('.lang-menu li');
+              
+              if (langText) {
+                langText.textContent = langNames[savedLang] || '한국어';
+              }
+              
+              items.forEach(item => {
+                if (item.dataset.lang === savedLang) {
+                  item.classList.add('active');
+                } else {
+                  item.classList.remove('active');
+                }
+              });
+            });
+            
+            // 챗봇 버튼 URL 초기화
+            const chatbotBtn = document.querySelector('.chatbot-button');
+            if (chatbotBtn) {
+              chatbotBtn.href = '/static/i18n/chatbot-' + savedLang;
+            }
+          });
+        </script>
         <script src="/static/app.js"></script>
     </body>
     </html>
