@@ -552,6 +552,26 @@ app.get('/', (c) => {
             color: #3b82f6;
           }
           
+          .pc-header-nav a {
+            position: relative;
+            padding-bottom: 4px;
+          }
+          
+          .pc-header-nav a.active {
+            color: #2563EB;
+            font-weight: 600;
+          }
+          
+          .pc-header-nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #2563EB;
+          }
+          
           .tab-button {
             padding: 8px 16px;
             border: none;
@@ -677,12 +697,13 @@ app.get('/', (c) => {
             </a>
             
             <nav class="pc-header-nav">
-                <a href="#home">홈</a>
-                <a href="#delivery">배달</a>
-                <a href="#market">전통시장</a>
-                <a href="#localfood">로컬푸드</a>
-                <a href="#specialty">특산물</a>
-                <a href="#merchant">가맹점 신청</a>
+                <a href="/" class="active">홈</a>
+                <a href="/delivery">배달</a>
+                <a href="/market">전통시장</a>
+                <a href="/static/localfood.html">로컬푸드</a>
+                <a href="/specialty">특산물</a>
+                <a href="/static/trade.html">중고·나눔</a>
+                <a href="/partner/apply">가맹점 신청</a>
                 <a href="#support">고객센터</a>
             </nav>
             
@@ -717,6 +738,9 @@ app.get('/', (c) => {
             <div class="px-4 py-3">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-3">
+                        <button id="menuBtn" class="text-gray-700 text-xl">
+                            <i class="fas fa-bars"></i>
+                        </button>
                         <i class="fas fa-handshake text-blue-500 text-2xl"></i>
                         <div>
                             <h1 class="text-lg font-bold text-gray-900">경산온(ON)</h1>
@@ -730,7 +754,6 @@ app.get('/', (c) => {
                             <option value="gumi">구미시</option>
                             <option value="andong">안동시</option>
                         </select>
-                        
                         <!-- 모바일 다국어 드롭다운 -->
                         <div class="lang-select">
                             <button class="lang-btn" style="padding: 6px 10px; font-size: 13px;">
@@ -752,6 +775,61 @@ app.get('/', (c) => {
                 </div>
             </div>
         </header>
+
+        <!-- 모바일 햄버거 메뉴 -->
+        <div id="menuDrawer" class="hidden fixed inset-0 z-50">
+            <div class="absolute inset-0 bg-black bg-opacity-50" onclick="closeMenu()"></div>
+            <div class="absolute left-0 top-0 bottom-0 w-80 bg-white shadow-xl transform transition-transform duration-300">
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-xl font-bold text-gray-900">메뉴</h2>
+                        <button onclick="closeMenu()" class="text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-times text-2xl"></i>
+                        </button>
+                    </div>
+                    <nav class="space-y-2">
+                        <a href="/" class="block px-4 py-3 rounded-lg hover:bg-gray-100 text-gray-900">
+                            <i class="fas fa-home mr-3 text-blue-600"></i>
+                            홈
+                        </a>
+                        <a href="/delivery" class="block px-4 py-3 rounded-lg hover:bg-gray-100 text-gray-900">
+                            <i class="fas fa-motorcycle mr-3 text-blue-600"></i>
+                            배달
+                        </a>
+                        <a href="/market" class="block px-4 py-3 rounded-lg hover:bg-gray-100 text-gray-900">
+                            <i class="fas fa-store mr-3 text-blue-600"></i>
+                            전통시장
+                        </a>
+                        <a href="/static/localfood.html" class="block px-4 py-3 rounded-lg hover:bg-gray-100 text-gray-900">
+                            <i class="fas fa-leaf mr-3 text-green-600"></i>
+                            로컬푸드
+                        </a>
+                        <a href="/specialty" class="block px-4 py-3 rounded-lg hover:bg-gray-100 text-gray-900">
+                            <i class="fas fa-star mr-3 text-orange-600"></i>
+                            특산물
+                        </a>
+                        <a href="/static/trade.html" class="block px-4 py-3 rounded-lg hover:bg-gray-100 text-gray-900">
+                            <i class="fas fa-exchange-alt mr-3 text-purple-600"></i>
+                            중고·나눔
+                        </a>
+                        <a href="/partner/apply" class="block px-4 py-3 rounded-lg hover:bg-gray-100 text-gray-900">
+                            <i class="fas fa-handshake mr-3 text-indigo-600"></i>
+                            가맹점 신청
+                        </a>
+                        <a href="/support" class="block px-4 py-3 rounded-lg hover:bg-gray-100 text-gray-900">
+                            <i class="fas fa-headset mr-3 text-pink-600"></i>
+                            고객센터
+                        </a>
+                    </nav>
+                    <div class="mt-6 pt-6 border-t">
+                        <button class="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                            <i class="fas fa-user mr-2"></i>
+                            로그인
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- 메인 콘텐츠 -->
         <div id="app" class="app-container"></div>
@@ -801,6 +879,17 @@ app.get('/', (c) => {
 
         <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
         <script>
+          // 햄버거 메뉴 기능
+          function openMenu() {
+            document.getElementById('menuDrawer').classList.remove('hidden');
+          }
+          
+          function closeMenu() {
+            document.getElementById('menuDrawer').classList.add('hidden');
+          }
+          
+          document.getElementById('menuBtn')?.addEventListener('click', openMenu);
+          
           // 다국어 드롭다운 기능
           document.addEventListener('DOMContentLoaded', function() {
             const langSelects = document.querySelectorAll('.lang-select');
