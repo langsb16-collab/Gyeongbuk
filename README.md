@@ -66,6 +66,15 @@
 
 > "경찰서/CCTV 인근 거래 장소 지도 표시"
 
+### 6. 고령자 친화 챗봇 '온이' (NEW ✨)
+- **우측 하단 플로팅 버튼**: 64px 큰 터치 영역
+- **표정 세트**: 😊 기본 / 👀 안내 / 👍 완료
+- **말풍선 디자인**: 큰 글씨 18px+, 네이비 #1F3A5F
+- **FAQ 40개**: 시민용/가맹점용/고령자용/행정용 4개 카테고리
+- **첫 방문 자동 노출**: "안녕하세요! 온이에요 😊"
+
+> "사진만 찍으면 됩니다 😊 온이가 도와드릴게요"
+
 ---
 
 ## 🚀 주요 기능
@@ -132,11 +141,15 @@
 - `GET /api/free-items` - 무료나눔
 - `GET /api/safe-zones` - 안전거래 존
 
-### 특산물·관광 (NEW)
+### 특산물·관광
 - `GET /api/specialties` - 경산 특산물 4종
 - `GET /api/tourist-spots` - 관광지 3곳
 - `GET /api/festivals` - 경산 대추축제
 - `GET /api/qr/:spotId` - 관광지 QR 커머스 (핵심)
+
+### 챗봇 (NEW)
+- `GET /api/chatbot/faq` - 전체 FAQ (40개)
+- `GET /api/chatbot/faq/:category` - 카테고리별 FAQ
 
 ### 가맹점
 - `POST /api/merchant-apply` - 가맹점 신청
@@ -215,9 +228,17 @@
 ## 📝 프로젝트 정보
 
 - **개발 기간**: 2026-01-12
-- **코드 라인**: 2,392줄
-- **Git 커밋**: 9개
+- **코드 라인**: 2,700+줄 (챗봇 추가)
+- **Git 커밋**: 13개
 - **프로젝트 위치**: `/home/user/webapp`
+
+## 📄 주요 문서
+
+- `README.md` - 프로젝트 개요 및 가이드
+- `BRAND_IDENTITY.md` - 브랜드 아이덴티티 가이드
+- `RESPONSIVE_DESIGN.md` - PC·모바일 반응형 디자인 가이드
+- `DEPLOYMENT_SUMMARY.md` - 개발 완료 보고서
+- `chatbot-faq.txt` - 챗봇 FAQ 원본 데이터
 
 ## 🎯 핵심 메시지
 
