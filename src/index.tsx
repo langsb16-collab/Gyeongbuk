@@ -1000,14 +1000,14 @@ app.get('/api/local-food-products', async (c) => {
       farmId: 'FARM-001',
       farmName: '경산 유기농 농장',
       farmerName: '김농부',
-      productName: '당일 수확 상추',
-      price: 5000,
-      unit: 'kg',
-      todayStock: 20,
+      productName: '유기농 쌀',
+      price: 35000,
+      unit: '2kg',
+      todayStock: 50,
       harvestDate: new Date().toISOString().split('T')[0],
       certification: 'ORGANIC',
-      thumbnail: 'https://images.unsplash.com/photo-1622206151226-18ca2c9ab4a1?w=400',
-      category: 'vegetable'
+      thumbnail: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400',
+      category: 'grain'
     },
     {
       productId: 'LOCAL-002',
