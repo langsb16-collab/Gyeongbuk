@@ -2421,6 +2421,39 @@ app.get('/', (c) => {
                         </div>
                     </div>
                 </div>
+
+                <!-- 로컬푸드 섹션 -->
+                <div class="p-4 max-w-6xl mx-auto mt-8">
+                    <div class="mb-4 flex items-center justify-between">
+                        <div>
+                            <h2 class="text-2xl font-bold mb-2">🥬 로컬 푸드</h2>
+                            <p class="text-gray-600">당일 수확 신선 배송</p>
+                        </div>
+                        <a href="/static/localfood" class="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                            전체보기 <i class="fas fa-chevron-right ml-1"></i>
+                        </a>
+                    </div>
+                    
+                    <div id="localFoodGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <!-- 로딩 중 -->
+                        <div class="col-span-full text-center py-8">
+                            <i class="fas fa-spinner fa-spin text-3xl text-gray-400 mb-2"></i>
+                            <p class="text-sm text-gray-600">로컬푸드를 불러오는 중...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 공공 주문 맛집 섹션 -->
+                <div class="p-4 max-w-6xl mx-auto mt-8 mb-20">
+                    <div class="mb-4">
+                        <h2 class="text-2xl font-bold mb-2">🏪 공공 주문 맛집</h2>
+                        <p class="text-gray-600">경산시가 추천하는 맛집</p>
+                    </div>
+                    
+                    <div id="publicRestaurantGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <!-- 공공 주문 맛집 카드들이 여기에 렌더링됩니다 -->
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -2505,6 +2538,139 @@ app.get('/', (c) => {
             }
           }
           
+          // 로컬푸드 로드
+          async function loadLocalFoods() {
+            try {
+              const response = await axios.get('/api/local-food-products');
+              const products = response.data.products || [];
+              renderLocalFoods(products.slice(0, 3)); // 상위 3개만 표시
+            } catch (error) {
+              console.error('로컬푸드 로딩 실패:', error);
+              document.getElementById('localFoodGrid').innerHTML = \`
+                <div class="col-span-full text-center py-8 text-gray-500">
+                  <i class="fas fa-exclamation-circle text-3xl mb-2"></i>
+                  <p class="text-sm">로컬푸드를 불러오는데 실패했습니다.</p>
+                </div>
+              \`;
+            }
+          }
+
+          // 로컬푸드 렌더링
+          function renderLocalFoods(products) {
+            const grid = document.getElementById('localFoodGrid');
+            
+            if (products.length === 0) {
+              grid.innerHTML = \`
+                <div class="col-span-full text-center py-8 text-gray-500">
+                  <i class="fas fa-box-open text-3xl mb-2"></i>
+                  <p class="text-sm">등록된 상품이 없습니다.</p>
+                </div>
+              \`;
+              return;
+            }
+
+            grid.innerHTML = products.map(product => \`
+              <div class="card cursor-pointer hover:shadow-lg transition" onclick="window.location.href='/static/localfood'">
+                <div class="relative h-48 bg-gray-200">
+                  <img src="\${product.thumbnail || 'https://via.placeholder.com/400x300?text=Fresh+Food'}" 
+                       alt="\${product.productName}"
+                       crossorigin="anonymous"
+                       loading="lazy"
+                       onerror="this.onerror=null; this.src='https://via.placeholder.com/400x300/22c55e/ffffff?text=\${encodeURIComponent(product.productName)}';"
+                       class="w-full h-full object-cover">
+                  <span class="absolute top-2 left-2 bg-green-600 text-white text-xs px-2 py-1 rounded-full font-bold">
+                    <i class="fas fa-leaf mr-1"></i>당일수확
+                  </span>
+                </div>
+                <div class="p-3">
+                  <h4 class="font-medium text-gray-900 mb-1 line-clamp-1">\${product.productName}</h4>
+                  <p class="text-sm text-gray-600 mb-2">
+                    <i class="fas fa-user-farmer mr-1"></i>\${product.farmerName}
+                  </p>
+                  <div class="flex items-center justify-between">
+                    <span class="text-lg font-bold text-gray-900">
+                      \${product.price.toLocaleString()}원
+                    </span>
+                    <button onclick="event.stopPropagation(); window.location.href='/static/localfood'" 
+                            class="px-3 py-1.5 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 transition font-medium">
+                      담기
+                    </button>
+                  </div>
+                </div>
+              </div>
+            \`).join('');
+          }
+
+          // 공공 주문 맛집 로드
+          async function loadPublicRestaurants() {
+            try {
+              const response = await axios.get('/api/restaurants');
+              const restaurants = response.data || [];
+              renderPublicRestaurants(restaurants.slice(3, 6)); // 4~6번째 음식점 표시
+            } catch (error) {
+              console.error('공공 주문 맛집 로딩 실패:', error);
+              document.getElementById('publicRestaurantGrid').innerHTML = \`
+                <div class="col-span-full text-center py-8 text-gray-500">
+                  <i class="fas fa-exclamation-circle text-3xl mb-2"></i>
+                  <p class="text-sm">음식점을 불러오는데 실패했습니다.</p>
+                </div>
+              \`;
+            }
+          }
+
+          // 공공 주문 맛집 렌더링
+          function renderPublicRestaurants(restaurants) {
+            const grid = document.getElementById('publicRestaurantGrid');
+            
+            if (restaurants.length === 0) {
+              grid.innerHTML = \`
+                <div class="col-span-full text-center py-8 text-gray-500">
+                  <i class="fas fa-store-slash text-3xl mb-2"></i>
+                  <p class="text-sm">등록된 음식점이 없습니다.</p>
+                </div>
+              \`;
+              return;
+            }
+
+            grid.innerHTML = restaurants.map(restaurant => \`
+              <div class="card">
+                <img src="\${restaurant.image || 'https://via.placeholder.com/400x250?text=Restaurant'}" 
+                     alt="\${restaurant.name}"
+                     crossorigin="anonymous"
+                     loading="lazy"
+                     onerror="this.onerror=null; this.src='https://via.placeholder.com/400x250/3b82f6/ffffff?text=\${encodeURIComponent(restaurant.name)}';"
+                     class="w-full h-48 object-cover">
+                <div class="p-4">
+                  <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-lg font-bold">\${restaurant.name}</h3>
+                    <span class="badge badge-info text-xs">\${restaurant.category || '음식점'}</span>
+                  </div>
+                  <div class="flex items-center text-yellow-500 text-sm mb-2">
+                    <i class="fas fa-star mr-1"></i>
+                    <span class="font-bold mr-1">\${restaurant.rating || '4.5'}</span>
+                    <span class="text-gray-500">(\${restaurant.reviewCount || '0'})</span>
+                    <span class="mx-2">|</span>
+                    <span class="text-gray-600">\${restaurant.deliveryTime || '30-40'}분</span>
+                  </div>
+                  <p class="text-sm text-gray-600 mb-3">\${restaurant.description || ''}</p>
+                  <div class="flex items-center justify-between">
+                    <span class="badge badge-primary text-xs">배달비 0원</span>
+                    <div class="flex gap-2">
+                      <button onclick="goToMenu('\${restaurant.id || restaurant.name}')" 
+                              class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-sm hover:bg-gray-200 transition">
+                        메뉴 보기
+                      </button>
+                      <button onclick="startOrder('\${restaurant.id || restaurant.name}')" 
+                              class="px-3 py-1.5 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition">
+                        주문하기
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            \`).join('');
+          }
+          
           // 페이지 초기화
           document.addEventListener('DOMContentLoaded', function() {
             console.log('페이지 초기화 시작');
@@ -2515,6 +2681,10 @@ app.get('/', (c) => {
               menuBtn.addEventListener('click', openMenu);
               console.log('햄버거 메뉴 버튼 이벤트 등록 완료');
             }
+            
+            // 로컬푸드 및 공공 주문 맛집 로드
+            loadLocalFoods();
+            loadPublicRestaurants();
             
             // 언어를 한국어로 설정
             document.documentElement.setAttribute('dir', 'ltr');
