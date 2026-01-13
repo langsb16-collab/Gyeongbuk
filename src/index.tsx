@@ -1611,18 +1611,18 @@ app.get('/', (c) => {
         <header class="pc-header">
             <a href="/" class="pc-header-logo">
                 <i class="fas fa-handshake"></i>
-                <span>경산온(ON)</span>
+                <span data-i18n="brand">경산온(ON)</span>
             </a>
             
             <nav class="pc-header-nav">
-                <a href="/" class="active">홈</a>
-                <a href="/delivery">배달</a>
-                <a href="/market">전통시장</a>
-                <a href="/static/localfood.html">로컬푸드</a>
-                <a href="/specialty">특산물</a>
-                <a href="/static/trade.html">중고·나눔</a>
-                <a href="/partner/apply">가맹점 신청</a>
-                <a href="#support">고객센터</a>
+                <a href="/" class="active" data-i18n="home">홈</a>
+                <a href="/delivery" data-i18n="delivery">배달</a>
+                <a href="/market" data-i18n="market">전통시장</a>
+                <a href="/static/localfood.html" data-i18n="localFood">로컬푸드</a>
+                <a href="/specialty" data-i18n="specialty">특산물</a>
+                <a href="/static/trade.html" data-i18n="usedTrade">중고·나눔</a>
+                <a href="/partner/apply" data-i18n="partnerApply">가맹점 신청</a>
+                <a href="#support" data-i18n="support">고객센터</a>
             </nav>
             
             <div class="pc-header-actions">
@@ -1646,7 +1646,7 @@ app.get('/', (c) => {
                 
                 <button class="lang-btn">
                     <i class="fas fa-user"></i>
-                    <span>로그인</span>
+                    <span data-i18n="login">로그인</span>
                 </button>
             </div>
         </header>
@@ -1661,8 +1661,8 @@ app.get('/', (c) => {
                         </button>
                         <i class="fas fa-handshake text-blue-500 text-2xl"></i>
                         <div>
-                            <h1 class="text-lg font-bold text-gray-900">경산온(ON)</h1>
-                            <p class="text-xs text-gray-500">배달비 0원</p>
+                            <h1 class="text-lg font-bold text-gray-900" data-i18n="brand">경산온(ON)</h1>
+                            <p class="text-xs text-gray-500" data-i18n="noDeliveryFee">배달비 0원</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -1708,41 +1708,41 @@ app.get('/', (c) => {
                     <nav class="space-y-2">
                         <a href="/" class="block px-4 py-3 rounded-lg hover:bg-gray-100 text-gray-900">
                             <i class="fas fa-home mr-3 text-blue-600"></i>
-                            홈
+                            <span data-i18n="home">홈</span>
                         </a>
                         <a href="/delivery" class="block px-4 py-3 rounded-lg hover:bg-gray-100 text-gray-900">
                             <i class="fas fa-motorcycle mr-3 text-blue-600"></i>
-                            배달
+                            <span data-i18n="delivery">배달</span>
                         </a>
                         <a href="/market" class="block px-4 py-3 rounded-lg hover:bg-gray-100 text-gray-900">
                             <i class="fas fa-store mr-3 text-blue-600"></i>
-                            전통시장
+                            <span data-i18n="market">전통시장</span>
                         </a>
                         <a href="/static/localfood.html" class="block px-4 py-3 rounded-lg hover:bg-gray-100 text-gray-900">
                             <i class="fas fa-leaf mr-3 text-green-600"></i>
-                            로컬푸드
+                            <span data-i18n="localFood">로컬푸드</span>
                         </a>
                         <a href="/specialty" class="block px-4 py-3 rounded-lg hover:bg-gray-100 text-gray-900">
                             <i class="fas fa-star mr-3 text-orange-600"></i>
-                            특산물
+                            <span data-i18n="specialty">특산물</span>
                         </a>
                         <a href="/static/trade.html" class="block px-4 py-3 rounded-lg hover:bg-gray-100 text-gray-900">
                             <i class="fas fa-exchange-alt mr-3 text-purple-600"></i>
-                            중고·나눔
+                            <span data-i18n="usedTrade">중고·나눔</span>
                         </a>
                         <a href="/partner/apply" class="block px-4 py-3 rounded-lg hover:bg-gray-100 text-gray-900">
                             <i class="fas fa-handshake mr-3 text-indigo-600"></i>
-                            가맹점 신청
+                            <span data-i18n="partnerApply">가맹점 신청</span>
                         </a>
                         <a href="/support" class="block px-4 py-3 rounded-lg hover:bg-gray-100 text-gray-900">
                             <i class="fas fa-headset mr-3 text-pink-600"></i>
-                            고객센터
+                            <span data-i18n="support">고객센터</span>
                         </a>
                     </nav>
                     <div class="mt-6 pt-6 border-t">
                         <button class="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
                             <i class="fas fa-user mr-2"></i>
-                            로그인
+                            <span data-i18n="login">로그인</span>
                         </button>
                     </div>
                 </div>
@@ -1761,15 +1761,15 @@ app.get('/', (c) => {
         <nav class="mobile-tab bottom-nav">
             <div class="nav-item active" data-page="home">
                 <i class="fas fa-home text-xl mb-1"></i>
-                <span class="text-xs">홈</span>
+                <span class="text-xs" data-i18n="home">홈</span>
             </div>
             <div class="nav-item" data-page="delivery">
                 <i class="fas fa-motorcycle text-xl mb-1"></i>
-                <span class="text-xs">배달</span>
+                <span class="text-xs" data-i18n="delivery">배달</span>
             </div>
             <div class="nav-item" data-page="market">
                 <i class="fas fa-store text-xl mb-1"></i>
-                <span class="text-xs">중고·나눔</span>
+                <span class="text-xs" data-i18n="usedTrade">중고·나눔</span>
             </div>
             <div class="nav-item" data-page="coupon">
                 <i class="fas fa-ticket-alt text-xl mb-1"></i>
@@ -1797,6 +1797,392 @@ app.get('/', (c) => {
 
         <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
         <script>
+          // 다국어 번역 객체
+          const translations = {
+            ko: {
+              // 브랜드
+              brand: '경산온(ON)',
+              tagline: '경산은 배달비가 없습니다',
+              
+              // 메뉴
+              home: '홈',
+              delivery: '배달',
+              market: '전통시장',
+              localFood: '로컬푸드',
+              specialty: '특산물',
+              usedTrade: '중고·나눔',
+              partnerApply: '가맹점 신청',
+              support: '고객센터',
+              login: '로그인',
+              
+              // 중고거래 카테고리
+              all: '전체',
+              freeGiveaway: '무료나눔',
+              electronics: '전자기기',
+              appliances: '가전',
+              furniture: '가구',
+              babyItems: '유아용품',
+              
+              // 버튼
+              orderNow: '주문하기',
+              viewMenu: '메뉴 보기',
+              mapView: '지도보기',
+              tradeHere: '이곳에서 거래',
+              register: '등록하기',
+              search: '검색',
+              filter: '필터',
+              
+              // 상태
+              available: '판매중',
+              soldOut: '판매완료',
+              free: '무료',
+              
+              // 기타
+              won: '원',
+              viewCount: '조회',
+              safeTradingPlace: '안전거래 장소',
+              todayDelivery: '당일 배송',
+              noDeliveryFee: '배달비 0원',
+              noCommission: '중개수수료 0%',
+              noAd: '광고비 0원'
+            },
+            en: {
+              // Brand
+              brand: 'Gyeongsan ON',
+              tagline: 'No Delivery Fee in Gyeongsan',
+              
+              // Menu
+              home: 'Home',
+              delivery: 'Delivery',
+              market: 'Market',
+              localFood: 'Local Food',
+              specialty: 'Specialty',
+              usedTrade: 'Used & Free',
+              partnerApply: 'Partner Apply',
+              support: 'Support',
+              login: 'Login',
+              
+              // Used Trade Categories
+              all: 'All',
+              freeGiveaway: 'Free',
+              electronics: 'Electronics',
+              appliances: 'Appliances',
+              furniture: 'Furniture',
+              babyItems: 'Baby Items',
+              
+              // Buttons
+              orderNow: 'Order Now',
+              viewMenu: 'View Menu',
+              mapView: 'Map',
+              tradeHere: 'Trade Here',
+              register: 'Register',
+              search: 'Search',
+              filter: 'Filter',
+              
+              // Status
+              available: 'Available',
+              soldOut: 'Sold Out',
+              free: 'Free',
+              
+              // Others
+              won: 'KRW',
+              viewCount: 'Views',
+              safeTradingPlace: 'Safe Trading Place',
+              todayDelivery: 'Same Day Delivery',
+              noDeliveryFee: 'Free Delivery',
+              noCommission: '0% Commission',
+              noAd: '0 Ad Cost'
+            },
+            zh: {
+              // 品牌
+              brand: '庆山ON',
+              tagline: '庆山免配送费',
+              
+              // 菜单
+              home: '首页',
+              delivery: '配送',
+              market: '传统市场',
+              localFood: '本地食品',
+              specialty: '特产',
+              usedTrade: '二手·免费',
+              partnerApply: '商户申请',
+              support: '客服中心',
+              login: '登录',
+              
+              // 二手交易类别
+              all: '全部',
+              freeGiveaway: '免费赠送',
+              electronics: '电子产品',
+              appliances: '家电',
+              furniture: '家具',
+              babyItems: '婴儿用品',
+              
+              // 按钮
+              orderNow: '立即订购',
+              viewMenu: '查看菜单',
+              mapView: '地图',
+              tradeHere: '在这交易',
+              register: '注册',
+              search: '搜索',
+              filter: '筛选',
+              
+              // 状态
+              available: '在售',
+              soldOut: '已售出',
+              free: '免费',
+              
+              // 其他
+              won: '韩元',
+              viewCount: '浏览',
+              safeTradingPlace: '安全交易地点',
+              todayDelivery: '当日配送',
+              noDeliveryFee: '免配送费',
+              noCommission: '0%佣金',
+              noAd: '0广告费'
+            },
+            ja: {
+              // ブランド
+              brand: '慶山ON',
+              tagline: '慶山は配達料無料',
+              
+              // メニュー
+              home: 'ホーム',
+              delivery: '配達',
+              market: '伝統市場',
+              localFood: 'ローカルフード',
+              specialty: '特産品',
+              usedTrade: '中古・譲渡',
+              partnerApply: '加盟店申請',
+              support: 'サポート',
+              login: 'ログイン',
+              
+              // 中古取引カテゴリー
+              all: '全体',
+              freeGiveaway: '無料譲渡',
+              electronics: '電子機器',
+              appliances: '家電',
+              furniture: '家具',
+              babyItems: 'ベビー用品',
+              
+              // ボタン
+              orderNow: '注文する',
+              viewMenu: 'メニュー',
+              mapView: '地図',
+              tradeHere: 'ここで取引',
+              register: '登録',
+              search: '検索',
+              filter: 'フィルター',
+              
+              // ステータス
+              available: '販売中',
+              soldOut: '売り切れ',
+              free: '無料',
+              
+              // その他
+              won: 'ウォン',
+              viewCount: '閲覧',
+              safeTradingPlace: '安全取引場所',
+              todayDelivery: '当日配送',
+              noDeliveryFee: '配達料無料',
+              noCommission: '手数料0%',
+              noAd: '広告費0円'
+            },
+            es: {
+              // Marca
+              brand: 'Gyeongsan ON',
+              tagline: 'Sin Tarifa de Entrega en Gyeongsan',
+              
+              // Menú
+              home: 'Inicio',
+              delivery: 'Entrega',
+              market: 'Mercado',
+              localFood: 'Comida Local',
+              specialty: 'Especialidad',
+              usedTrade: 'Usado y Gratis',
+              partnerApply: 'Solicitud de Socio',
+              support: 'Soporte',
+              login: 'Iniciar Sesión',
+              
+              // Categorías de Comercio Usado
+              all: 'Todo',
+              freeGiveaway: 'Gratis',
+              electronics: 'Electrónica',
+              appliances: 'Electrodomésticos',
+              furniture: 'Muebles',
+              babyItems: 'Artículos para Bebés',
+              
+              // Botones
+              orderNow: 'Ordenar Ahora',
+              viewMenu: 'Ver Menú',
+              mapView: 'Mapa',
+              tradeHere: 'Comerciar Aquí',
+              register: 'Registrarse',
+              search: 'Buscar',
+              filter: 'Filtrar',
+              
+              // Estado
+              available: 'Disponible',
+              soldOut: 'Agotado',
+              free: 'Gratis',
+              
+              // Otros
+              won: 'KRW',
+              viewCount: 'Vistas',
+              safeTradingPlace: 'Lugar de Comercio Seguro',
+              todayDelivery: 'Entrega el Mismo Día',
+              noDeliveryFee: 'Entrega Gratis',
+              noCommission: '0% Comisión',
+              noAd: '0 Costo de Publicidad'
+            },
+            fr: {
+              // Marque
+              brand: 'Gyeongsan ON',
+              tagline: 'Pas de Frais de Livraison à Gyeongsan',
+              
+              // Menu
+              home: 'Accueil',
+              delivery: 'Livraison',
+              market: 'Marché',
+              localFood: 'Nourriture Locale',
+              specialty: 'Spécialité',
+              usedTrade: 'D\'occasion et Gratuit',
+              partnerApply: 'Demande de Partenaire',
+              support: 'Support',
+              login: 'Connexion',
+              
+              // Catégories de Commerce d\'occasion
+              all: 'Tout',
+              freeGiveaway: 'Gratuit',
+              electronics: 'Électronique',
+              appliances: 'Appareils',
+              furniture: 'Meubles',
+              babyItems: 'Articles pour Bébés',
+              
+              // Boutons
+              orderNow: 'Commander Maintenant',
+              viewMenu: 'Voir le Menu',
+              mapView: 'Carte',
+              tradeHere: 'Échanger Ici',
+              register: 'S\'inscrire',
+              search: 'Rechercher',
+              filter: 'Filtrer',
+              
+              // Statut
+              available: 'Disponible',
+              soldOut: 'Épuisé',
+              free: 'Gratuit',
+              
+              // Autres
+              won: 'KRW',
+              viewCount: 'Vues',
+              safeTradingPlace: 'Lieu d\'Échange Sûr',
+              todayDelivery: 'Livraison le Jour Même',
+              noDeliveryFee: 'Livraison Gratuite',
+              noCommission: '0% Commission',
+              noAd: '0 Coût Publicitaire'
+            },
+            ar: {
+              // العلامة التجارية
+              brand: 'غيونغسان أون',
+              tagline: 'لا توجد رسوم توصيل في غيونغسان',
+              
+              // القائمة
+              home: 'الرئيسية',
+              delivery: 'التوصيل',
+              market: 'السوق',
+              localFood: 'الطعام المحلي',
+              specialty: 'المنتجات المميزة',
+              usedTrade: 'مستعمل ومجاني',
+              partnerApply: 'طلب شريك',
+              support: 'الدعم',
+              login: 'تسجيل الدخول',
+              
+              // فئات التجارة المستعملة
+              all: 'الكل',
+              freeGiveaway: 'مجاني',
+              electronics: 'إلكترونيات',
+              appliances: 'أجهزة',
+              furniture: 'أثاث',
+              babyItems: 'مستلزمات الأطفال',
+              
+              // الأزرار
+              orderNow: 'اطلب الآن',
+              viewMenu: 'عرض القائمة',
+              mapView: 'الخريطة',
+              tradeHere: 'التجارة هنا',
+              register: 'تسجيل',
+              search: 'بحث',
+              filter: 'تصفية',
+              
+              // الحالة
+              available: 'متاح',
+              soldOut: 'نفذ',
+              free: 'مجاني',
+              
+              // أخرى
+              won: 'وون',
+              viewCount: 'المشاهدات',
+              safeTradingPlace: 'مكان تجاري آمن',
+              todayDelivery: 'التوصيل في نفس اليوم',
+              noDeliveryFee: 'توصيل مجاني',
+              noCommission: '0٪ عمولة',
+              noAd: '0 تكلفة إعلانية'
+            },
+            de: {
+              // Marke
+              brand: 'Gyeongsan ON',
+              tagline: 'Keine Liefergebühr in Gyeongsan',
+              
+              // Menü
+              home: 'Startseite',
+              delivery: 'Lieferung',
+              market: 'Markt',
+              localFood: 'Lokales Essen',
+              specialty: 'Spezialität',
+              usedTrade: 'Gebraucht & Kostenlos',
+              partnerApply: 'Partner-Antrag',
+              support: 'Support',
+              login: 'Anmelden',
+              
+              // Gebrauchthandel-Kategorien
+              all: 'Alle',
+              freeGiveaway: 'Kostenlos',
+              electronics: 'Elektronik',
+              appliances: 'Geräte',
+              furniture: 'Möbel',
+              babyItems: 'Babyartikel',
+              
+              // Schaltflächen
+              orderNow: 'Jetzt Bestellen',
+              viewMenu: 'Menü Ansehen',
+              mapView: 'Karte',
+              tradeHere: 'Hier Handeln',
+              register: 'Registrieren',
+              search: 'Suchen',
+              filter: 'Filtern',
+              
+              // Status
+              available: 'Verfügbar',
+              soldOut: 'Ausverkauft',
+              free: 'Kostenlos',
+              
+              // Sonstiges
+              won: 'KRW',
+              viewCount: 'Ansichten',
+              safeTradingPlace: 'Sicherer Handelsplatz',
+              todayDelivery: 'Lieferung am selben Tag',
+              noDeliveryFee: 'Kostenlose Lieferung',
+              noCommission: '0% Provision',
+              noAd: '0 Werbekosten'
+            }
+          };
+          
+          // 번역 함수
+          function t(key) {
+            const lang = localStorage.getItem('lang') || 'ko';
+            return translations[lang]?.[key] || translations['ko'][key] || key;
+          }
+          
           // 햄버거 메뉴 기능
           function openMenu() {
             document.getElementById('menuDrawer').classList.remove('hidden');
@@ -1935,6 +2321,35 @@ app.get('/', (c) => {
             if (chatbotBtn) {
               chatbotBtn.href = '/static/i18n/chatbot-' + savedLang;
             }
+            
+            // 페이지 번역 적용
+            console.log('🌍 번역 적용 시작...');
+            
+            // data-i18n 속성이 있는 모든 요소 번역
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+              const key = el.getAttribute('data-i18n');
+              if (key) {
+                el.textContent = t(key);
+              }
+            });
+            
+            // placeholder 번역
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+              const key = el.getAttribute('data-i18n-placeholder');
+              if (key) {
+                el.placeholder = t(key);
+              }
+            });
+            
+            // title 번역
+            document.querySelectorAll('[data-i18n-title]').forEach(el => {
+              const key = el.getAttribute('data-i18n-title');
+              if (key) {
+                el.title = t(key);
+              }
+            });
+            
+            console.log('✅ 번역 적용 완료!');
           });
         </script>
         <script src="/static/app.js"></script>
