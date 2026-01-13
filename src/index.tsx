@@ -2183,6 +2183,44 @@ app.get('/', (c) => {
             return translations[lang]?.[key] || translations['ko'][key] || key;
           }
           
+          // 페이지 번역 적용 함수
+          function applyTranslations() {
+            console.log('🌍 번역 적용 시작...');
+            const lang = localStorage.getItem('lang') || 'ko';
+            console.log('📍 현재 언어:', lang);
+            
+            // data-i18n 속성이 있는 모든 요소 번역
+            const elements = document.querySelectorAll('[data-i18n]');
+            console.log('📝 번역할 요소 개수:', elements.length);
+            
+            elements.forEach(el => {
+              const key = el.getAttribute('data-i18n');
+              if (key) {
+                const translated = t(key);
+                el.textContent = translated;
+                console.log('번역:', key, '->', translated);
+              }
+            });
+            
+            // placeholder 번역
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+              const key = el.getAttribute('data-i18n-placeholder');
+              if (key) {
+                el.placeholder = t(key);
+              }
+            });
+            
+            // title 번역
+            document.querySelectorAll('[data-i18n-title]').forEach(el => {
+              const key = el.getAttribute('data-i18n-title');
+              if (key) {
+                el.title = t(key);
+              }
+            });
+            
+            console.log('✅ 번역 적용 완료!');
+          }
+          
           // 햄버거 메뉴 기능
           function openMenu() {
             document.getElementById('menuDrawer').classList.remove('hidden');
@@ -2322,34 +2360,8 @@ app.get('/', (c) => {
               chatbotBtn.href = '/static/i18n/chatbot-' + savedLang;
             }
             
-            // 페이지 번역 적용
-            console.log('🌍 번역 적용 시작...');
-            
-            // data-i18n 속성이 있는 모든 요소 번역
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-              const key = el.getAttribute('data-i18n');
-              if (key) {
-                el.textContent = t(key);
-              }
-            });
-            
-            // placeholder 번역
-            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-              const key = el.getAttribute('data-i18n-placeholder');
-              if (key) {
-                el.placeholder = t(key);
-              }
-            });
-            
-            // title 번역
-            document.querySelectorAll('[data-i18n-title]').forEach(el => {
-              const key = el.getAttribute('data-i18n-title');
-              if (key) {
-                el.title = t(key);
-              }
-            });
-            
-            console.log('✅ 번역 적용 완료!');
+            // 번역 적용 (함수 호출)
+            applyTranslations();
           });
         </script>
         <script src="/static/app.js"></script>
