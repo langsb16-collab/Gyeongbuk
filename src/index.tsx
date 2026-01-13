@@ -1006,7 +1006,7 @@ app.get('/api/local-food-products', async (c) => {
       todayStock: 50,
       harvestDate: new Date().toISOString().split('T')[0],
       certification: 'ORGANIC',
-      thumbnail: '/static/images/rice.svg',
+      thumbnail: '/static/images/rice.svg?v=2',
       category: 'grain'
     },
     {
@@ -1020,7 +1020,7 @@ app.get('/api/local-food-products', async (c) => {
       todayStock: 15,
       harvestDate: new Date().toISOString().split('T')[0],
       certification: 'ORGANIC',
-      thumbnail: '/static/images/tomato.svg',
+      thumbnail: '/static/images/tomato.svg?v=2',
       category: 'vegetable'
     },
     {
@@ -1034,7 +1034,7 @@ app.get('/api/local-food-products', async (c) => {
       todayStock: 30,
       harvestDate: new Date().toISOString().split('T')[0],
       certification: 'PESTICIDE_FREE',
-      thumbnail: '/static/images/jujube.svg',
+      thumbnail: '/static/images/jujube.svg?v=2',
       category: 'fruit'
     },
     {
@@ -1048,7 +1048,7 @@ app.get('/api/local-food-products', async (c) => {
       todayStock: 10,
       harvestDate: new Date().toISOString().split('T')[0],
       certification: 'ORGANIC',
-      thumbnail: '/static/images/grape.svg',
+      thumbnail: '/static/images/grape.svg?v=2',
       category: 'fruit'
     },
     {
@@ -1062,7 +1062,7 @@ app.get('/api/local-food-products', async (c) => {
       todayStock: 25,
       harvestDate: new Date().toISOString().split('T')[0],
       certification: 'PESTICIDE_FREE',
-      thumbnail: '/static/images/spinach.svg',
+      thumbnail: '/static/images/spinach.svg?v=2',
       category: 'vegetable'
     },
     {
@@ -1076,7 +1076,7 @@ app.get('/api/local-food-products', async (c) => {
       todayStock: 12,
       harvestDate: new Date().toISOString().split('T')[0],
       certification: 'ORGANIC',
-      thumbnail: '/static/images/honey.svg',
+      thumbnail: '/static/images/honey.svg?v=2',
       category: 'processed'
     }
   ]
