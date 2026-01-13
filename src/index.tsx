@@ -2185,17 +2185,18 @@ app.get('/', (c) => {
           
           // 페이지 번역 적용 함수
           function applyTranslations() {
-            console.log('🌍 번역 적용 시작...');
+            console.log('번역 적용 시작');
             const lang = localStorage.getItem('lang') || 'ko';
-            console.log('📍 현재 언어:', lang);
+            console.log('현재 언어:', lang);
             
-            // data-i18n 속성이 있는 모든 요소 번역
+            // data-i18n 속성이 있는 모든 요소 번역 (드롭다운 제외)
             const elements = document.querySelectorAll('[data-i18n]');
-            console.log('📝 번역할 요소 개수:', elements.length);
+            console.log('번역할 요소 개수:', elements.length);
             
             elements.forEach(el => {
               const key = el.getAttribute('data-i18n');
-              if (key) {
+              // 언어 선택 메뉴 항목은 번역하지 않음
+              if (key && !el.closest('.lang-menu')) {
                 const translated = t(key);
                 el.textContent = translated;
                 console.log('번역:', key, '->', translated);
@@ -2218,7 +2219,7 @@ app.get('/', (c) => {
               }
             });
             
-            console.log('✅ 번역 적용 완료!');
+            console.log('번역 적용 완료');
           }
           
           // 햄버거 메뉴 기능
@@ -2234,9 +2235,9 @@ app.get('/', (c) => {
           
           // 다국어 드롭다운 기능
           document.addEventListener('DOMContentLoaded', function() {
-            console.log('🌍 언어 드롭다운 초기화 시작');
+            console.log('언어 드롭다운 초기화 시작');
             const langSelects = document.querySelectorAll('.lang-select');
-            console.log('📍 발견된 lang-select 개수:', langSelects.length);
+            console.log('발견된 lang-select 개수:', langSelects.length);
             
             langSelects.forEach((select, index) => {
               const btn = select.querySelector('.lang-btn');
@@ -2244,24 +2245,21 @@ app.get('/', (c) => {
               const langText = select.querySelector('.lang-text');
               const items = select.querySelectorAll('.lang-menu li');
               
-              console.log(\`🔧 드롭다운 #\${index + 1} 설정 중...\`, {
-                btn: !!btn,
-                menu: !!menu,
-                langText: !!langText,
-                itemsCount: items.length
-              });
+              console.log('드롭다운 설정 중, 인덱스:', index + 1);
+              console.log('버튼 존재:', !!btn, '메뉴 존재:', !!menu, '항목 개수:', items.length);
               
               if (!btn) {
-                console.error(\`❌ 드롭다운 #\${index + 1}: 버튼을 찾을 수 없습니다\`);
+                console.error('드롭다운 버튼을 찾을 수 없습니다, 인덱스:', index + 1);
                 return;
               }
               
               // 버튼 클릭 시 토글
               btn.addEventListener('click', (e) => {
-                console.log(\`🖱️ 드롭다운 #\${index + 1} 버튼 클릭!\`);
+                console.log('드롭다운 버튼 클릭, 인덱스:', index + 1);
                 e.stopPropagation();
                 select.classList.toggle('open');
-                console.log('📂 드롭다운 상태:', select.classList.contains('open') ? '열림' : '닫힘');
+                const isOpen = select.classList.contains('open');
+                console.log('드롭다운 상태:', isOpen ? '열림' : '닫힘');
                 
                 // 다른 드롭다운 닫기
                 langSelects.forEach(other => {
@@ -2275,7 +2273,7 @@ app.get('/', (c) => {
                   e.stopPropagation();
                   const lang = item.dataset.lang;
                   const text = item.textContent;
-                  console.log(\`🌐 언어 선택: \${text} (\${lang})\`);
+                  console.log('언어 선택:', text, '(', lang, ')');
                   
                   // 선택된 언어 표시
                   items.forEach(i => i.classList.remove('active'));
@@ -2284,29 +2282,29 @@ app.get('/', (c) => {
                   // 버튼 텍스트 변경
                   if (langText) {
                     langText.textContent = text;
-                    console.log('✅ 버튼 텍스트 변경 완료');
+                    console.log('버튼 텍스트 변경 완료');
                   }
                   
                   // 로컬 스토리지에 저장
                   localStorage.setItem('lang', lang);
-                  console.log('💾 localStorage 저장 완료');
+                  console.log('localStorage 저장 완료');
                   
                   // 챗봇 페이지로 이동 (언어별)
                   const chatbotBtn = document.querySelector('.chatbot-button');
                   if (chatbotBtn) {
                     chatbotBtn.href = '/static/i18n/chatbot-' + lang;
-                    console.log('🤖 챗봇 링크 업데이트:', chatbotBtn.href);
+                    console.log('챗봇 링크 업데이트:', chatbotBtn.href);
                   }
                   
                   // 드롭다운 닫기
                   select.classList.remove('open');
-                  console.log('📂 드롭다운 닫힘');
+                  console.log('드롭다운 닫힘');
                   
                   // 성공 메시지
-                  console.log('🎉 언어가 변경되었습니다: ' + text);
+                  console.log('언어가 변경되었습니다:', text);
                   
                   // 페이지 새로고침으로 언어 적용
-                  console.log('🔄 페이지 새로고침 중...');
+                  console.log('페이지 새로고침 중...');
                   setTimeout(() => {
                     window.location.reload();
                   }, 300);
