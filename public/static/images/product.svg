@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="250" viewBox="0 0 400 250">
+  <rect fill="#fef3c7" width="400" height="250"/>
+  <circle cx="150" cy="80" r="30" fill="#fbbf24" opacity="0.6"/>
+  <circle cx="250" cy="100" r="35" fill="#f59e0b" opacity="0.6"/>
+  <circle cx="200" cy="140" r="25" fill="#d97706" opacity="0.6"/>
+  <text x="200" y="210" font-size="20" fill="#92400e" text-anchor="middle" font-family="Arial, sans-serif">상품 이미지</text>
+</svg>

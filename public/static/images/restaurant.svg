@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="250" viewBox="0 0 400 250">
+  <rect fill="#f3f4f6" width="400" height="250"/>
+  <circle cx="200" cy="100" r="40" fill="#e5e7eb"/>
+  <path d="M 160 140 Q 200 160 240 140" stroke="#d1d5db" stroke-width="3" fill="none"/>
+  <text x="200" y="200" font-size="20" fill="#6b7280" text-anchor="middle" font-family="Arial, sans-serif">음식점 이미지</text>
+</svg>

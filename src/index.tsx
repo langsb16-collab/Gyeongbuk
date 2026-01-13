@@ -1306,11 +1306,11 @@ app.get('/delivery', (c) => {
 
                 grid.innerHTML = restaurants.map(restaurant => \`
                     <div class="restaurant-card bg-white rounded-lg md:rounded-xl shadow-sm overflow-hidden">
-                        <img src="\${restaurant.image || 'https://via.placeholder.com/400x250?text=Restaurant'}" 
+                        <img src="\${restaurant.image || '/static/images/restaurant.svg'}" 
                              alt="\${restaurant.name}"
                              crossorigin="anonymous"
                              loading="lazy"
-                             onerror="this.onerror=null; this.src='https://via.placeholder.com/400x250/3b82f6/ffffff?text=\${encodeURIComponent(restaurant.name)}';"
+                             onerror="this.onerror=null; this.src='/static/images/restaurant.svg';"
                              class="restaurant-image w-full object-cover">
                         <div class="p-3 md:p-4">
                             <div class="flex items-start justify-between mb-2">
@@ -2349,7 +2349,7 @@ app.get('/', (c) => {
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     <!-- 레스토랑 카드 1 -->
                     <div class="card">
-                        <img src="https://via.placeholder.com/400x250?text=Restaurant" alt="장산 커피 로스터스" class="w-full h-48 object-cover">
+                        <img src="/static/images/restaurant.svg" alt="장산 커피 로스터스" class="w-full h-48 object-cover">
                         <div class="p-4">
                             <div class="flex items-center justify-between mb-2">
                                 <h3 class="text-lg font-bold">장산 커피 로스터스</h3>
@@ -2379,7 +2379,7 @@ app.get('/', (c) => {
                     
                     <!-- 레스토랑 카드 2 -->
                     <div class="card">
-                        <img src="https://via.placeholder.com/400x250?text=Korean+Food" alt="경산 전통 한정식" class="w-full h-48 object-cover">
+                        <img src="/static/images/restaurant.svg" alt="경산 전통 한정식" class="w-full h-48 object-cover">
                         <div class="p-4">
                             <div class="flex items-center justify-between mb-2">
                                 <h3 class="text-lg font-bold">경산 전통 한정식</h3>
@@ -2409,7 +2409,7 @@ app.get('/', (c) => {
                     
                     <!-- 레스토랑 카드 3 -->
                     <div class="card">
-                        <img src="https://via.placeholder.com/400x250?text=Fast+Food" alt="경산 치킨" class="w-full h-48 object-cover">
+                        <img src="/static/images/restaurant.svg" alt="경산 치킨" class="w-full h-48 object-cover">
                         <div class="p-4">
                             <div class="flex items-center justify-between mb-2">
                                 <h3 class="text-lg font-bold">경산 치킨</h3>
@@ -2595,7 +2595,7 @@ app.get('/', (c) => {
               return \`
                 <div class="card cursor-pointer hover:shadow-lg transition" onclick="window.location.href='/static/localfood'">
                   <div class="relative h-48 bg-gray-200">
-                    <img src="\${product.thumbnail || 'https://via.placeholder.com/400x300?text=Fresh+Food'}" 
+                    <img src="\${product.thumbnail || '/static/images/product.svg'}" 
                          alt="\${product.productName}"
                          crossorigin="anonymous"
                          loading="lazy"
@@ -2667,7 +2667,7 @@ app.get('/', (c) => {
               const fallbackImage = 'https://via.placeholder.com/400x250/3b82f6/ffffff?text=' + restaurant.name.substring(0, 10);
               return \`
                 <div class="card">
-                  <img src="\${restaurant.image || 'https://via.placeholder.com/400x250?text=Restaurant'}" 
+                  <img src="\${restaurant.image || '/static/images/restaurant.svg'}" 
                        alt="\${restaurant.name}"
                        crossorigin="anonymous"
                        loading="lazy"
