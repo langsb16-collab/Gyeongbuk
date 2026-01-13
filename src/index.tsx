@@ -152,16 +152,57 @@ app.get('/api/stores/:storeId/menus', async (c) => {
   return c.json(sampleMenus)
 })
 
-// 장바구니 생성 (메뉴보기에서 담기)
-app.post('/api/cart/add', async (c) => {
+// 장바구니 생성 (주문하기 버튼 - 장바구니 먼저 생성)
+app.post('/api/cart/create', async (c) => {
   const body = await c.req.json()
-  const cartId = 'CART-' + Date.now()
+  const { storeId } = body
+  const cartId = 'CART-' + Date.now() + '-' + Math.random().toString(36).substring(7)
   
   return c.json({
     success: true,
     cartId,
-    status: 'TEMP',
-    message: '장바구니에 담겼습니다.'
+    storeId,
+    status: 'READY', // 주문 준비 상태
+    message: '장바구니가 생성되었습니다.'
+  })
+})
+
+// 현재 장바구니 조회
+app.get('/api/cart/current', async (c) => {
+  // 실제로는 세션/쿠키에서 cartId를 가져와야 함
+  const cartId = c.req.query('cartId')
+  
+  if (!cartId) {
+    return c.json({ cart: null, items: [] })
+  }
+  
+  // 임시 응답 (실제로는 D1에서 조회)
+  return c.json({
+    cart: {
+      cartId,
+      storeId: 'STORE-001',
+      status: 'READY',
+      createdAt: new Date().toISOString()
+    },
+    items: []
+  })
+})
+
+// 장바구니에 메뉴 추가 (메뉴보기에서 담기)
+app.post('/api/cart/add', async (c) => {
+  const body = await c.req.json()
+  const { cartId, menuId, menuName, price, quantity } = body
+  
+  return c.json({
+    success: true,
+    cartId,
+    message: '장바구니에 담겼습니다.',
+    item: {
+      menuId,
+      menuName,
+      price,
+      quantity: quantity || 1
+    }
   })
 })
 
@@ -1318,6 +1359,257 @@ app.post('/api/auth/login-email', async (c) => {
   })
 })
 
+// 메뉴 페이지
+app.get('/store/:storeId/menu', async (c) => {
+  const storeId = c.req.param('storeId')
+  
+  return c.html(`
+    <!DOCTYPE html>
+    <html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>메뉴 보기 - 경산온(ON)</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    </head>
+    <body class="bg-gray-100">
+        <div class="max-w-4xl mx-auto p-4">
+            <div class="bg-white rounded-lg shadow-sm p-4 mb-4">
+                <button onclick="history.back()" class="text-gray-600 mb-4">
+                    <i class="fas fa-arrow-left mr-2"></i>뒤로 가기
+                </button>
+                <h1 class="text-2xl font-bold mb-2">메뉴 보기</h1>
+                <p class="text-gray-600">마음에 드는 메뉴를 장바구니에 담아보세요</p>
+            </div>
+            
+            <div id="menuList" class="space-y-4">
+                <div class="text-center py-8">
+                    <i class="fas fa-spinner fa-spin text-3xl text-gray-400"></i>
+                    <p class="text-gray-500 mt-2">메뉴 불러오는 중...</p>
+                </div>
+            </div>
+            
+            <!-- 장바구니 플로팅 버튼 -->
+            <div class="fixed bottom-4 right-4">
+                <button onclick="goToOrder()" class="bg-blue-600 text-white px-6 py-3 rounded-full shadow-lg hover:bg-blue-700 transition">
+                    <i class="fas fa-shopping-cart mr-2"></i>
+                    <span id="cartCount">0</span>개 담김
+                </button>
+            </div>
+        </div>
+        
+        <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+        <script>
+          const storeId = '${storeId}';
+          let cartId = localStorage.getItem('cartId');
+          let cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
+          
+          // 페이지 로드 시 메뉴 불러오기
+          async function loadMenus() {
+            try {
+              const res = await axios.get(\`/api/stores/\${storeId}/menus\`);
+              const menus = res.data;
+              
+              const menuList = document.getElementById('menuList');
+              menuList.innerHTML = menus.map(menu => \`
+                <div class="bg-white rounded-lg shadow-sm p-4">
+                  <div class="flex justify-between items-start">
+                    <div class="flex-1">
+                      <h3 class="text-lg font-bold mb-1">\${menu.menuName}</h3>
+                      <p class="text-gray-600 text-sm mb-2">\${menu.category || '한식'}</p>
+                      <p class="text-blue-600 font-bold text-xl">\${menu.price.toLocaleString()}원</p>
+                    </div>
+                    <button onclick="addToCart('\${menu.menuId}', '\${menu.menuName}', \${menu.price})" 
+                            class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+                      담기
+                    </button>
+                  </div>
+                </div>
+              \`).join('');
+              
+              updateCartCount();
+            } catch (error) {
+              console.error('메뉴 불러오기 실패:', error);
+            }
+          }
+          
+          // 장바구니에 담기
+          async function addToCart(menuId, menuName, price) {
+            // 로컬 장바구니에 추가
+            const existingItem = cartItems.find(item => item.menuId === menuId);
+            if (existingItem) {
+              existingItem.quantity++;
+            } else {
+              cartItems.push({ menuId, menuName, price, quantity: 1 });
+            }
+            
+            localStorage.setItem('cartItems', JSON.stringify(cartItems));
+            updateCartCount();
+            
+            // 토스트 메시지
+            alert('장바구니에 담았습니다!');
+          }
+          
+          function updateCartCount() {
+            const totalCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cartCount').textContent = totalCount;
+          }
+          
+          function goToOrder() {
+            if (cartItems.length === 0) {
+              alert('장바구니가 비어있습니다');
+              return;
+            }
+            window.location.href = \`/store/\${storeId}/order\`;
+          }
+          
+          loadMenus();
+        </script>
+    </body>
+    </html>
+  `)
+})
+
+// 주문 페이지
+app.get('/store/:storeId/order', async (c) => {
+  const storeId = c.req.param('storeId')
+  
+  return c.html(`
+    <!DOCTYPE html>
+    <html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>주문하기 - 경산온(ON)</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    </head>
+    <body class="bg-gray-100">
+        <div class="max-w-4xl mx-auto p-4">
+            <div class="bg-white rounded-lg shadow-sm p-4 mb-4">
+                <button onclick="history.back()" class="text-gray-600 mb-4">
+                    <i class="fas fa-arrow-left mr-2"></i>뒤로 가기
+                </button>
+                <h1 class="text-2xl font-bold mb-2">주문하기</h1>
+                <p class="text-gray-600">주문 내역을 확인하고 결제해주세요</p>
+            </div>
+            
+            <!-- 주문 내역 -->
+            <div class="bg-white rounded-lg shadow-sm p-4 mb-4">
+                <h2 class="text-lg font-bold mb-4">주문 내역</h2>
+                <div id="orderItems" class="space-y-3">
+                    <!-- 주문 아이템들이 여기에 표시됩니다 -->
+                </div>
+            </div>
+            
+            <!-- 무료배달 안내 -->
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                <div class="flex items-center">
+                    <i class="fas fa-truck text-blue-600 text-2xl mr-3"></i>
+                    <div>
+                        <p class="font-bold text-blue-900">배달비 0원</p>
+                        <p class="text-sm text-blue-700">경산은 모든 배달이 무료입니다!</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 금액 정보 -->
+            <div class="bg-white rounded-lg shadow-sm p-4 mb-4">
+                <div class="space-y-2">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">주문 금액</span>
+                        <span id="subtotal" class="font-bold">0원</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">배달비</span>
+                        <span class="text-blue-600 font-bold">0원</span>
+                    </div>
+                    <div class="border-t pt-2 flex justify-between">
+                        <span class="font-bold text-lg">총 결제 금액</span>
+                        <span id="total" class="font-bold text-xl text-blue-600">0원</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 결제 버튼 -->
+            <button onclick="processOrder()" class="w-full bg-blue-600 text-white py-4 rounded-lg font-bold text-lg hover:bg-blue-700 transition">
+                결제하기
+            </button>
+        </div>
+        
+        <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+        <script>
+          const storeId = '${storeId}';
+          let cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
+          
+          // 페이지 로드 시 초기화
+          function init() {
+            if (cartItems.length === 0) {
+              alert('장바구니가 비어있습니다');
+              window.location.href = \`/store/\${storeId}/menu\`;
+              return;
+            }
+            
+            displayOrderItems();
+            calculateTotal();
+          }
+          
+          function displayOrderItems() {
+            const orderItemsDiv = document.getElementById('orderItems');
+            orderItemsDiv.innerHTML = cartItems.map(item => \`
+              <div class="flex justify-between items-center border-b pb-3">
+                <div>
+                  <p class="font-bold">\${item.menuName}</p>
+                  <p class="text-sm text-gray-600">\${item.price.toLocaleString()}원 × \${item.quantity}</p>
+                </div>
+                <p class="font-bold">\${(item.price * item.quantity).toLocaleString()}원</p>
+              </div>
+            \`).join('');
+          }
+          
+          function calculateTotal() {
+            const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            document.getElementById('subtotal').textContent = subtotal.toLocaleString() + '원';
+            document.getElementById('total').textContent = subtotal.toLocaleString() + '원';
+          }
+          
+          async function processOrder() {
+            try {
+              const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+              
+              // 주문 생성 API 호출
+              const res = await axios.post('/api/orders/start', {
+                storeId,
+                items: cartItems,
+                subtotalAmount: subtotal,
+                deliveryFee: 0,
+                totalAmount: subtotal
+              });
+              
+              if (res.data.success) {
+                alert('주문이 완료되었습니다!\\n주문번호: ' + res.data.orderId);
+                
+                // 장바구니 비우기
+                localStorage.removeItem('cartItems');
+                localStorage.removeItem('cartId');
+                
+                // 홈으로 이동
+                window.location.href = '/';
+              }
+            } catch (error) {
+              console.error('주문 실패:', error);
+              alert('주문 처리 중 오류가 발생했습니다');
+            }
+          }
+          
+          init();
+        </script>
+    </body>
+    </html>
+  `)
+})
+
 // 메인 페이지
 app.get('/', (c) => {
   return c.html(`
@@ -1633,7 +1925,107 @@ app.get('/', (c) => {
         </div>
 
         <!-- 메인 콘텐츠 -->
-        <div id="app" class="app-container"></div>
+        <div id="app" class="app-container">
+            <!-- 샘플 레스토랑 카드 -->
+            <div class="p-4 max-w-6xl mx-auto">
+                <div class="mb-4">
+                    <h2 class="text-2xl font-bold mb-2">🍜 배달 음식점</h2>
+                    <p class="text-gray-600">배달비 0원! 경산온에서 주문하세요</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- 레스토랑 카드 1 -->
+                    <div class="card">
+                        <img src="https://via.placeholder.com/400x250?text=Restaurant" alt="장산 커피 로스터스" class="w-full h-48 object-cover">
+                        <div class="p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="text-lg font-bold">장산 커피 로스터스</h3>
+                                <span class="badge badge-info text-xs">카페·디저트</span>
+                            </div>
+                            <div class="flex items-center text-yellow-500 text-sm mb-2">
+                                <i class="fas fa-star mr-1"></i>
+                                <span class="font-bold mr-1">4.6</span>
+                                <span class="text-gray-500">(26)</span>
+                                <span class="mx-2">|</span>
+                                <span class="text-gray-600">15-25분</span>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-3">스페셜 로스팅 신선한 모든 커피</p>
+                            <div class="flex items-center justify-between">
+                                <span class="badge badge-primary text-xs">배달비 0원</span>
+                                <div class="flex gap-2">
+                                    <button onclick="goToMenu('경산커피1')" class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-sm hover:bg-gray-200 transition">
+                                        메뉴 보기
+                                    </button>
+                                    <button onclick="startOrder('경산커피1')" class="px-3 py-1.5 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition">
+                                        주문하기
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 레스토랑 카드 2 -->
+                    <div class="card">
+                        <img src="https://via.placeholder.com/400x250?text=Korean+Food" alt="경산 전통 한정식" class="w-full h-48 object-cover">
+                        <div class="p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="text-lg font-bold">경산 전통 한정식</h3>
+                                <span class="badge badge-success text-xs">한식</span>
+                            </div>
+                            <div class="flex items-center text-yellow-500 text-sm mb-2">
+                                <i class="fas fa-star mr-1"></i>
+                                <span class="font-bold mr-1">4.8</span>
+                                <span class="text-gray-500">(42)</span>
+                                <span class="mx-2">|</span>
+                                <span class="text-gray-600">20-30분</span>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-3">경산 대표 한식당</p>
+                            <div class="flex items-center justify-between">
+                                <span class="badge badge-primary text-xs">배달비 0원</span>
+                                <div class="flex gap-2">
+                                    <button onclick="goToMenu('경산한식1')" class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-sm hover:bg-gray-200 transition">
+                                        메뉴 보기
+                                    </button>
+                                    <button onclick="startOrder('경산한식1')" class="px-3 py-1.5 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition">
+                                        주문하기
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 레스토랑 카드 3 -->
+                    <div class="card">
+                        <img src="https://via.placeholder.com/400x250?text=Fast+Food" alt="경산 치킨" class="w-full h-48 object-cover">
+                        <div class="p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="text-lg font-bold">경산 치킨</h3>
+                                <span class="badge badge-warning text-xs">치킨·피자</span>
+                            </div>
+                            <div class="flex items-center text-yellow-500 text-sm mb-2">
+                                <i class="fas fa-star mr-1"></i>
+                                <span class="font-bold mr-1">4.5</span>
+                                <span class="text-gray-500">(38)</span>
+                                <span class="mx-2">|</span>
+                                <span class="text-gray-600">15-20분</span>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-3">바삭한 국내산 치킨</p>
+                            <div class="flex items-center justify-between">
+                                <span class="badge badge-primary text-xs">배달비 0원</span>
+                                <div class="flex gap-2">
+                                    <button onclick="goToMenu('경산치킨1')" class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-sm hover:bg-gray-200 transition">
+                                        메뉴 보기
+                                    </button>
+                                    <button onclick="startOrder('경산치킨1')" class="px-3 py-1.5 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition">
+                                        주문하기
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- 챗봇 플로팅 버튼 -->
         <a href="/static/i18n/chatbot-ko" class="chatbot-button" title="온이 챗봇">
@@ -1687,6 +2079,33 @@ app.get('/', (c) => {
           
           function closeMenu() {
             document.getElementById('menuDrawer').classList.add('hidden');
+          }
+          
+          // 메뉴 보기 버튼 클릭 (장바구니 없이 메뉴만 보기)
+          function goToMenu(storeId) {
+            window.location.href = \`/store/\${storeId}/menu\`;
+          }
+          
+          // 주문하기 버튼 클릭 (장바구니 생성 후 주문 페이지로)
+          async function startOrder(storeId) {
+            try {
+              // 1. 장바구니 생성
+              const res = await axios.post('/api/cart/create', { storeId });
+              
+              if (res.data.success) {
+                const cartId = res.data.cartId;
+                
+                // 2. localStorage에 cartId 저장
+                localStorage.setItem('cartId', cartId);
+                localStorage.setItem('storeId', storeId);
+                
+                // 3. 메뉴 페이지로 이동
+                window.location.href = \`/store/\${storeId}/menu\`;
+              }
+            } catch (error) {
+              console.error('주문 시작 실패:', error);
+              alert('주문 시작 중 오류가 발생했습니다');
+            }
           }
           
           // 페이지 초기화
