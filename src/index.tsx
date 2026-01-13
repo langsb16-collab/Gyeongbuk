@@ -997,31 +997,100 @@ app.get('/api/local-food-products', async (c) => {
   const sampleProducts = [
     {
       productId: 'LOCAL-001',
+      farmId: 'FARM-001',
       farmName: '경산 유기농 농장',
       farmerName: '김농부',
       productName: '당일 수확 상추',
       price: 5000,
-      unit: '1kg',
+      unit: 'kg',
       todayStock: 20,
       harvestDate: new Date().toISOString().split('T')[0],
       certification: 'ORGANIC',
-      thumbnail: 'https://via.placeholder.com/300x200'
+      thumbnail: 'https://images.unsplash.com/photo-1622206151226-18ca2c9ab4a1?w=400&h=300&fit=crop',
+      category: 'vegetable'
+    },
+    {
+      productId: 'LOCAL-002',
+      farmId: 'FARM-002',
+      farmName: '햇살 농원',
+      farmerName: '이농부',
+      productName: '제철 토마토',
+      price: 15000,
+      unit: 'kg',
+      todayStock: 15,
+      harvestDate: new Date().toISOString().split('T')[0],
+      certification: 'ORGANIC',
+      thumbnail: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=400&h=300&fit=crop',
+      category: 'vegetable'
     },
     {
       productId: 'LOCAL-003',
+      farmId: 'FARM-003',
       farmName: '경산 대추 농장',
       farmerName: '박농부',
       productName: '경산 대추',
       price: 20000,
-      unit: '1kg',
+      unit: 'kg',
       todayStock: 30,
       harvestDate: new Date().toISOString().split('T')[0],
       certification: 'PESTICIDE_FREE',
-      thumbnail: 'https://via.placeholder.com/300x200'
+      thumbnail: 'https://images.unsplash.com/photo-1577003833154-a3d809950dd6?w=400&h=300&fit=crop',
+      category: 'fruit'
+    },
+    {
+      productId: 'LOCAL-004',
+      farmId: 'FARM-004',
+      farmName: '모닝팜',
+      farmerName: '최농부',
+      productName: '하양 포도',
+      price: 35000,
+      unit: 'kg',
+      todayStock: 10,
+      harvestDate: new Date().toISOString().split('T')[0],
+      certification: 'ORGANIC',
+      thumbnail: 'https://images.unsplash.com/photo-1599819177842-32d993e8c7a8?w=400&h=300&fit=crop',
+      category: 'fruit'
+    },
+    {
+      productId: 'LOCAL-005',
+      farmId: 'FARM-005',
+      farmName: '푸른 들판',
+      farmerName: '정농부',
+      productName: '무농약 시금치',
+      price: 8000,
+      unit: 'kg',
+      todayStock: 25,
+      harvestDate: new Date().toISOString().split('T')[0],
+      certification: 'PESTICIDE_FREE',
+      thumbnail: 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=400&h=300&fit=crop',
+      category: 'vegetable'
+    },
+    {
+      productId: 'LOCAL-006',
+      farmId: 'FARM-006',
+      farmName: '산골 양봉',
+      farmerName: '김양봉',
+      productName: '야생화 꿀',
+      price: 28000,
+      unit: 'kg',
+      todayStock: 12,
+      harvestDate: new Date().toISOString().split('T')[0],
+      certification: 'ORGANIC',
+      thumbnail: 'https://images.unsplash.com/photo-1587049352846-4a222e784210?w=400&h=300&fit=crop',
+      category: 'processed'
     }
   ]
   
-  return c.json(sampleProducts)
+  // 카테고리 필터링
+  const filteredProducts = category && category !== 'all' 
+    ? sampleProducts.filter(p => p.category === category)
+    : sampleProducts
+  
+  return c.json({
+    success: true,
+    products: filteredProducts,
+    total: filteredProducts.length
+  })
 })
 
 // 로컬푸드 예약 주문
