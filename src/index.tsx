@@ -1237,9 +1237,25 @@ app.get('/delivery', (c) => {
         <!-- 메인 컨텐츠 -->
         <div class="max-w-7xl mx-auto px-4 py-4 md:py-6">
             <!-- 배너 -->
-            <div class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl md:rounded-2xl p-4 md:p-6 mb-4 md:mb-6 text-white">
-                <h2 class="text-lg md:text-2xl font-bold mb-1 md:mb-2">배달비 0원</h2>
-                <p class="text-sm md:text-base opacity-90">경산 전역 무료 배달 서비스</p>
+            <div class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl md:rounded-2xl p-4 md:p-8 mb-4 md:mb-6 text-white text-center">
+                <div class="mb-3 md:mb-4">
+                    <span class="inline-block px-4 py-2 bg-white/20 rounded-full text-sm md:text-base font-semibold mb-2">🎉 경산시 시범 운영 중</span>
+                </div>
+                <p class="text-xs md:text-sm opacity-90 mb-3 md:mb-4">수수료 0% · 광고비 0% · 배달비 지원</p>
+                <div class="grid grid-cols-3 gap-4 max-w-3xl mx-auto">
+                    <div>
+                        <p class="text-2xl md:text-3xl font-bold mb-1">8.9억</p>
+                        <p class="text-xs md:text-sm opacity-80">소상공인 절감</p>
+                    </div>
+                    <div>
+                        <p class="text-2xl md:text-3xl font-bold mb-1">234곳</p>
+                        <p class="text-xs md:text-sm opacity-80">입점 가맹점</p>
+                    </div>
+                    <div>
+                        <p class="text-2xl md:text-3xl font-bold mb-1">8.9K</p>
+                        <p class="text-xs md:text-sm opacity-80">이용 시민</p>
+                    </div>
+                </div>
             </div>
 
             <!-- 음식점 목록 -->
