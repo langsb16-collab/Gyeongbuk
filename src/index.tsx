@@ -2559,6 +2559,11 @@ app.get('/', (c) => {
           function renderLocalFoods(products) {
             const grid = document.getElementById('localFoodGrid');
             
+            if (!grid) {
+              console.error('localFoodGrid element not found');
+              return;
+            }
+            
             if (products.length === 0) {
               grid.innerHTML = \`
                 <div class="col-span-full text-center py-8 text-gray-500">
@@ -2569,36 +2574,41 @@ app.get('/', (c) => {
               return;
             }
 
-            grid.innerHTML = products.map(product => \`
-              <div class="card cursor-pointer hover:shadow-lg transition" onclick="window.location.href='/static/localfood'">
-                <div class="relative h-48 bg-gray-200">
-                  <img src="\${product.thumbnail || 'https://via.placeholder.com/400x300?text=Fresh+Food'}" 
-                       alt="\${product.productName}"
-                       crossorigin="anonymous"
-                       loading="lazy"
-                       onerror="this.onerror=null; this.src='https://via.placeholder.com/400x300/22c55e/ffffff?text=\${encodeURIComponent(product.productName)}';"
-                       class="w-full h-full object-cover">
-                  <span class="absolute top-2 left-2 bg-green-600 text-white text-xs px-2 py-1 rounded-full font-bold">
-                    <i class="fas fa-leaf mr-1"></i>당일수확
-                  </span>
-                </div>
-                <div class="p-3">
-                  <h4 class="font-medium text-gray-900 mb-1 line-clamp-1">\${product.productName}</h4>
-                  <p class="text-sm text-gray-600 mb-2">
-                    <i class="fas fa-user-farmer mr-1"></i>\${product.farmerName}
-                  </p>
-                  <div class="flex items-center justify-between">
-                    <span class="text-lg font-bold text-gray-900">
-                      \${product.price.toLocaleString()}원
+            grid.innerHTML = products.map(product => {
+              const fallbackImage = 'https://via.placeholder.com/400x300/22c55e/ffffff?text=' + product.productName.substring(0, 10);
+              return \`
+                <div class="card cursor-pointer hover:shadow-lg transition" onclick="window.location.href='/static/localfood'">
+                  <div class="relative h-48 bg-gray-200">
+                    <img src="\${product.thumbnail || 'https://via.placeholder.com/400x300?text=Fresh+Food'}" 
+                         alt="\${product.productName}"
+                         crossorigin="anonymous"
+                         loading="lazy"
+                         onerror="this.onerror=null; this.src='\${fallbackImage}';"
+                         class="w-full h-full object-cover">
+                    <span class="absolute top-2 left-2 bg-green-600 text-white text-xs px-2 py-1 rounded-full font-bold">
+                      <i class="fas fa-leaf mr-1"></i>당일수확
                     </span>
-                    <button onclick="event.stopPropagation(); window.location.href='/static/localfood'" 
-                            class="px-3 py-1.5 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 transition font-medium">
-                      담기
-                    </button>
+                  </div>
+                  <div class="p-3">
+                    <h4 class="font-medium text-gray-900 mb-1 line-clamp-1">\${product.productName}</h4>
+                    <p class="text-sm text-gray-600 mb-2">
+                      <i class="fas fa-user-farmer mr-1"></i>\${product.farmerName}
+                    </p>
+                    <div class="flex items-center justify-between">
+                      <span class="text-lg font-bold text-gray-900">
+                        \${product.price.toLocaleString()}원
+                      </span>
+                      <button onclick="event.stopPropagation(); window.location.href='/static/localfood'" 
+                              class="px-3 py-1.5 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 transition font-medium">
+                        담기
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            \`).join('');
+              \`;
+            }).join('');
+            
+            console.log('로컬푸드 렌더링 완료:', products.length, '개');
           }
 
           // 공공 주문 맛집 로드
@@ -2622,6 +2632,11 @@ app.get('/', (c) => {
           function renderPublicRestaurants(restaurants) {
             const grid = document.getElementById('publicRestaurantGrid');
             
+            if (!grid) {
+              console.error('publicRestaurantGrid element not found');
+              return;
+            }
+            
             if (restaurants.length === 0) {
               grid.innerHTML = \`
                 <div class="col-span-full text-center py-8 text-gray-500">
@@ -2632,43 +2647,48 @@ app.get('/', (c) => {
               return;
             }
 
-            grid.innerHTML = restaurants.map(restaurant => \`
-              <div class="card">
-                <img src="\${restaurant.image || 'https://via.placeholder.com/400x250?text=Restaurant'}" 
-                     alt="\${restaurant.name}"
-                     crossorigin="anonymous"
-                     loading="lazy"
-                     onerror="this.onerror=null; this.src='https://via.placeholder.com/400x250/3b82f6/ffffff?text=\${encodeURIComponent(restaurant.name)}';"
-                     class="w-full h-48 object-cover">
-                <div class="p-4">
-                  <div class="flex items-center justify-between mb-2">
-                    <h3 class="text-lg font-bold">\${restaurant.name}</h3>
-                    <span class="badge badge-info text-xs">\${restaurant.category || '음식점'}</span>
-                  </div>
-                  <div class="flex items-center text-yellow-500 text-sm mb-2">
-                    <i class="fas fa-star mr-1"></i>
-                    <span class="font-bold mr-1">\${restaurant.rating || '4.5'}</span>
-                    <span class="text-gray-500">(\${restaurant.reviewCount || '0'})</span>
-                    <span class="mx-2">|</span>
-                    <span class="text-gray-600">\${restaurant.deliveryTime || '30-40'}분</span>
-                  </div>
-                  <p class="text-sm text-gray-600 mb-3">\${restaurant.description || ''}</p>
-                  <div class="flex items-center justify-between">
-                    <span class="badge badge-primary text-xs">배달비 0원</span>
-                    <div class="flex gap-2">
-                      <button onclick="goToMenu('\${restaurant.id || restaurant.name}')" 
-                              class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-sm hover:bg-gray-200 transition">
-                        메뉴 보기
-                      </button>
-                      <button onclick="startOrder('\${restaurant.id || restaurant.name}')" 
-                              class="px-3 py-1.5 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition">
-                        주문하기
-                      </button>
+            grid.innerHTML = restaurants.map(restaurant => {
+              const fallbackImage = 'https://via.placeholder.com/400x250/3b82f6/ffffff?text=' + restaurant.name.substring(0, 10);
+              return \`
+                <div class="card">
+                  <img src="\${restaurant.image || 'https://via.placeholder.com/400x250?text=Restaurant'}" 
+                       alt="\${restaurant.name}"
+                       crossorigin="anonymous"
+                       loading="lazy"
+                       onerror="this.onerror=null; this.src='\${fallbackImage}';"
+                       class="w-full h-48 object-cover">
+                  <div class="p-4">
+                    <div class="flex items-center justify-between mb-2">
+                      <h3 class="text-lg font-bold">\${restaurant.name}</h3>
+                      <span class="badge badge-info text-xs">\${restaurant.category || '음식점'}</span>
+                    </div>
+                    <div class="flex items-center text-yellow-500 text-sm mb-2">
+                      <i class="fas fa-star mr-1"></i>
+                      <span class="font-bold mr-1">\${restaurant.rating || '4.5'}</span>
+                      <span class="text-gray-500">(\${restaurant.reviewCount || '0'})</span>
+                      <span class="mx-2">|</span>
+                      <span class="text-gray-600">\${restaurant.deliveryTime || '30-40'}분</span>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-3">\${restaurant.description || ''}</p>
+                    <div class="flex items-center justify-between">
+                      <span class="badge badge-primary text-xs">배달비 0원</span>
+                      <div class="flex gap-2">
+                        <button onclick="goToMenu('\${restaurant.id || restaurant.name}')" 
+                                class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-sm hover:bg-gray-200 transition font-medium">
+                          메뉴 보기
+                        </button>
+                        <button onclick="startOrder('\${restaurant.id || restaurant.name}')" 
+                                class="px-3 py-1.5 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition font-semibold">
+                          주문하기
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            \`).join('');
+              \`;
+            }).join('');
+            
+            console.log('공공 주문 맛집 렌더링 완료:', restaurants.length, '개');
           }
           
           // 페이지 초기화
