@@ -1522,6 +1522,31 @@ app.get('/', (c) => {
           .loading.active {
             display: block;
           }
+          
+          /* RTL (아랍어) 지원 */
+          body.rtl {
+            direction: rtl;
+            text-align: right;
+          }
+          
+          body.rtl .pc-header-nav a {
+            margin-left: 16px;
+            margin-right: 0;
+          }
+          
+          body.rtl .pc-header-actions {
+            flex-direction: row-reverse;
+          }
+          
+          body.rtl button i {
+            margin-right: 0;
+            margin-left: 8px;
+          }
+          
+          body.rtl nav a i {
+            margin-right: 0;
+            margin-left: 12px;
+          }
         </style>
     </head>
     <body>
@@ -1552,8 +1577,8 @@ app.get('/', (c) => {
                     <option value="ja">🇯🇵 日本語</option>
                     <option value="es">🇪🇸 Español</option>
                     <option value="fr">🇫🇷 Français</option>
-                    <option value="ar">🇸🇦 العربية</option>
                     <option value="de">🇩🇪 Deutsch</option>
+                    <option value="ar">🇸🇦 العربية</option>
                 </select>
                 
                 <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
@@ -1592,8 +1617,8 @@ app.get('/', (c) => {
                             <option value="ja">🇯🇵 JA</option>
                             <option value="es">🇪🇸 ES</option>
                             <option value="fr">🇫🇷 FR</option>
-                            <option value="ar">🇸🇦 AR</option>
                             <option value="de">🇩🇪 DE</option>
+                            <option value="ar">🇸🇦 AR</option>
                         </select>
                     </div>
                 </div>
@@ -1679,11 +1704,11 @@ app.get('/', (c) => {
             </div>
             <div class="nav-item" data-page="coupon">
                 <i class="fas fa-ticket-alt text-xl mb-1"></i>
-                <span class="text-xs">쿠폰</span>
+                <span class="text-xs" data-i18n="coupon">쿠폰</span>
             </div>
             <div class="nav-item" data-page="my">
                 <i class="fas fa-user text-xl mb-1"></i>
-                <span class="text-xs">마이</span>
+                <span class="text-xs" data-i18n="my">마이</span>
             </div>
         </nav>
 
@@ -1750,7 +1775,9 @@ app.get('/', (c) => {
               todayDelivery: '당일 배송',
               noDeliveryFee: '배달비 0원',
               noCommission: '중개수수료 0%',
-              noAd: '광고비 0원'
+              noAd: '광고비 0원',
+              coupon: '쿠폰',
+              my: '마이'
             },
             en: {
               // Brand
@@ -1797,7 +1824,9 @@ app.get('/', (c) => {
               todayDelivery: 'Same Day Delivery',
               noDeliveryFee: 'Free Delivery',
               noCommission: '0% Commission',
-              noAd: '0 Ad Cost'
+              noAd: '0 Ad Cost',
+              coupon: 'Coupon',
+              my: 'My'
             },
             zh: {
               // 品牌
@@ -1844,7 +1873,9 @@ app.get('/', (c) => {
               todayDelivery: '当日配送',
               noDeliveryFee: '免配送费',
               noCommission: '0%佣金',
-              noAd: '0广告费'
+              noAd: '0广告费',
+              coupon: '优惠券',
+              my: '我的'
             },
             ja: {
               // ブランド
@@ -1891,7 +1922,9 @@ app.get('/', (c) => {
               todayDelivery: '当日配送',
               noDeliveryFee: '配達料無料',
               noCommission: '手数料0%',
-              noAd: '広告費0円'
+              noAd: '広告費0円',
+              coupon: 'クーポン',
+              my: 'マイ'
             },
             es: {
               // Marca
@@ -1938,7 +1971,9 @@ app.get('/', (c) => {
               todayDelivery: 'Entrega el Mismo Día',
               noDeliveryFee: 'Entrega Gratis',
               noCommission: '0% Comisión',
-              noAd: '0 Costo de Publicidad'
+              noAd: '0 Costo de Publicidad',
+              coupon: 'Cupón',
+              my: 'Mi Cuenta'
             },
             fr: {
               // Marque
@@ -1985,7 +2020,9 @@ app.get('/', (c) => {
               todayDelivery: 'Livraison le Jour Même',
               noDeliveryFee: 'Livraison Gratuite',
               noCommission: '0% Commission',
-              noAd: '0 Coût Publicitaire'
+              noAd: '0 Coût Publicitaire',
+              coupon: 'Coupon',
+              my: 'Mon Compte'
             },
             ar: {
               // العلامة التجارية
@@ -2079,7 +2116,58 @@ app.get('/', (c) => {
               todayDelivery: 'Lieferung am selben Tag',
               noDeliveryFee: 'Kostenlose Lieferung',
               noCommission: '0% Provision',
-              noAd: '0 Werbekosten'
+              noAd: '0 Werbekosten',
+              coupon: 'Gutschein',
+              my: 'Mein Konto'
+            },
+            ar: {
+              // العلامة التجارية
+              brand: 'غيونغسان أون',
+              tagline: 'لا رسوم توصيل في غيونغسان',
+              
+              // القائمة
+              home: 'الرئيسية',
+              delivery: 'التوصيل',
+              market: 'السوق التقليدي',
+              localFood: 'الطعام المحلي',
+              specialty: 'المنتجات المميزة',
+              usedTrade: 'مستعمل ومجاني',
+              partnerApply: 'طلب شريك',
+              support: 'الدعم',
+              login: 'تسجيل الدخول',
+              
+              // فئات التجارة المستعملة
+              all: 'الكل',
+              freeGiveaway: 'مجاني',
+              electronics: 'إلكترونيات',
+              appliances: 'أجهزة',
+              furniture: 'أثاث',
+              babyItems: 'مستلزمات الأطفال',
+              
+              // الأزرار
+              orderNow: 'اطلب الآن',
+              viewMenu: 'عرض القائمة',
+              mapView: 'الخريطة',
+              tradeHere: 'التجارة هنا',
+              register: 'تسجيل',
+              search: 'بحث',
+              filter: 'تصفية',
+              
+              // الحالة
+              available: 'متاح',
+              soldOut: 'نفذ',
+              free: 'مجاني',
+              
+              // أخرى
+              won: 'وون',
+              viewCount: 'المشاهدات',
+              safeTradingPlace: 'مكان تجاري آمن',
+              todayDelivery: 'التوصيل في نفس اليوم',
+              noDeliveryFee: 'توصيل مجاني',
+              noCommission: '0٪ عمولة',
+              noAd: '0 تكلفة إعلانية',
+              coupon: 'كوبون',
+              my: 'حسابي'
             }
           };
           
@@ -2094,6 +2182,19 @@ app.get('/', (c) => {
             console.log('번역 적용 시작');
             const lang = localStorage.getItem('lang') || 'ko';
             console.log('현재 언어:', lang);
+            
+            // RTL 처리 (아랍어)
+            if (lang === 'ar') {
+              document.documentElement.setAttribute('dir', 'rtl');
+              document.documentElement.setAttribute('lang', 'ar');
+              document.body.classList.add('rtl');
+              console.log('RTL 모드 활성화');
+            } else {
+              document.documentElement.setAttribute('dir', 'ltr');
+              document.documentElement.setAttribute('lang', lang);
+              document.body.classList.remove('rtl');
+              console.log('LTR 모드');
+            }
             
             // data-i18n 속성이 있는 모든 요소 번역 (드롭다운 제외)
             const elements = document.querySelectorAll('[data-i18n]');
