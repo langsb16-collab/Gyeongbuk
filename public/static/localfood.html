@@ -201,8 +201,8 @@
             }
 
             grid.innerHTML = filtered.map(product => `
-                <div class="product-card bg-white rounded-lg shadow-sm overflow-hidden cursor-pointer" onclick="openOrderModal('${product.productId}')">
-                    <div class="relative h-48 bg-gray-200">
+                <div class="product-card bg-white rounded-lg shadow-sm overflow-hidden">
+                    <div class="relative h-48 bg-gray-200 cursor-pointer" onclick="openOrderModal('${product.productId}')">
                         <img src="${product.thumbnail}" 
                              alt="${product.productName}"
                              class="w-full h-full object-cover">
@@ -216,13 +216,13 @@
                         <p class="text-sm text-gray-600 mb-2">
                             <i class="fas fa-user-farmer mr-1"></i>${product.farmerName}
                         </p>
-                        <div class="flex items-center justify-between">
+                        <div class="flex items-center justify-between mb-3">
                             <span class="text-lg font-bold text-gray-900">
                                 ${product.price.toLocaleString()}원
                             </span>
                             <span class="text-xs text-gray-500">${product.unit}</span>
                         </div>
-                        <div class="mt-2 flex items-center justify-between text-xs">
+                        <div class="mb-3 flex items-center justify-between text-xs">
                             <span class="text-green-600">
                                 <i class="fas fa-box mr-1"></i>재고 ${product.todayStock}${product.unit}
                             </span>
@@ -230,6 +230,10 @@
                                 <i class="fas fa-calendar mr-1"></i>${formatDate(product.harvestDate)}
                             </span>
                         </div>
+                        <button onclick="event.stopPropagation(); openOrderModal('${product.productId}')" 
+                                class="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg font-bold text-sm">
+                            <i class="fas fa-shopping-cart mr-1"></i>주문
+                        </button>
                     </div>
                 </div>
             `).join('');
