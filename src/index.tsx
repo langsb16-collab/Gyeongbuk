@@ -1471,6 +1471,160 @@ app.get('/store/:storeId/menu', async (c) => {
   `)
 })
 
+// 메뉴 페이지
+app.get('/store/:storeId/menu', async (c) => {
+  const storeId = c.req.param('storeId')
+  
+  return c.html(`
+    <!DOCTYPE html>
+    <html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>메뉴 - 경산온(ON)</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+        <style>
+          .menu-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+          }
+          .menu-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+          }
+          .order-btn {
+            background: #22c55e;
+            color: #fff;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.2s;
+          }
+          .order-btn:hover {
+            background: #16a34a;
+          }
+          .order-btn:active {
+            transform: scale(0.97);
+          }
+        </style>
+    </head>
+    <body class="bg-gray-50">
+        <!-- 헤더 -->
+        <header class="bg-white shadow-sm sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto px-4 py-4">
+                <div class="flex items-center justify-between">
+                    <button onclick="history.back()" class="text-gray-600 hover:text-gray-900">
+                        <i class="fas fa-arrow-left text-xl"></i>
+                    </button>
+                    <h1 class="text-xl font-bold text-gray-900">메뉴</h1>
+                    <button onclick="goToCart()" class="relative text-gray-600 hover:text-gray-900">
+                        <i class="fas fa-shopping-cart text-xl"></i>
+                        <span id="cartBadge" class="hidden absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- 메뉴 목록 -->
+        <div class="max-w-7xl mx-auto px-4 py-6">
+            <div id="menuList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- 메뉴 카드들이 여기에 렌더링됩니다 -->
+            </div>
+        </div>
+
+        <script>
+          const storeId = '${storeId}';
+          let cart = JSON.parse(localStorage.getItem('cart')) || [];
+          
+          // 메뉴 로드
+          async function loadMenus() {
+            try {
+              const res = await axios.get(\`/api/stores/\${storeId}/menus\`);
+              const menus = res.data;
+              
+              const menuList = document.getElementById('menuList');
+              menuList.innerHTML = menus.map(menu => \`
+                <div class="menu-card bg-white rounded-lg shadow-sm overflow-hidden">
+                  <div class="p-4">
+                    <h3 class="text-lg font-bold mb-2">\${menu.menuName}</h3>
+                    <p class="text-2xl font-bold text-blue-600 mb-3">\${menu.price.toLocaleString()}원</p>
+                    <button 
+                      class="order-btn w-full"
+                      data-menu-id="\${menu.menuId}"
+                      data-menu-name="\${menu.menuName}"
+                      data-price="\${menu.price}"
+                      onclick="addToCart(this)"
+                    >
+                      <i class="fas fa-cart-plus mr-2"></i>
+                      장바구니에 담기
+                    </button>
+                  </div>
+                </div>
+              \`).join('');
+              
+              updateCartBadge();
+            } catch (error) {
+              console.error('메뉴 로드 실패:', error);
+              alert('메뉴를 불러오는데 실패했습니다');
+            }
+          }
+          
+          // 장바구니에 추가
+          function addToCart(btn) {
+            const product = {
+              id: btn.dataset.menuId,
+              name: btn.dataset.menuName,
+              price: parseInt(btn.dataset.price),
+              qty: 1,
+              storeId: storeId,
+              addedAt: new Date().toISOString()
+            };
+            
+            cart.push(product);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            
+            // 사용자 피드백
+            btn.innerHTML = '<i class="fas fa-check mr-2"></i>담았습니다!';
+            btn.style.background = '#10b981';
+            
+            setTimeout(() => {
+              btn.innerHTML = '<i class="fas fa-cart-plus mr-2"></i>장바구니에 담기';
+              btn.style.background = '#22c55e';
+            }, 1500);
+            
+            updateCartBadge();
+            console.log('🛒 현재 장바구니:', cart);
+          }
+          
+          // 장바구니 배지 업데이트
+          function updateCartBadge() {
+            const badge = document.getElementById('cartBadge');
+            if (cart.length > 0) {
+              badge.textContent = cart.length;
+              badge.classList.remove('hidden');
+            } else {
+              badge.classList.add('hidden');
+            }
+          }
+          
+          // 장바구니로 이동
+          function goToCart() {
+            if (cart.length === 0) {
+              alert('장바구니가 비어있습니다');
+              return;
+            }
+            window.location.href = \`/store/\${storeId}/order\`;
+          }
+          
+          // 페이지 로드
+          loadMenus();
+        </script>
+    </body>
+    </html>
+  `)
+})
+
 // 주문 페이지
 app.get('/store/:storeId/order', async (c) => {
   const storeId = c.req.param('storeId')

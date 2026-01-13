@@ -407,6 +407,25 @@
             const deliveryDate = document.querySelector('input[name="deliveryDate"]:checked').value;
             
             try {
+                // 1️⃣ 장바구니에 상품 추가 (localStorage)
+                const product = {
+                    id: selectedProduct.productId,
+                    type: 'localfood',
+                    name: selectedProduct.productName,
+                    price: selectedProduct.price,
+                    quantity: orderQuantity,
+                    unit: selectedProduct.unit,
+                    deliveryDate: deliveryDate,
+                    farmName: selectedProduct.farmName,
+                    certification: selectedProduct.certification,
+                    addedAt: new Date().toISOString()
+                };
+
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                cart.push(product);
+                localStorage.setItem('cart', JSON.stringify(cart));
+
+                // 2️⃣ 서버에 주문 전송
                 const orderData = {
                     productId: selectedProduct.productId,
                     farmId: selectedProduct.farmId,
@@ -417,13 +436,21 @@
 
                 const response = await axios.post('/api/local-food-orders', orderData);
                 
-                alert(`✅ 예약 주문이 완료되었습니다!\n\n상품: ${selectedProduct.productName}\n수량: ${orderQuantity}${selectedProduct.unit}\n배송: ${deliveryDate === 'today' ? '오늘 저녁' : '내일 오전'}\n총 금액: ${(selectedProduct.price * orderQuantity).toLocaleString()}원`);
+                // 3️⃣ 사용자 피드백
+                alert(`✅ 장바구니에 담겼습니다!\n\n상품: ${selectedProduct.productName}\n수량: ${orderQuantity}${selectedProduct.unit}\n배송: ${deliveryDate === 'today' ? '오늘 저녁' : '내일 오전'}\n총 금액: ${(selectedProduct.price * orderQuantity).toLocaleString()}원\n\n장바구니: ${cart.length}개 상품`);
+                
+                console.log('🛒 현재 장바구니:', cart);
                 
                 closeOrderModal();
                 loadProducts(); // 재고 업데이트
+                
+                // 4️⃣ (선택) 주문 페이지로 이동하시겠습니까?
+                // if (confirm('주문 페이지로 이동하시겠습니까?')) {
+                //     window.location.href = '/order';
+                // }
             } catch (error) {
                 console.error('주문 실패:', error);
-                alert('주문에 실패했습니다. 다시 시도해주세요.');
+                alert('장바구니 담기에 실패했습니다. 다시 시도해주세요.');
             }
         }
 
