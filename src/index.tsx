@@ -1006,7 +1006,7 @@ app.get('/api/local-food-products', async (c) => {
       todayStock: 50,
       harvestDate: new Date().toISOString().split('T')[0],
       certification: 'ORGANIC',
-      thumbnail: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%2310b981" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" font-size="24" fill="white" text-anchor="middle" dy=".3em"%3E유기농 쌀%3C/text%3E%3C/svg%3E',
+      thumbnail: '/static/images/rice.svg',
       category: 'grain'
     },
     {
@@ -1020,7 +1020,7 @@ app.get('/api/local-food-products', async (c) => {
       todayStock: 15,
       harvestDate: new Date().toISOString().split('T')[0],
       certification: 'ORGANIC',
-      thumbnail: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23ef4444" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" font-size="24" fill="white" text-anchor="middle" dy=".3em"%3E제철 토마토%3C/text%3E%3C/svg%3E',
+      thumbnail: '/static/images/tomato.svg',
       category: 'vegetable'
     },
     {
@@ -1034,7 +1034,7 @@ app.get('/api/local-food-products', async (c) => {
       todayStock: 30,
       harvestDate: new Date().toISOString().split('T')[0],
       certification: 'PESTICIDE_FREE',
-      thumbnail: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23dc2626" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" font-size="24" fill="white" text-anchor="middle" dy=".3em"%3E경산 대추%3C/text%3E%3C/svg%3E',
+      thumbnail: '/static/images/jujube.svg',
       category: 'fruit'
     },
     {
@@ -1048,7 +1048,7 @@ app.get('/api/local-food-products', async (c) => {
       todayStock: 10,
       harvestDate: new Date().toISOString().split('T')[0],
       certification: 'ORGANIC',
-      thumbnail: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%238b5cf6" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" font-size="24" fill="white" text-anchor="middle" dy=".3em"%3E하양 포도%3C/text%3E%3C/svg%3E',
+      thumbnail: '/static/images/grape.svg',
       category: 'fruit'
     },
     {
@@ -1062,7 +1062,7 @@ app.get('/api/local-food-products', async (c) => {
       todayStock: 25,
       harvestDate: new Date().toISOString().split('T')[0],
       certification: 'PESTICIDE_FREE',
-      thumbnail: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%2322c55e" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" font-size="24" fill="white" text-anchor="middle" dy=".3em"%3E무농약 시금치%3C/text%3E%3C/svg%3E',
+      thumbnail: '/static/images/spinach.svg',
       category: 'vegetable'
     },
     {
@@ -1076,7 +1076,7 @@ app.get('/api/local-food-products', async (c) => {
       todayStock: 12,
       harvestDate: new Date().toISOString().split('T')[0],
       certification: 'ORGANIC',
-      thumbnail: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23f59e0b" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" font-size="24" fill="white" text-anchor="middle" dy=".3em"%3E야생화 꿀%3C/text%3E%3C/svg%3E',
+      thumbnail: '/static/images/honey.svg',
       category: 'processed'
     }
   ]
