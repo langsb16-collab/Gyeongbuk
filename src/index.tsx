@@ -1522,88 +1522,6 @@ app.get('/', (c) => {
           .loading.active {
             display: block;
           }
-          
-          /* 언어 선택 드롭다운 스타일 */
-          .lang-select {
-            position: relative;
-            display: inline-block;
-          }
-          
-          .lang-btn {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            color: #374151;
-            transition: all 0.2s;
-          }
-          
-          .lang-btn:hover {
-            border-color: #3b82f6;
-            background: #f9fafb;
-          }
-          
-          .lang-arrow {
-            font-size: 12px;
-            transition: transform 0.2s;
-          }
-          
-          .lang-select.open .lang-arrow {
-            transform: rotate(180deg);
-          }
-          
-          .lang-menu {
-            position: absolute;
-            top: calc(100% + 8px);
-            right: 0;
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            min-width: 150px;
-            list-style: none;
-            padding: 8px 0;
-            margin: 0;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: all 0.2s;
-            z-index: 1000;
-          }
-          
-          .lang-select.open .lang-menu {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-          }
-          
-          .lang-menu li {
-            padding: 10px 16px;
-            cursor: pointer;
-            transition: background 0.2s;
-            font-size: 14px;
-            color: #374151;
-          }
-          
-          .lang-menu li:hover {
-            background: #f3f4f6;
-          }
-          
-          .lang-menu li.active {
-            background: #eff6ff;
-            color: #3b82f6;
-            font-weight: 600;
-          }
-          
-          .lang-menu li.active::before {
-            content: '✓ ';
-            margin-right: 4px;
-          }
         </style>
     </head>
     <body>
@@ -1626,26 +1544,20 @@ app.get('/', (c) => {
             </nav>
             
             <div class="pc-header-actions">
-                <!-- 다국어 드롭다운 -->
-                <div class="lang-select">
-                    <button class="lang-btn">
-                        <span class="lang-text">한국어</span>
-                        <span class="lang-arrow">▾</span>
-                    </button>
-                    <ul class="lang-menu">
-                        <li class="active" data-lang="ko">한국어</li>
-                        <li data-lang="en">English</li>
-                        <li data-lang="zh">中文</li>
-                        <li data-lang="ja">日本語</li>
-                        <li data-lang="es">Español</li>
-                        <li data-lang="fr">Français</li>
-                        <li data-lang="ar">العربية</li>
-                        <li data-lang="de">Deutsch</li>
-                    </ul>
-                </div>
+                <!-- 다국어 선택 (HTML Select) -->
+                <select id="langSelector" class="text-sm border border-gray-300 rounded-lg px-3 py-2 cursor-pointer hover:border-blue-500 focus:border-blue-500 focus:outline-none">
+                    <option value="ko">🇰🇷 한국어</option>
+                    <option value="en">🇺🇸 English</option>
+                    <option value="zh">🇨🇳 中文</option>
+                    <option value="ja">🇯🇵 日本語</option>
+                    <option value="es">🇪🇸 Español</option>
+                    <option value="fr">🇫🇷 Français</option>
+                    <option value="ar">🇸🇦 العربية</option>
+                    <option value="de">🇩🇪 Deutsch</option>
+                </select>
                 
-                <button class="lang-btn">
-                    <i class="fas fa-user"></i>
+                <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                    <i class="fas fa-user mr-2"></i>
                     <span data-i18n="login">로그인</span>
                 </button>
             </div>
@@ -1672,23 +1584,17 @@ app.get('/', (c) => {
                             <option value="gumi">구미시</option>
                             <option value="andong">안동시</option>
                         </select>
-                        <!-- 모바일 다국어 드롭다운 -->
-                        <div class="lang-select">
-                            <button class="lang-btn" style="padding: 6px 10px; font-size: 13px;">
-                                <span class="lang-text">한국어</span>
-                                <span class="lang-arrow">▾</span>
-                            </button>
-                            <ul class="lang-menu">
-                                <li class="active" data-lang="ko">한국어</li>
-                                <li data-lang="en">English</li>
-                                <li data-lang="zh">中文</li>
-                                <li data-lang="ja">日本語</li>
-                                <li data-lang="es">Español</li>
-                                <li data-lang="fr">Français</li>
-                                <li data-lang="ar">العربية</li>
-                                <li data-lang="de">Deutsch</li>
-                            </ul>
-                        </div>
+                        <!-- 모바일 다국어 선택 (HTML Select) -->
+                        <select id="langSelectorMobile" class="text-sm border border-gray-300 rounded-lg px-2 py-1.5 cursor-pointer">
+                            <option value="ko">🇰🇷 KO</option>
+                            <option value="en">🇺🇸 EN</option>
+                            <option value="zh">🇨🇳 ZH</option>
+                            <option value="ja">🇯🇵 JA</option>
+                            <option value="es">🇪🇸 ES</option>
+                            <option value="fr">🇫🇷 FR</option>
+                            <option value="ar">🇸🇦 AR</option>
+                            <option value="de">🇩🇪 DE</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -2231,126 +2137,66 @@ app.get('/', (c) => {
             document.getElementById('menuDrawer').classList.add('hidden');
           }
           
-          document.getElementById('menuBtn')?.addEventListener('click', openMenu);
-          
-          // 다국어 드롭다운 기능
+          // 모든 초기화를 DOMContentLoaded 안에서 실행
           document.addEventListener('DOMContentLoaded', function() {
-            console.log('언어 드롭다운 초기화 시작');
-            const langSelects = document.querySelectorAll('.lang-select');
-            console.log('발견된 lang-select 개수:', langSelects.length);
+            console.log('페이지 초기화 시작');
             
-            langSelects.forEach((select, index) => {
-              const btn = select.querySelector('.lang-btn');
-              const menu = select.querySelector('.lang-menu');
-              const langText = select.querySelector('.lang-text');
-              const items = select.querySelectorAll('.lang-menu li');
-              
-              console.log('드롭다운 설정 중, 인덱스:', index + 1);
-              console.log('버튼 존재:', !!btn, '메뉴 존재:', !!menu, '항목 개수:', items.length);
-              
-              if (!btn) {
-                console.error('드롭다운 버튼을 찾을 수 없습니다, 인덱스:', index + 1);
-                return;
-              }
-              
-              // 버튼 클릭 시 토글
-              btn.addEventListener('click', (e) => {
-                console.log('드롭다운 버튼 클릭, 인덱스:', index + 1);
-                e.stopPropagation();
-                select.classList.toggle('open');
-                const isOpen = select.classList.contains('open');
-                console.log('드롭다운 상태:', isOpen ? '열림' : '닫힘');
-                
-                // 다른 드롭다운 닫기
-                langSelects.forEach(other => {
-                  if (other !== select) other.classList.remove('open');
-                });
-              });
-              
-              // 언어 선택
-              items.forEach((item, itemIndex) => {
-                item.addEventListener('click', (e) => {
-                  e.stopPropagation();
-                  const lang = item.dataset.lang;
-                  const text = item.textContent;
-                  console.log('언어 선택:', text, '(', lang, ')');
-                  
-                  // 선택된 언어 표시
-                  items.forEach(i => i.classList.remove('active'));
-                  item.classList.add('active');
-                  
-                  // 버튼 텍스트 변경
-                  if (langText) {
-                    langText.textContent = text;
-                    console.log('버튼 텍스트 변경 완료');
-                  }
-                  
-                  // 로컬 스토리지에 저장
-                  localStorage.setItem('lang', lang);
-                  console.log('localStorage 저장 완료');
-                  
-                  // 챗봇 페이지로 이동 (언어별)
-                  const chatbotBtn = document.querySelector('.chatbot-button');
-                  if (chatbotBtn) {
-                    chatbotBtn.href = '/static/i18n/chatbot-' + lang;
-                    console.log('챗봇 링크 업데이트:', chatbotBtn.href);
-                  }
-                  
-                  // 드롭다운 닫기
-                  select.classList.remove('open');
-                  console.log('드롭다운 닫힘');
-                  
-                  // 성공 메시지
-                  console.log('언어가 변경되었습니다:', text);
-                  
-                  // 페이지 새로고침으로 언어 적용
-                  console.log('페이지 새로고침 중...');
-                  setTimeout(() => {
-                    window.location.reload();
-                  }, 300);
-                });
-              });
-            });
-            
-            // 외부 클릭 시 드롭다운 닫기
-            document.addEventListener('click', (e) => {
-              langSelects.forEach(select => {
-                // 클릭한 요소가 lang-select 내부가 아닌 경우에만 닫기
-                if (!select.contains(e.target)) {
-                  select.classList.remove('open');
-                }
-              });
-            });
+            // 햄버거 메뉴 버튼 이벤트
+            const menuBtn = document.getElementById('menuBtn');
+            if (menuBtn) {
+              menuBtn.addEventListener('click', openMenu);
+              console.log('햄버거 메뉴 버튼 이벤트 등록 완료');
+            }
             
             // 저장된 언어 불러오기
             const savedLang = localStorage.getItem('lang') || 'ko';
-            const langNames = {
-              'ko': '한국어',
-              'en': 'English',
-              'zh': '中文',
-              'ja': '日本語',
-              'es': 'Español',
-              'fr': 'Français',
-              'ar': 'العربية',
-              'de': 'Deutsch'
-            };
+            console.log('저장된 언어:', savedLang);
             
-            langSelects.forEach(select => {
-              const langText = select.querySelector('.lang-text');
-              const items = select.querySelectorAll('.lang-menu li');
-              
-              if (langText) {
-                langText.textContent = langNames[savedLang] || '한국어';
-              }
-              
-              items.forEach(item => {
-                if (item.dataset.lang === savedLang) {
-                  item.classList.add('active');
-                } else {
-                  item.classList.remove('active');
+            // 언어 선택자 초기화 (PC)
+            const langSelector = document.getElementById('langSelector');
+            if (langSelector) {
+              langSelector.value = savedLang;
+              langSelector.addEventListener('change', function() {
+                const selectedLang = this.value;
+                console.log('언어 변경:', selectedLang);
+                localStorage.setItem('lang', selectedLang);
+                
+                // 챗봇 링크 업데이트
+                const chatbotBtn = document.querySelector('.chatbot-button');
+                if (chatbotBtn) {
+                  chatbotBtn.href = '/static/i18n/chatbot-' + selectedLang;
                 }
+                
+                // 페이지 리로드
+                setTimeout(() => {
+                  window.location.reload();
+                }, 100);
               });
-            });
+              console.log('PC 언어 선택자 초기화 완료');
+            }
+            
+            // 언어 선택자 초기화 (Mobile)
+            const langSelectorMobile = document.getElementById('langSelectorMobile');
+            if (langSelectorMobile) {
+              langSelectorMobile.value = savedLang;
+              langSelectorMobile.addEventListener('change', function() {
+                const selectedLang = this.value;
+                console.log('언어 변경 (모바일):', selectedLang);
+                localStorage.setItem('lang', selectedLang);
+                
+                // 챗봇 링크 업데이트
+                const chatbotBtn = document.querySelector('.chatbot-button');
+                if (chatbotBtn) {
+                  chatbotBtn.href = '/static/i18n/chatbot-' + selectedLang;
+                }
+                
+                // 페이지 리로드
+                setTimeout(() => {
+                  window.location.reload();
+                }, 100);
+              });
+              console.log('모바일 언어 선택자 초기화 완료');
+            }
             
             // 챗봇 버튼 URL 초기화
             const chatbotBtn = document.querySelector('.chatbot-button');
@@ -2358,8 +2204,9 @@ app.get('/', (c) => {
               chatbotBtn.href = '/static/i18n/chatbot-' + savedLang;
             }
             
-            // 번역 적용 (함수 호출)
+            // 번역 적용
             applyTranslations();
+            console.log('페이지 초기화 완료');
           });
         </script>
         <script src="/static/app.js"></script>
