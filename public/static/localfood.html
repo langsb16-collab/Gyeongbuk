@@ -202,10 +202,10 @@
 
             grid.innerHTML = filtered.map(product => `
                 <div class="product-card bg-white rounded-lg shadow-sm overflow-hidden cursor-pointer" onclick="openOrderModal('${product.productId}')">
-                    <div class="relative pb-[75%] bg-gray-200">
-                        <img src="${product.thumbnail || 'https://via.placeholder.com/300x200?text=Fresh+Food'}" 
+                    <div class="relative h-48 bg-gray-200">
+                        <img src="${product.thumbnail || 'https://via.placeholder.com/400x300?text=Fresh+Food'}" 
                              alt="${product.productName}"
-                             class="absolute inset-0 w-full h-full object-cover">
+                             class="w-full h-full object-cover">
                         <span class="harvest-badge absolute top-2 left-2 text-white text-xs px-2 py-1 rounded-full font-bold">
                             <i class="fas fa-leaf mr-1"></i> 당일수확
                         </span>
@@ -268,19 +268,19 @@
             content.innerHTML = `
                 <!-- 상품 정보 -->
                 <div class="bg-gray-50 rounded-lg p-4 mb-4">
-                    <div class="flex items-start space-x-3">
-                        <img src="${selectedProduct.thumbnail || 'https://via.placeholder.com/80x80?text=Food'}" 
+                    <div class="mb-3">
+                        <img src="${selectedProduct.thumbnail || 'https://via.placeholder.com/400x300?text=Food'}" 
                              alt="${selectedProduct.productName}"
-                             class="w-20 h-20 rounded-lg object-cover">
-                        <div class="flex-1">
-                            <h4 class="font-bold text-gray-900 mb-1">${selectedProduct.productName}</h4>
-                            <p class="text-sm text-gray-600 mb-1">
-                                <i class="fas fa-user-farmer mr-1"></i>${selectedProduct.farmerName} (${selectedProduct.farmName})
-                            </p>
-                            <p class="text-sm text-green-600">
-                                <i class="fas fa-calendar-check mr-1"></i>수확일: ${formatDate(selectedProduct.harvestDate)}
-                            </p>
-                        </div>
+                             class="w-full h-48 rounded-lg object-cover">
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-gray-900 mb-2 text-lg">${selectedProduct.productName}</h4>
+                        <p class="text-sm text-gray-600 mb-1">
+                            <i class="fas fa-user-farmer mr-1"></i>${selectedProduct.farmerName} (${selectedProduct.farmName})
+                        </p>
+                        <p class="text-sm text-green-600">
+                            <i class="fas fa-calendar-check mr-1"></i>수확일: ${formatDate(selectedProduct.harvestDate)}
+                        </p>
                     </div>
                 </div>
 
