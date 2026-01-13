@@ -1006,7 +1006,7 @@ app.get('/api/local-food-products', async (c) => {
       todayStock: 50,
       harvestDate: new Date().toISOString().split('T')[0],
       certification: 'ORGANIC',
-      thumbnail: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400',
+      thumbnail: 'https://via.placeholder.com/400x300/10b981/ffffff?text=%EC%9C%A0%EA%B8%B0%EB%86%8D+%EC%8C%80',
       category: 'grain'
     },
     {
@@ -1016,11 +1016,11 @@ app.get('/api/local-food-products', async (c) => {
       farmerName: '이농부',
       productName: '제철 토마토',
       price: 15000,
-      unit: 'kg',
+      unit: '3kg',
       todayStock: 15,
       harvestDate: new Date().toISOString().split('T')[0],
       certification: 'ORGANIC',
-      thumbnail: 'https://images.unsplash.com/photo-1546470427-e26264995c4e?w=400',
+      thumbnail: 'https://via.placeholder.com/400x300/ef4444/ffffff?text=%ED%86%A0%EB%A7%88%ED%86%A0',
       category: 'vegetable'
     },
     {
@@ -1034,7 +1034,7 @@ app.get('/api/local-food-products', async (c) => {
       todayStock: 30,
       harvestDate: new Date().toISOString().split('T')[0],
       certification: 'PESTICIDE_FREE',
-      thumbnail: 'https://images.unsplash.com/photo-1631882955259-36f67e3f8b2c?w=400',
+      thumbnail: 'https://via.placeholder.com/400x300/dc2626/ffffff?text=%EA%B2%BD%EC%82%B0+%EB%8C%80%EC%B6%94',
       category: 'fruit'
     },
     {
@@ -1044,11 +1044,11 @@ app.get('/api/local-food-products', async (c) => {
       farmerName: '최농부',
       productName: '하양 포도',
       price: 35000,
-      unit: 'kg',
+      unit: '2kg',
       todayStock: 10,
       harvestDate: new Date().toISOString().split('T')[0],
       certification: 'ORGANIC',
-      thumbnail: 'https://images.unsplash.com/photo-1601275868399-45bec4f4cd9d?w=400',
+      thumbnail: 'https://via.placeholder.com/400x300/8b5cf6/ffffff?text=%ED%8F%AC%EB%8F%84',
       category: 'fruit'
     },
     {
@@ -1058,11 +1058,11 @@ app.get('/api/local-food-products', async (c) => {
       farmerName: '정농부',
       productName: '무농약 시금치',
       price: 8000,
-      unit: 'kg',
+      unit: '2kg',
       todayStock: 25,
       harvestDate: new Date().toISOString().split('T')[0],
       certification: 'PESTICIDE_FREE',
-      thumbnail: 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=400',
+      thumbnail: 'https://via.placeholder.com/400x300/22c55e/ffffff?text=%EC%8B%9C%EA%B8%88%EC%B9%98',
       category: 'vegetable'
     },
     {
@@ -1076,7 +1076,7 @@ app.get('/api/local-food-products', async (c) => {
       todayStock: 12,
       harvestDate: new Date().toISOString().split('T')[0],
       certification: 'ORGANIC',
-      thumbnail: 'https://images.unsplash.com/photo-1558642084-fd07fae5282e?w=400',
+      thumbnail: 'https://via.placeholder.com/400x300/f59e0b/ffffff?text=%EC%95%BC%EC%83%9D%ED%99%94+%EA%BF%80',
       category: 'processed'
     }
   ]
