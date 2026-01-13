@@ -1163,33 +1163,207 @@ app.get('/delivery', (c) => {
         <title>배달 - 경산온(ON)</title>
         <script src="https://cdn.tailwindcss.com"></script>
         <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+        <style>
+            /* 반응형 카드 스타일 */
+            .restaurant-card {
+                transition: transform 0.2s, box-shadow 0.2s;
+            }
+            .restaurant-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            }
+            
+            /* PC 화면 (768px 이상) */
+            @media (min-width: 768px) {
+                .restaurant-image {
+                    height: 200px;
+                }
+                .restaurant-title {
+                    font-size: 1.25rem; /* 20px */
+                }
+                .restaurant-info {
+                    font-size: 0.875rem; /* 14px */
+                }
+                .btn-menu, .btn-order {
+                    font-size: 0.875rem; /* 14px */
+                    padding: 0.5rem 1rem;
+                }
+                .badge-text {
+                    font-size: 0.75rem; /* 12px */
+                }
+            }
+            
+            /* 모바일 화면 (767px 이하) */
+            @media (max-width: 767px) {
+                .restaurant-image {
+                    height: 160px;
+                }
+                .restaurant-title {
+                    font-size: 1rem; /* 16px */
+                }
+                .restaurant-info {
+                    font-size: 0.75rem; /* 12px */
+                }
+                .btn-menu, .btn-order {
+                    font-size: 0.75rem; /* 12px */
+                    padding: 0.375rem 0.75rem;
+                }
+                .badge-text {
+                    font-size: 0.625rem; /* 10px */
+                }
+            }
+        </style>
     </head>
     <body class="bg-gray-50">
-        <div class="max-w-7xl mx-auto p-6">
-            <h1 class="text-3xl font-bold mb-6"><i class="fas fa-motorcycle mr-2"></i>배달 서비스</h1>
-            <div class="bg-white rounded-lg shadow-sm p-6">
-                <p class="text-gray-600 mb-4">배달비 0원으로 경산 전역 배달 서비스를 제공합니다.</p>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="border rounded-lg p-4">
-                        <h3 class="font-bold mb-2">🍜 음식점 배달</h3>
-                        <p class="text-sm text-gray-600">다양한 음식점에서 주문하세요</p>
+        <!-- 헤더 -->
+        <div class="bg-white shadow-sm sticky top-0 z-10">
+            <div class="max-w-7xl mx-auto px-4 py-3 md:py-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2 md:gap-3">
+                        <a href="/" class="text-gray-600 hover:text-gray-900">
+                            <i class="fas fa-arrow-left text-lg md:text-xl"></i>
+                        </a>
+                        <h1 class="text-xl md:text-2xl font-bold text-gray-900">
+                            <i class="fas fa-motorcycle mr-1 md:mr-2"></i>배달
+                        </h1>
                     </div>
-                    <div class="border rounded-lg p-4">
-                        <h3 class="font-bold mb-2">🏪 전통시장 배달</h3>
-                        <p class="text-sm text-gray-600">전통시장 상품을 한번에</p>
-                    </div>
-                    <div class="border rounded-lg p-4">
-                        <h3 class="font-bold mb-2">🥬 로컬푸드 배달</h3>
-                        <p class="text-sm text-gray-600">당일 수확 신선 배송</p>
-                    </div>
-                </div>
-                <div class="mt-6 text-center">
-                    <a href="/" class="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                        <i class="fas fa-home mr-2"></i>메인으로 돌아가기
-                    </a>
+                    <button class="text-gray-600 hover:text-gray-900">
+                        <i class="fas fa-search text-lg md:text-xl"></i>
+                    </button>
                 </div>
             </div>
         </div>
+
+        <!-- 메인 컨텐츠 -->
+        <div class="max-w-7xl mx-auto px-4 py-4 md:py-6">
+            <!-- 배너 -->
+            <div class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl md:rounded-2xl p-4 md:p-6 mb-4 md:mb-6 text-white">
+                <h2 class="text-lg md:text-2xl font-bold mb-1 md:mb-2">배달비 0원</h2>
+                <p class="text-sm md:text-base opacity-90">경산 전역 무료 배달 서비스</p>
+            </div>
+
+            <!-- 음식점 목록 -->
+            <div class="mb-4 md:mb-6">
+                <h2 class="text-base md:text-xl font-bold text-gray-900 mb-3 md:mb-4">인기 음식점</h2>
+                <div id="restaurantGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                    <!-- 로딩 중 -->
+                    <div class="col-span-full text-center py-8 md:py-12">
+                        <i class="fas fa-spinner fa-spin text-3xl md:text-4xl text-gray-400 mb-2 md:mb-4"></i>
+                        <p class="text-sm md:text-base text-gray-600">음식점 정보를 불러오는 중...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+        <script>
+            // 페이지 로드 시 음식점 목록 가져오기
+            async function loadRestaurants() {
+                try {
+                    const response = await axios.get('/api/restaurants');
+                    const restaurants = response.data || [];
+                    renderRestaurants(restaurants);
+                } catch (error) {
+                    console.error('음식점 로딩 실패:', error);
+                    document.getElementById('restaurantGrid').innerHTML = \`
+                        <div class="col-span-full text-center py-8 md:py-12 text-gray-500">
+                            <i class="fas fa-exclamation-circle text-3xl md:text-4xl mb-2 md:mb-4"></i>
+                            <p class="text-sm md:text-base">음식점을 불러오는데 실패했습니다.</p>
+                        </div>
+                    \`;
+                }
+            }
+
+            // 음식점 렌더링
+            function renderRestaurants(restaurants) {
+                const grid = document.getElementById('restaurantGrid');
+                
+                if (restaurants.length === 0) {
+                    grid.innerHTML = \`
+                        <div class="col-span-full text-center py-8 md:py-12 text-gray-500">
+                            <i class="fas fa-store-slash text-3xl md:text-4xl mb-2 md:mb-4"></i>
+                            <p class="text-sm md:text-base">등록된 음식점이 없습니다.</p>
+                        </div>
+                    \`;
+                    return;
+                }
+
+                grid.innerHTML = restaurants.map(restaurant => \`
+                    <div class="restaurant-card bg-white rounded-lg md:rounded-xl shadow-sm overflow-hidden">
+                        <img src="\${restaurant.image || 'https://via.placeholder.com/400x250?text=Restaurant'}" 
+                             alt="\${restaurant.name}"
+                             crossorigin="anonymous"
+                             loading="lazy"
+                             onerror="this.onerror=null; this.src='https://via.placeholder.com/400x250/3b82f6/ffffff?text=\${encodeURIComponent(restaurant.name)}';"
+                             class="restaurant-image w-full object-cover">
+                        <div class="p-3 md:p-4">
+                            <div class="flex items-start justify-between mb-2">
+                                <h3 class="restaurant-title font-bold text-gray-900 flex-1">\${restaurant.name}</h3>
+                                <span class="badge-text bg-blue-100 text-blue-800 px-2 py-1 rounded-full whitespace-nowrap ml-2">
+                                    \${restaurant.category || '음식점'}
+                                </span>
+                            </div>
+                            
+                            <div class="restaurant-info flex items-center text-gray-600 mb-2">
+                                <div class="flex items-center text-yellow-500 mr-3">
+                                    <i class="fas fa-star mr-1"></i>
+                                    <span class="font-semibold">\${restaurant.rating || '4.5'}</span>
+                                    <span class="text-gray-500 ml-1">(\${restaurant.reviewCount || '0'})</span>
+                                </div>
+                                <span class="text-gray-500">|</span>
+                                <span class="ml-3">\${restaurant.deliveryTime || '30-40'}분</span>
+                            </div>
+                            
+                            <p class="restaurant-info text-gray-600 mb-3 line-clamp-1">\${restaurant.description || ''}</p>
+                            
+                            <div class="flex items-center justify-between">
+                                <span class="badge-text bg-green-100 text-green-800 px-2 md:px-3 py-1 rounded-full font-medium">
+                                    <i class="fas fa-motorcycle mr-1"></i>배달비 0원
+                                </span>
+                                <div class="flex gap-2">
+                                    <button onclick="goToMenu('\${restaurant.id || restaurant.name}')" 
+                                            class="btn-menu bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition font-medium">
+                                        메뉴
+                                    </button>
+                                    <button onclick="startOrder('\${restaurant.id || restaurant.name}')" 
+                                            class="btn-order bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold">
+                                        주문
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                \`).join('');
+            }
+
+            // 메뉴 보기
+            function goToMenu(storeId) {
+                window.location.href = '/store/' + encodeURIComponent(storeId) + '/menu';
+            }
+
+            // 주문하기 (장바구니 생성)
+            async function startOrder(storeId) {
+                try {
+                    const response = await axios.post('/api/cart/create', { storeId });
+                    const { cartId } = response.data;
+                    
+                    // localStorage에 저장
+                    localStorage.setItem('cartId', cartId);
+                    localStorage.setItem('storeId', storeId);
+                    
+                    // 메뉴 페이지로 이동
+                    window.location.href = '/store/' + encodeURIComponent(storeId) + '/menu';
+                } catch (error) {
+                    console.error('장바구니 생성 실패:', error);
+                    alert('주문을 시작할 수 없습니다. 다시 시도해주세요.');
+                }
+            }
+
+            // 페이지 로드 시 실행
+            document.addEventListener('DOMContentLoaded', () => {
+                loadRestaurants();
+            });
+        </script>
     </body>
     </html>
   `)
