@@ -205,6 +205,9 @@
                     <div class="relative h-48 bg-gray-200">
                         <img src="${product.thumbnail || 'https://via.placeholder.com/400x300?text=Fresh+Food'}" 
                              alt="${product.productName}"
+                             crossorigin="anonymous"
+                             loading="lazy"
+                             onerror="this.onerror=null; this.src='https://via.placeholder.com/400x300/22c55e/ffffff?text=${encodeURIComponent(product.productName)}';"
                              class="w-full h-full object-cover">
                         <span class="harvest-badge absolute top-2 left-2 text-white text-xs px-2 py-1 rounded-full font-bold">
                             <i class="fas fa-leaf mr-1"></i> 당일수확
@@ -271,6 +274,9 @@
                     <div class="mb-3">
                         <img src="${selectedProduct.thumbnail || 'https://via.placeholder.com/400x300?text=Food'}" 
                              alt="${selectedProduct.productName}"
+                             crossorigin="anonymous"
+                             loading="eager"
+                             onerror="this.onerror=null; this.src='https://via.placeholder.com/400x300/22c55e/ffffff?text=${encodeURIComponent(selectedProduct.productName)}';"
                              class="w-full h-48 rounded-lg object-cover">
                     </div>
                     <div>

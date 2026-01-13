@@ -1006,7 +1006,7 @@ app.get('/api/local-food-products', async (c) => {
       todayStock: 20,
       harvestDate: new Date().toISOString().split('T')[0],
       certification: 'ORGANIC',
-      thumbnail: 'https://images.unsplash.com/photo-1622206151226-18ca2c9ab4a1?w=400&h=300&fit=crop',
+      thumbnail: 'https://images.unsplash.com/photo-1622206151226-18ca2c9ab4a1?w=400',
       category: 'vegetable'
     },
     {
@@ -1020,7 +1020,7 @@ app.get('/api/local-food-products', async (c) => {
       todayStock: 15,
       harvestDate: new Date().toISOString().split('T')[0],
       certification: 'ORGANIC',
-      thumbnail: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=400&h=300&fit=crop',
+      thumbnail: 'https://images.unsplash.com/photo-1546470427-e26264995c4e?w=400',
       category: 'vegetable'
     },
     {
@@ -1034,7 +1034,7 @@ app.get('/api/local-food-products', async (c) => {
       todayStock: 30,
       harvestDate: new Date().toISOString().split('T')[0],
       certification: 'PESTICIDE_FREE',
-      thumbnail: 'https://images.unsplash.com/photo-1577003833154-a3d809950dd6?w=400&h=300&fit=crop',
+      thumbnail: 'https://images.unsplash.com/photo-1631882955259-36f67e3f8b2c?w=400',
       category: 'fruit'
     },
     {
@@ -1048,7 +1048,7 @@ app.get('/api/local-food-products', async (c) => {
       todayStock: 10,
       harvestDate: new Date().toISOString().split('T')[0],
       certification: 'ORGANIC',
-      thumbnail: 'https://images.unsplash.com/photo-1599819177842-32d993e8c7a8?w=400&h=300&fit=crop',
+      thumbnail: 'https://images.unsplash.com/photo-1601275868399-45bec4f4cd9d?w=400',
       category: 'fruit'
     },
     {
@@ -1062,7 +1062,7 @@ app.get('/api/local-food-products', async (c) => {
       todayStock: 25,
       harvestDate: new Date().toISOString().split('T')[0],
       certification: 'PESTICIDE_FREE',
-      thumbnail: 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=400&h=300&fit=crop',
+      thumbnail: 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=400',
       category: 'vegetable'
     },
     {
@@ -1076,7 +1076,7 @@ app.get('/api/local-food-products', async (c) => {
       todayStock: 12,
       harvestDate: new Date().toISOString().split('T')[0],
       certification: 'ORGANIC',
-      thumbnail: 'https://images.unsplash.com/photo-1587049352846-4a222e784210?w=400&h=300&fit=crop',
+      thumbnail: 'https://images.unsplash.com/photo-1558642084-fd07fae5282e?w=400',
       category: 'processed'
     }
   ]
