@@ -1522,6 +1522,88 @@ app.get('/', (c) => {
           .loading.active {
             display: block;
           }
+          
+          /* 언어 선택 드롭다운 스타일 */
+          .lang-select {
+            position: relative;
+            display: inline-block;
+          }
+          
+          .lang-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #374151;
+            transition: all 0.2s;
+          }
+          
+          .lang-btn:hover {
+            border-color: #3b82f6;
+            background: #f9fafb;
+          }
+          
+          .lang-arrow {
+            font-size: 12px;
+            transition: transform 0.2s;
+          }
+          
+          .lang-select.open .lang-arrow {
+            transform: rotate(180deg);
+          }
+          
+          .lang-menu {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            min-width: 150px;
+            list-style: none;
+            padding: 8px 0;
+            margin: 0;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.2s;
+            z-index: 1000;
+          }
+          
+          .lang-select.open .lang-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+          }
+          
+          .lang-menu li {
+            padding: 10px 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 14px;
+            color: #374151;
+          }
+          
+          .lang-menu li:hover {
+            background: #f3f4f6;
+          }
+          
+          .lang-menu li.active {
+            background: #eff6ff;
+            color: #3b82f6;
+            font-weight: 600;
+          }
+          
+          .lang-menu li.active::before {
+            content: '✓ ';
+            margin-right: 4px;
+          }
         </style>
     </head>
     <body>
@@ -1779,9 +1861,12 @@ app.get('/', (c) => {
             });
             
             // 외부 클릭 시 드롭다운 닫기
-            document.addEventListener('click', () => {
+            document.addEventListener('click', (e) => {
               langSelects.forEach(select => {
-                select.classList.remove('open');
+                // 클릭한 요소가 lang-select 내부가 아닌 경우에만 닫기
+                if (!select.contains(e.target)) {
+                  select.classList.remove('open');
+                }
               });
             });
             
