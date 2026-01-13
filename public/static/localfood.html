@@ -203,11 +203,8 @@
             grid.innerHTML = filtered.map(product => `
                 <div class="product-card bg-white rounded-lg shadow-sm overflow-hidden cursor-pointer" onclick="openOrderModal('${product.productId}')">
                     <div class="relative h-48 bg-gray-200">
-                        <img src="${product.thumbnail || 'https://via.placeholder.com/400x300?text=Fresh+Food'}" 
+                        <img src="${product.thumbnail}" 
                              alt="${product.productName}"
-                             crossorigin="anonymous"
-                             loading="lazy"
-                             onerror="this.onerror=null; this.src='https://via.placeholder.com/400x300/22c55e/ffffff?text=${encodeURIComponent(product.productName)}';"
                              class="w-full h-full object-cover">
                         <span class="harvest-badge absolute top-2 left-2 text-white text-xs px-2 py-1 rounded-full font-bold">
                             <i class="fas fa-leaf mr-1"></i> 당일수확
