@@ -99,6 +99,98 @@ app.post('/api/merchant-apply', async (c) => {
   })
 })
 
+// 장바구니 생성 API
+app.post('/api/cart/create', async (c) => {
+  const { storeId } = await c.req.json()
+  const cartId = `CART-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+  
+  return c.json({
+    success: true,
+    cartId,
+    storeId,
+    createdAt: new Date().toISOString()
+  })
+})
+
+// 가게 메뉴 조회 API
+app.get('/api/stores/:storeId/menus', (c) => {
+  const storeId = c.req.param('storeId')
+  
+  // 샘플 메뉴 데이터
+  const sampleMenus = {
+    '중앙시장 떡볶이': [
+      {
+        menuId: 'M001',
+        name: '떡볶이',
+        description: '매콤달콤한 즉석 떡볶이',
+        price: 4000,
+        image: '/static/images/product.svg',
+        category: '메인'
+      },
+      {
+        menuId: 'M002',
+        name: '순대',
+        description: '쫄깃한 수제 순대',
+        price: 5000,
+        image: '/static/images/product.svg',
+        category: '메인'
+      },
+      {
+        menuId: 'M003',
+        name: '튀김',
+        description: '바삭바삭한 모듬 튀김',
+        price: 3000,
+        image: '/static/images/product.svg',
+        category: '사이드'
+      },
+      {
+        menuId: 'M004',
+        name: '김밥',
+        description: '신선한 야채가 가득한 김밥',
+        price: 3500,
+        image: '/static/images/product.svg',
+        category: '메인'
+      }
+    ]
+  }
+  
+  const menus = sampleMenus[storeId] || [
+    {
+      menuId: 'M001',
+      name: '대표 메뉴',
+      description: '가게의 시그니처 메뉴',
+      price: 8000,
+      image: '/static/images/product.svg',
+      category: '메인'
+    },
+    {
+      menuId: 'M002',
+      name: '특선 메뉴',
+      description: '오늘의 특별한 메뉴',
+      price: 12000,
+      image: '/static/images/product.svg',
+      category: '메인'
+    }
+  ]
+  
+  return c.json(menus)
+})
+
+// 주문 접수 API
+app.post('/api/orders', async (c) => {
+  const orderData = await c.req.json()
+  const orderId = `ORD${new Date().getFullYear()}${String(new Date().getMonth() + 1).padStart(2, '0')}${String(new Date().getDate()).padStart(2, '0')}${String(Date.now()).slice(-4)}`
+  
+  // 실제 구현에서는 DB에 저장
+  return c.json({
+    success: true,
+    orderId,
+    status: 'RECEIVED',
+    estimatedTime: 30,
+    message: '주문이 접수되었습니다.'
+  })
+})
+
 // 가맹점 승인/반려 API
 app.post('/api/merchant-applications/:id/approve', async (c) => {
   const id = c.req.param('id')
@@ -1378,6 +1470,416 @@ app.get('/delivery', (c) => {
             // 페이지 로드 시 실행
             document.addEventListener('DOMContentLoaded', () => {
                 loadRestaurants();
+            });
+        </script>
+    </body>
+    </html>
+  `)
+})
+
+// 메뉴 페이지
+app.get('/store/:storeId/menu', (c) => {
+  const storeId = c.req.param('storeId')
+  return c.html(`
+    <!DOCTYPE html>
+    <html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>메뉴 - 경산온(ON)</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+        <style>
+            .menu-item { transition: transform 0.2s; }
+            .menu-item:hover { transform: translateY(-4px); }
+        </style>
+    </head>
+    <body class="bg-gray-50">
+        <!-- 헤더 -->
+        <div class="bg-white shadow-sm sticky top-0 z-10">
+            <div class="max-w-7xl mx-auto px-4 py-3">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <a href="/delivery" class="text-gray-600 hover:text-gray-900">
+                            <i class="fas fa-arrow-left text-xl"></i>
+                        </a>
+                        <h1 class="text-xl font-bold text-gray-900">메뉴</h1>
+                    </div>
+                    <button onclick="viewCart()" class="relative text-gray-600 hover:text-gray-900">
+                        <i class="fas fa-shopping-cart text-xl"></i>
+                        <span id="cartBadge" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center hidden">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 가게 정보 -->
+        <div class="max-w-7xl mx-auto px-4 py-4">
+            <div id="storeInfo" class="bg-white rounded-xl shadow-sm p-4 mb-4">
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-spinner fa-spin text-2xl text-gray-400"></i>
+                    <span class="text-gray-600">가게 정보 로딩 중...</span>
+                </div>
+            </div>
+
+            <!-- 메뉴 목록 -->
+            <div class="mb-6">
+                <h2 class="text-lg font-bold text-gray-900 mb-3">메뉴</h2>
+                <div id="menuGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- 로딩 중 -->
+                    <div class="col-span-full text-center py-12">
+                        <i class="fas fa-spinner fa-spin text-4xl text-gray-400 mb-4"></i>
+                        <p class="text-gray-600">메뉴를 불러오는 중...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 장바구니 모달 -->
+        <div id="cartModal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
+            <div class="bg-white rounded-xl max-w-lg w-full max-h-[80vh] overflow-y-auto">
+                <div class="sticky top-0 bg-white border-b px-6 py-4 flex items-center justify-between">
+                    <h3 class="text-xl font-bold">장바구니</h3>
+                    <button onclick="closeCart()" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                <div id="cartItems" class="p-6">
+                    <!-- 장바구니 아이템 -->
+                </div>
+                <div class="sticky bottom-0 bg-white border-t p-6">
+                    <div class="flex justify-between mb-4">
+                        <span class="font-bold">총 금액</span>
+                        <span id="totalPrice" class="font-bold text-blue-600 text-xl">0원</span>
+                    </div>
+                    <button onclick="submitOrder()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold hover:bg-blue-700">
+                        주문하기
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 주문 폼 모달 -->
+        <div id="orderModal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
+            <div class="bg-white rounded-xl max-w-lg w-full">
+                <div class="px-6 py-4 border-b">
+                    <h3 class="text-xl font-bold">주문 정보 입력</h3>
+                </div>
+                <div class="p-6">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">이름</label>
+                            <input type="text" id="customerName" placeholder="홍길동" 
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">연락처</label>
+                            <input type="tel" id="customerPhone" placeholder="010-1234-5678" 
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">배송지 주소</label>
+                            <input type="text" id="customerAddress" placeholder="경산시 ○○동 ○○" 
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">요청사항</label>
+                            <textarea id="orderMemo" placeholder="예) 문 앞에 두고 가주세요" rows="3"
+                                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-6 py-4 border-t flex gap-3">
+                    <button onclick="closeOrderModal()" class="flex-1 px-6 py-3 border border-gray-300 rounded-lg font-medium hover:bg-gray-50">
+                        취소
+                    </button>
+                    <button onclick="confirmOrder()" class="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700">
+                        주문 접수
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+        <script>
+            const storeId = '${storeId}';
+            let cart = JSON.parse(localStorage.getItem('cart_' + storeId)) || [];
+            let storeInfo = null;
+
+            // 가게 정보 로드
+            async function loadStoreInfo() {
+                try {
+                    const response = await axios.get('/api/restaurants');
+                    const restaurants = response.data || [];
+                    storeInfo = restaurants.find(r => (r.id || r.name) === storeId);
+                    
+                    if (storeInfo) {
+                        document.getElementById('storeInfo').innerHTML = \`
+                            <div class="flex items-center gap-4">
+                                <img src="\${storeInfo.image || '/static/images/restaurant.svg'}" 
+                                     alt="\${storeInfo.name}" 
+                                     class="w-16 h-16 rounded-lg object-cover">
+                                <div>
+                                    <h2 class="text-xl font-bold text-gray-900">\${storeInfo.name}</h2>
+                                    <div class="flex items-center gap-3 text-sm text-gray-600 mt-1">
+                                        <span class="flex items-center text-yellow-500">
+                                            <i class="fas fa-star mr-1"></i>\${storeInfo.rating || '4.5'}
+                                        </span>
+                                        <span>\${storeInfo.deliveryTime || '30-40'}분</span>
+                                        <span class="text-green-600 font-semibold">배달비 0원</span>
+                                    </div>
+                                </div>
+                            </div>
+                        \`;
+                    }
+                } catch (error) {
+                    console.error('가게 정보 로딩 실패:', error);
+                }
+            }
+
+            // 메뉴 목록 로드
+            async function loadMenus() {
+                try {
+                    const response = await axios.get(\`/api/stores/\${storeId}/menus\`);
+                    const menus = response.data || [];
+                    renderMenus(menus);
+                } catch (error) {
+                    console.error('메뉴 로딩 실패:', error);
+                    document.getElementById('menuGrid').innerHTML = \`
+                        <div class="col-span-full text-center py-12 text-gray-500">
+                            <i class="fas fa-exclamation-circle text-4xl mb-4"></i>
+                            <p>메뉴를 불러오는데 실패했습니다.</p>
+                        </div>
+                    \`;
+                }
+            }
+
+            // 메뉴 렌더링
+            function renderMenus(menus) {
+                const grid = document.getElementById('menuGrid');
+                
+                if (menus.length === 0) {
+                    grid.innerHTML = \`
+                        <div class="col-span-full text-center py-12 text-gray-500">
+                            <i class="fas fa-utensils text-4xl mb-4"></i>
+                            <p>등록된 메뉴가 없습니다.</p>
+                        </div>
+                    \`;
+                    return;
+                }
+
+                grid.innerHTML = menus.map(menu => \`
+                    <div class="menu-item bg-white rounded-xl shadow-sm overflow-hidden cursor-pointer" onclick="addToCart('\${menu.menuId}')">
+                        <img src="\${menu.image || '/static/images/product.svg'}" 
+                             alt="\${menu.name}"
+                             class="w-full h-48 object-cover">
+                        <div class="p-4">
+                            <h3 class="font-bold text-gray-900 mb-1">\${menu.name}</h3>
+                            <p class="text-sm text-gray-600 mb-3 line-clamp-2">\${menu.description || ''}</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-xl font-bold text-blue-600">\${menu.price.toLocaleString()}원</span>
+                                <button onclick="event.stopPropagation(); addToCart('\${menu.menuId}')" 
+                                        class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-medium">
+                                    <i class="fas fa-plus mr-1"></i>담기
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                \`).join('');
+            }
+
+            // 장바구니에 추가
+            async function addToCart(menuId) {
+                try {
+                    const response = await axios.get(\`/api/stores/\${storeId}/menus\`);
+                    const menus = response.data || [];
+                    const menu = menus.find(m => m.menuId === menuId);
+                    
+                    if (!menu) return;
+
+                    const existing = cart.find(item => item.menuId === menuId);
+                    if (existing) {
+                        existing.qty += 1;
+                    } else {
+                        cart.push({ ...menu, qty: 1 });
+                    }
+
+                    localStorage.setItem('cart_' + storeId, JSON.stringify(cart));
+                    updateCartBadge();
+                    
+                    // 간단한 피드백
+                    const btn = event.target.closest('button');
+                    if (btn) {
+                        const originalText = btn.innerHTML;
+                        btn.innerHTML = '<i class="fas fa-check mr-1"></i>담김';
+                        setTimeout(() => btn.innerHTML = originalText, 1000);
+                    }
+                } catch (error) {
+                    console.error('장바구니 추가 실패:', error);
+                }
+            }
+
+            // 장바구니 보기
+            function viewCart() {
+                if (cart.length === 0) {
+                    alert('장바구니가 비어있습니다.');
+                    return;
+                }
+
+                renderCart();
+                document.getElementById('cartModal').classList.remove('hidden');
+            }
+
+            // 장바구니 닫기
+            function closeCart() {
+                document.getElementById('cartModal').classList.add('hidden');
+            }
+
+            // 장바구니 렌더링
+            function renderCart() {
+                const container = document.getElementById('cartItems');
+                
+                if (cart.length === 0) {
+                    container.innerHTML = \`
+                        <div class="text-center py-8 text-gray-500">
+                            <i class="fas fa-shopping-cart text-4xl mb-4"></i>
+                            <p>장바구니가 비어있습니다.</p>
+                        </div>
+                    \`;
+                    document.getElementById('totalPrice').textContent = '0원';
+                    return;
+                }
+
+                container.innerHTML = cart.map((item, index) => \`
+                    <div class="flex items-center gap-4 mb-4 pb-4 border-b">
+                        <img src="\${item.image || '/static/images/product.svg'}" 
+                             alt="\${item.name}" 
+                             class="w-20 h-20 rounded-lg object-cover">
+                        <div class="flex-1">
+                            <h4 class="font-bold text-gray-900">\${item.name}</h4>
+                            <p class="text-blue-600 font-semibold">\${item.price.toLocaleString()}원</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="updateQty(\${index}, -1)" class="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300">
+                                <i class="fas fa-minus text-xs"></i>
+                            </button>
+                            <span class="w-8 text-center font-semibold">\${item.qty}</span>
+                            <button onclick="updateQty(\${index}, 1)" class="w-8 h-8 rounded-full bg-blue-600 text-white hover:bg-blue-700">
+                                <i class="fas fa-plus text-xs"></i>
+                            </button>
+                        </div>
+                        <button onclick="removeFromCart(\${index})" class="text-red-500 hover:text-red-700">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                \`).join('');
+
+                const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+                document.getElementById('totalPrice').textContent = total.toLocaleString() + '원';
+            }
+
+            // 수량 변경
+            function updateQty(index, delta) {
+                cart[index].qty += delta;
+                if (cart[index].qty <= 0) {
+                    cart.splice(index, 1);
+                }
+                localStorage.setItem('cart_' + storeId, JSON.stringify(cart));
+                updateCartBadge();
+                renderCart();
+            }
+
+            // 장바구니에서 제거
+            function removeFromCart(index) {
+                cart.splice(index, 1);
+                localStorage.setItem('cart_' + storeId, JSON.stringify(cart));
+                updateCartBadge();
+                renderCart();
+            }
+
+            // 장바구니 배지 업데이트
+            function updateCartBadge() {
+                const badge = document.getElementById('cartBadge');
+                const count = cart.reduce((sum, item) => sum + item.qty, 0);
+                if (count > 0) {
+                    badge.textContent = count;
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            }
+
+            // 주문하기
+            function submitOrder() {
+                if (cart.length === 0) {
+                    alert('장바구니가 비어있습니다.');
+                    return;
+                }
+
+                const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+                if (total < 8000) {
+                    alert('최소 주문금액은 8,000원입니다.');
+                    return;
+                }
+
+                closeCart();
+                document.getElementById('orderModal').classList.remove('hidden');
+            }
+
+            // 주문 모달 닫기
+            function closeOrderModal() {
+                document.getElementById('orderModal').classList.add('hidden');
+            }
+
+            // 주문 확정
+            async function confirmOrder() {
+                const name = document.getElementById('customerName').value.trim();
+                const phone = document.getElementById('customerPhone').value.trim();
+                const address = document.getElementById('customerAddress').value.trim();
+                const memo = document.getElementById('orderMemo').value.trim();
+
+                if (!name || !phone || !address) {
+                    alert('이름, 연락처, 주소는 필수입니다.');
+                    return;
+                }
+
+                const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+
+                const orderData = {
+                    storeId,
+                    customer: { name, phone, address },
+                    items: cart,
+                    pricing: {
+                        itemsTotal: total,
+                        deliveryFee: 0,
+                        grandTotal: total
+                    },
+                    deliveryType: 'PUBLIC',
+                    memo
+                };
+
+                try {
+                    const response = await axios.post('/api/orders', orderData);
+                    alert(\`주문이 접수되었습니다!\\n주문번호: \${response.data.orderId}\`);
+                    
+                    // 장바구니 초기화
+                    cart = [];
+                    localStorage.removeItem('cart_' + storeId);
+                    updateCartBadge();
+                    
+                    closeOrderModal();
+                    window.location.href = '/delivery';
+                } catch (error) {
+                    console.error('주문 실패:', error);
+                    alert('주문에 실패했습니다. 다시 시도해주세요.');
+                }
+            }
+
+            // 페이지 로드 시 실행
+            document.addEventListener('DOMContentLoaded', () => {
+                loadStoreInfo();
+                loadMenus();
+                updateCartBadge();
             });
         </script>
     </body>
