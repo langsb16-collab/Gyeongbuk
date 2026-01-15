@@ -1396,8 +1396,12 @@ app.get('/delivery', (c) => {
                     return;
                 }
 
-                grid.innerHTML = restaurants.map(restaurant => \`
-                    <div class="restaurant-card bg-white rounded-lg md:rounded-xl shadow-sm overflow-hidden">
+                grid.innerHTML = '';
+                restaurants.forEach(restaurant => {
+                    const card = document.createElement('div');
+                    card.className = 'restaurant-card bg-white rounded-lg md:rounded-xl shadow-sm overflow-hidden';
+                    
+                    card.innerHTML = \`
                         <img src="\${restaurant.image || '/static/images/restaurant.svg'}" 
                              alt="\${restaurant.name}"
                              crossorigin="anonymous"
@@ -1416,7 +1420,7 @@ app.get('/delivery', (c) => {
                                 <div class="flex items-center text-yellow-500 mr-3">
                                     <i class="fas fa-star mr-1"></i>
                                     <span class="font-semibold">\${restaurant.rating || '4.5'}</span>
-                                    <span class="text-gray-500 ml-1">(\${restaurant.reviewCount || '0'})</span>
+                                    <span class="text-gray-500 ml-1">(\${restaurant.reviewCount || restaurant.reviews || '0'})</span>
                                 </div>
                                 <span class="text-gray-500">|</span>
                                 <span class="ml-3">\${restaurant.deliveryTime || '30-40'}분</span>
@@ -1429,19 +1433,27 @@ app.get('/delivery', (c) => {
                                     <i class="fas fa-motorcycle mr-1"></i>배달비 0원
                                 </span>
                                 <div class="flex gap-2">
-                                    <button onclick="goToMenu('\${restaurant.id || restaurant.name}')" 
-                                            class="btn-menu bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition font-medium">
+                                    <button class="btn-menu bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition font-medium">
                                         메뉴
                                     </button>
-                                    <button onclick="startOrder('\${restaurant.id || restaurant.name}')" 
-                                            class="btn-order bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold">
+                                    <button class="btn-order bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold">
                                         주문
                                     </button>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                \`).join('');
+                    \`;
+                    
+                    // 이벤트 리스너 추가
+                    const storeId = restaurant.id || restaurant.name;
+                    const menuBtn = card.querySelector('.btn-menu');
+                    const orderBtn = card.querySelector('.btn-order');
+                    
+                    menuBtn.addEventListener('click', () => goToMenu(storeId));
+                    orderBtn.addEventListener('click', () => startOrder(storeId));
+                    
+                    grid.appendChild(card);
+                });
             }
 
             // 메뉴 보기
