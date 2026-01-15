@@ -1401,57 +1401,92 @@ app.get('/delivery', (c) => {
 
                 grid.innerHTML = '';
                 restaurants.forEach(restaurant => {
+                    // 카드 생성
                     const card = document.createElement('div');
                     card.className = 'restaurant-card bg-white rounded-lg md:rounded-xl shadow-sm overflow-hidden';
                     
-                    card.innerHTML = \`
-                        <img src="\${restaurant.image || '/static/images/restaurant.svg'}" 
-                             alt="\${restaurant.name}"
-                             crossorigin="anonymous"
-                             loading="lazy"
-                             onerror="this.onerror=null; this.src='/static/images/restaurant.svg';"
-                             class="restaurant-image w-full object-cover">
-                        <div class="p-3 md:p-4">
-                            <div class="flex items-start justify-between mb-2">
-                                <h3 class="restaurant-title font-bold text-gray-900 flex-1">\${restaurant.name}</h3>
-                                <span class="badge-text bg-blue-100 text-blue-800 px-2 py-1 rounded-full whitespace-nowrap ml-2">
-                                    \${restaurant.category || '음식점'}
-                                </span>
-                            </div>
-                            
-                            <div class="restaurant-info flex items-center text-gray-600 mb-2">
-                                <div class="flex items-center text-yellow-500 mr-3">
-                                    <i class="fas fa-star mr-1"></i>
-                                    <span class="font-semibold">\${restaurant.rating || '4.5'}</span>
-                                    <span class="text-gray-500 ml-1">(\${restaurant.reviewCount || restaurant.reviews || '0'})</span>
-                                </div>
-                                <span class="text-gray-500">|</span>
-                                <span class="ml-3">\${restaurant.deliveryTime || '30-40'}분</span>
-                            </div>
-                            
-                            <p class="restaurant-info text-gray-600 mb-3 line-clamp-1">\${restaurant.description || ''}</p>
-                            
-                            <div class="flex items-center justify-between">
-                                <span class="badge-text bg-green-100 text-green-800 px-2 md:px-3 py-1 rounded-full font-medium">
-                                    <i class="fas fa-motorcycle mr-1"></i>배달비 0원
-                                </span>
-                                <div class="flex gap-2">
-                                    <button class="btn-menu bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition font-medium">
-                                        메뉴
-                                    </button>
-                                    <button class="btn-order bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold">
-                                        주문
-                                    </button>
-                                </div>
-                            </div>
+                    // 이미지
+                    const img = document.createElement('img');
+                    img.src = restaurant.image || '/static/images/restaurant.svg';
+                    img.alt = restaurant.name;
+                    img.className = 'restaurant-image w-full object-cover';
+                    img.crossOrigin = 'anonymous';
+                    img.loading = 'lazy';
+                    img.onerror = function() { this.src = '/static/images/restaurant.svg'; };
+                    
+                    // 카드 내용
+                    const cardBody = document.createElement('div');
+                    cardBody.className = 'p-3 md:p-4';
+                    
+                    // 제목 & 카테고리
+                    const titleRow = document.createElement('div');
+                    titleRow.className = 'flex items-start justify-between mb-2';
+                    
+                    const title = document.createElement('h3');
+                    title.className = 'restaurant-title font-bold text-gray-900 flex-1';
+                    title.textContent = restaurant.name;
+                    
+                    const badge = document.createElement('span');
+                    badge.className = 'badge-text bg-blue-100 text-blue-800 px-2 py-1 rounded-full whitespace-nowrap ml-2';
+                    badge.textContent = restaurant.category || '음식점';
+                    
+                    titleRow.appendChild(title);
+                    titleRow.appendChild(badge);
+                    
+                    // 평점 & 배달시간
+                    const infoRow = document.createElement('div');
+                    infoRow.className = 'restaurant-info flex items-center text-gray-600 mb-2';
+                    infoRow.innerHTML = \`
+                        <div class="flex items-center text-yellow-500 mr-3">
+                            <i class="fas fa-star mr-1"></i>
+                            <span class="font-semibold">\${restaurant.rating || '4.5'}</span>
+                            <span class="text-gray-500 ml-1">(\${restaurant.reviewCount || restaurant.reviews || '0'})</span>
                         </div>
+                        <span class="text-gray-500">|</span>
+                        <span class="ml-3">\${restaurant.deliveryTime || '30-40'}분</span>
                     \`;
                     
-                    // 이벤트 리스너 추가
-                    const storeId = restaurant.id || restaurant.name;
-                    const menuBtn = card.querySelector('.btn-menu');
-                    const orderBtn = card.querySelector('.btn-order');
+                    // 설명
+                    const desc = document.createElement('p');
+                    desc.className = 'restaurant-info text-gray-600 mb-3 line-clamp-1';
+                    desc.textContent = restaurant.description || '';
                     
+                    // 하단 버튼 영역
+                    const bottom = document.createElement('div');
+                    bottom.className = 'flex items-center justify-between';
+                    
+                    const deliveryBadge = document.createElement('span');
+                    deliveryBadge.className = 'badge-text bg-green-100 text-green-800 px-2 md:px-3 py-1 rounded-full font-medium';
+                    deliveryBadge.innerHTML = '<i class="fas fa-motorcycle mr-1"></i>배달비 0원';
+                    
+                    const btnGroup = document.createElement('div');
+                    btnGroup.className = 'flex gap-2';
+                    
+                    const menuBtn = document.createElement('button');
+                    menuBtn.className = 'btn-menu bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition font-medium px-4 py-2';
+                    menuBtn.textContent = '메뉴';
+                    
+                    const orderBtn = document.createElement('button');
+                    orderBtn.className = 'btn-order bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold px-4 py-2';
+                    orderBtn.textContent = '주문';
+                    
+                    btnGroup.appendChild(menuBtn);
+                    btnGroup.appendChild(orderBtn);
+                    
+                    bottom.appendChild(deliveryBadge);
+                    bottom.appendChild(btnGroup);
+                    
+                    // 조립
+                    cardBody.appendChild(titleRow);
+                    cardBody.appendChild(infoRow);
+                    cardBody.appendChild(desc);
+                    cardBody.appendChild(bottom);
+                    
+                    card.appendChild(img);
+                    card.appendChild(cardBody);
+                    
+                    // 이벤트 리스너
+                    const storeId = restaurant.id || restaurant.name;
                     menuBtn.addEventListener('click', () => goToMenu(storeId));
                     orderBtn.addEventListener('click', () => startOrder(storeId));
                     
